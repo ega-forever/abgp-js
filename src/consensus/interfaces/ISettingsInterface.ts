@@ -1,0 +1,18 @@
+import {PacketModel} from '../models/PacketModel';
+
+export interface ISettingsInterface {
+  privateKey: string;
+  address: string;
+  gossipInterval: {
+    min: number,
+    max: number
+  };
+  sendSignalToRandomPeer: boolean;
+  reqMiddleware?: (packet: PacketModel) => Promise<PacketModel>;
+  resMiddleware?: (packet: PacketModel, peerPublicKey: string) => Promise<PacketModel>;
+  logger: {
+    error: () => void,
+    info: () => void,
+    trace: () => void
+  };
+}
