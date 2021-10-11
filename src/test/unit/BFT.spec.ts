@@ -1,4 +1,4 @@
-import {testSuite} from './bft/testSuite';
+import {testSuite} from './testSuite';
 
 describe('BFT tests (3 nodes)', () => testSuite({}, 3));
 

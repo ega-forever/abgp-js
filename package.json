@@ -1,7 +1,7 @@
 {
-  "name": "mokka",
-  "version": "1.3.0",
-  "description": "",
+  "name": "abgp-js",
+  "version": "1.0.0",
+  "description": "authenticated byzantine gossip protocol",
   "scripts": {
     "tsc:watch": "tsc -w",
     "tsc:build": "tsc",
@@ -11,16 +11,17 @@
     "build_dist": "rm -rf dist && npm run tsc:build && npm run build_web"
   },
   "keywords": [
-    "mokka",
+    "abgp",
     "consensus",
     "rsm",
-    "raft",
+    "gossip",
     "distributed"
   ],
   "main": "dist/consensus/main.js",
   "types": "dist/consensus/main.d.ts",
   "author": "zyev.egor@gmail.com",
   "license": "AGPLv3",
+  "homepage": "https://github.com/ega-forever/abgp-js",
   "dependencies": {
     "bn.js": "^5.1.1",
     "elliptic": "^6.5.2",
@@ -30,20 +31,15 @@
     "@types/bluebird": "^3.5.26",
     "@types/bunyan": "^1.8.6",
     "@types/chai": "^4.1.4",
-    "@types/fs-extra": "^5.0.5",
     "@types/mocha": "^5.2.4",
     "@types/node": "*",
     "axios": "^0.19.2",
     "axon": "2.0.x",
-    "bip-schnorr": "^0.3.0",
     "bluebird": "^3.5.3",
     "body-parser": "^1.19.0",
     "bunyan": "^1.8.12",
     "chai": "~3.5.0",
     "express": "^4.17.1",
-    "fs-extra": "^7.0.1",
-    "leveldown": "^5.0.3",
-    "lodash": "^4.17.11",
     "mocha": "^5.2.0",
     "ts-loader": "^5.4.5",
     "ts-node": "^8.4.1",
@@ -51,7 +47,6 @@
     "typescript": "^3.4.1",
     "webpack": "^4.42.0",
     "webpack-bundle-analyzer": "^3.3.2",
-    "webpack-cli": "^3.3.1",
-    "zeromq": "^6.0.0-beta.6"
+    "webpack-cli": "^3.3.1"
   }
 }

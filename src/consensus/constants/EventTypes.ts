@@ -1,8 +1,7 @@
 // tslint:disable
 export default {
-  NODE_JOIN: 'join',
-  NODE_LEAVE: 'leave',
-  HEARTBEAT_TIMEOUT: 'heartbeat_timeout',
-  STATE: 'state',
-  ACK: 'ack'
+  NODE_JOIN: 'JOIN',
+  NODE_LEAVE: 'LEAVE',
+  STATE_UPDATE: 'STATE_UPDATE',
+  STATE_SYNCED: 'STATE_SYNCED'
 };

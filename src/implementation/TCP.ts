@@ -1,7 +1,7 @@
 import msg from 'axon';
-import {BGP} from '../consensus/main';
+import {ABGP} from '../consensus/main';
 
-class TCPBGP extends BGP {
+class TCPABGP extends ABGP {
 
   private sockets: Map<string, any> = new Map<string, any>();
 
@@ -52,4 +52,4 @@ class TCPBGP extends BGP {
 
 }
 
-export default TCPBGP;
+export default TCPABGP;

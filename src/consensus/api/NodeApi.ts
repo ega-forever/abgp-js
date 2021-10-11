@@ -1,66 +1,85 @@
 import eventTypes from '../constants/EventTypes';
-import { BGP } from '../main';
-import { NodeModel, StateItem } from '../models/NodeModel';
+import EventTypes from '../constants/EventTypes';
+import MessageTypes from '../constants/MessageTypes';
+import { ABGP } from '../main';
+import { DataItem, NodeModel } from '../models/NodeModel';
 import { PacketModel } from '../models/PacketModel';
 import { MessageApi } from './MessageApi';
-import MessageTypes from '../constants/MessageTypes';
+import SignatureType from '../constants/SignatureType';
 
 class NodeApi {
 
-  private readonly bgp: BGP;
+  private readonly abgp: ABGP;
   private messageApi: MessageApi;
 
-  constructor(bgp: BGP) {
-    this.bgp = bgp;
-    this.messageApi = new MessageApi(bgp);
+  constructor(abgp: ABGP) {
+    this.abgp = abgp;
+    this.messageApi = new MessageApi(abgp);
   }
 
   public join(multiaddr: string): NodeModel {
 
     const publicKey = multiaddr.match(/\w+$/).toString();
 
-    if (this.bgp.publicKey === publicKey)
+    if (this.abgp.publicKey === publicKey)
       return;
 
     const node = new NodeModel(null, multiaddr);
+    this.abgp.publicKeys.add(node.publicKey);
 
-    node.write = this.bgp.write.bind(this.bgp);
+    node.write = this.abgp.write.bind(this.abgp);
     node.once('end', () => this.leave(node.publicKey));
 
-    this.bgp.nodes.set(publicKey, node);
-
-    // this.buildPublicKeysRootAndCombinations();
-    this.bgp.emit(eventTypes.NODE_JOIN, node);
+    this.abgp.nodes.set(publicKey, node);
+    this.abgp.emit(eventTypes.NODE_JOIN, node);
     return node;
   }
 
-  /*  public buildPublicKeysRootAndCombinations() {//todo maybe need to return
-      const sortedPublicKeys = [...this.bgp.nodes.keys(), this.bgp.publicKey].sort();
-      this.bgp.publicKeysRoot = utils.buildPublicKeysRoot(sortedPublicKeys);
-      this.bgp.publicKeysCombinationsInQuorum = getCombinations(sortedPublicKeys, this.bgp.majority());
-    }*/
-
   public leave(publicKey: string): void {
 
-    const node = this.bgp.nodes.get(publicKey);
-    this.bgp.nodes.delete(publicKey);
+    const node = this.abgp.nodes.get(publicKey);
+    this.abgp.nodes.delete(publicKey);
+    this.abgp.emit(eventTypes.NODE_LEAVE, node);
+  }
 
-    // this.buildPublicKeysRootAndCombinations();
-    this.bgp.emit(eventTypes.NODE_LEAVE, node);
+  public validatePacket(packet: PacketModel) {
+    if (!this.abgp.nodes.has(packet.publicKey) || packet.dataUpdateTimestamp > Date.now()) {
+      return null;
+    }
+
+    return packet;
   }
 
   public validateState(packet: PacketModel) {
-    if (this.bgp.getStateRoot() === packet.root || packet.vectorClock === this.bgp.nodes.get(packet.publicKey).vectorClock) { //todo compare with vector clock of local copy of node
-      return;
+
+    if (this.abgp.getStateRoot() === packet.root && this.abgp.nodes.get(packet.publicKey).dataUpdateTimestamp === packet.dataUpdateTimestamp) {
+      this.abgp.emit(EventTypes.STATE_SYNCED, packet.publicKey);
+      return null;
     }
 
+    if (this.abgp.getStateRoot() === packet.root && this.abgp.nodes.get(packet.publicKey).dataUpdateTimestamp !== packet.dataUpdateTimestamp) {
+      this.abgp.nodes.get(packet.publicKey).dataUpdateTimestamp = packet.dataUpdateTimestamp;
+
+      if (this.abgp.dataUpdateTimestamp < packet.dataUpdateTimestamp) {
+        this.abgp.dataUpdateTimestamp = packet.dataUpdateTimestamp;
+      }
+
+      this.abgp.emit(EventTypes.STATE_SYNCED, packet.publicKey);
+      return null;
+    }
+
+    if (packet.dataUpdateTimestamp === this.abgp.nodes.get(packet.publicKey).dataUpdateTimestamp) {
+      return null;
+    }
+
+    this.abgp.nodes.get(packet.publicKey).nextDataUpdateTimestamp = packet.dataUpdateTimestamp;
     return this.messageApi.packet(MessageTypes.STATE_REQ, {
       leave: packet.root
     });
   }
 
   public stateRequest(packet: PacketModel) {
-    const layers = this.bgp.getLayers();
+    const layers = this.abgp.getLayers();
     return this.messageApi.packet(MessageTypes.STATE_REP, {
       layers
     });
@@ -68,9 +87,9 @@ class NodeApi {
 
   public stateResponse(packet: PacketModel) {
     const layers = packet.data.layers[0];
-    const localLayers = this.bgp.getLayers()[0];
+    const localLayers = this.abgp.getLayers()[0];
 
-    const unknownLayers = layers.filter(layer => !localLayers.includes(layer));
+    const unknownLayers = layers.filter((layer) => !localLayers.includes(layer));
 
     return this.messageApi.packet(MessageTypes.DATA_REQ, {
       layers: unknownLayers
@@ -79,31 +98,58 @@ class NodeApi {
 
   public dataRequest(packet: PacketModel) {
     const layers = packet.data.layers;
-    const data:  = [];
+    const data: DataItem[] = [];
+    const sortedPublicKeys = [...this.abgp.publicKeys.keys()].sort();
 
     for (const layer of layers) {
-      if (!this.bgp.state.has(layer)) {
+      if (!this.abgp.state.has(layer)) {
         continue;
       }
-      const item = this.bgp.state.get(layer);
-      data.push(item);
+      const stateItem = this.abgp.state.get(layer);
+      const dbHash = this.abgp.hashData(`${stateItem.key}:${stateItem.value}:${stateItem.version}`);
+      const dbItem = this.abgp.db.get(`0x${dbHash}`);
+
+      const publicKeysMapDouble = sortedPublicKeys.map((publicKey)=>{
+        return dbItem.publicKeys.has(publicKey) ? 1 : 0
+      }).join('');
+
+      const signatureMapObject = [...dbItem.signaturesMap.keys()]
+        .reduce((result, key) => {
+          result[key] = dbItem.signaturesMap.get(key);
+          return result;
+        }, {});
+
+      data.push({
+        hash: layer,
+        key: stateItem.key,
+        value: stateItem.value,
+        version: stateItem.version,
+        signaturesMap: signatureMapObject,
+        signatureType: dbItem.signatureType,
+        publicKeyMap: parseInt(publicKeysMapDouble, 2)
+      });
     }
 
-    return this.messageApi.packet(MessageTypes.STATE_REP, {
+    return this.messageApi.packet(MessageTypes.DATA_REP, {
       data
     });
   }
 
   public dataResponse(packet: PacketModel) {
-    const data: StateItem[] = packet.data.data;
 
-    for (const item of data) {
-      this.bgp.append(item.key, item.value, item.version);
+    if (packet.dataUpdateTimestamp < this.abgp.nodes.get(packet.publicKey).nextDataUpdateTimestamp) {
+      return null;
     }
 
-    this.bgp.nodes.get(packet.publicKey).vectorClock = packet.vectorClock;
-    if (this.bgp.vectorClock < packet.vectorClock) {
-      this.bgp.vectorClock = packet.vectorClock;
+    const data: DataItem[] = packet.data.data;
+
+    for (const item of data) {
+      this.abgp.remoteAppend(item);
+    }
+
+    this.abgp.nodes.get(packet.publicKey).dataUpdateTimestamp = this.abgp.nodes.get(packet.publicKey).nextDataUpdateTimestamp;
+    if (this.abgp.dataUpdateTimestamp < this.abgp.nodes.get(packet.publicKey).nextDataUpdateTimestamp) {
+      this.abgp.dataUpdateTimestamp = this.abgp.nodes.get(packet.publicKey).nextDataUpdateTimestamp;
     }
   }
 

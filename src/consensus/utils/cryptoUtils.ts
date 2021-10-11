@@ -1,53 +1,25 @@
 // tslint:disable:variable-name
 import BN from 'bn.js';
-import * as crypto from 'crypto';
 import { ec as EC } from 'elliptic';
+import { MerkleTree } from 'merkletreejs';
 
 const ec = new EC('secp256k1');
 
 export const buildPublicKeysRoot = (
   publicKeys: string[]
 ) => {
-
-  let X = null;
-  for (const publicKey of publicKeys) {
-    const XI = pubKeyToPoint(Buffer.from(publicKey, 'hex'));
-    X = X === null ? XI : X.add(XI);
-  }
-
-  return pointToPublicKey(X).toString('hex');
-};
-
-export const buildPublicKeysRootForTerm = (
-  publicKeysRoot: string,
-  term: number,
-  nonce: number | string,
-  candidatePublicKey: string
-) => {
-
-  const mHash = crypto.createHash('sha256')
-    .update(`${ nonce }:${ term }:${ candidatePublicKey }`)
-    .digest('hex');
-
-  const X = pubKeyToPoint(Buffer.from(publicKeysRoot, 'hex')).mul(new BN(mHash, 16));
-  return pointToPublicKey(X).toString('hex');
+  const merkleTree = new MerkleTree(publicKeys);
+  return merkleTree.getHexRoot();
 };
 
 /* X = X1 * a1 + X2 * a2 + ..Xn * an */
 export const buildSharedPublicKeyX = (
   publicKeys: string[],
-  term: number,
-  nonce: number | string,
-  publicKeysRootForTerm: string
+  hash: string
 ) => {
-
-  const mHash = crypto.createHash('sha256')
-    .update(`${ nonce }:${ term }:${ publicKeysRootForTerm }`)
-    .digest('hex');
-
   let X = null;
   for (const publicKey of publicKeys) {
-    const XI = pubKeyToPoint(Buffer.from(publicKey, 'hex')).mul(new BN(mHash, 16));
+    const XI = pubKeyToPoint(Buffer.from(publicKey, 'hex')).mul(new BN(hash, 16));
     X = X === null ? XI : X.add(XI);
   }
 
@@ -71,16 +43,10 @@ export const buildPartialSignature = (
 export const partialSignatureVerify = (
   partialSignature: string,
   publicKey: string,
-  nonce: number,
-  term: number,
-  sharedPublicKeyX: string): boolean => {
-
-  const mHash = crypto.createHash('sha256')
-    .update(`${ nonce }:${ term }:${ sharedPublicKeyX }`)
-    .digest('hex');
+  hash: string): boolean => {
 
   const spG = ec.g.mul(partialSignature);
-  const check = pubKeyToPoint(Buffer.from(publicKey, 'hex')).mul(mHash);
+  const check = pubKeyToPoint(Buffer.from(publicKey, 'hex')).mul(hash);
   return pointToPublicKey(spG).toString('hex') === pointToPublicKey(check).toString('hex');
 };
 

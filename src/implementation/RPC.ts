@@ -2,9 +2,9 @@ import axios from 'axios';
 import bodyParser from 'body-parser';
 import express from 'express';
 import {URL} from 'url';
-import {BGP} from '../consensus/main';
+import {ABGP} from '../consensus/main';
 
-class RPCBGP extends BGP {
+class RPCABGP extends ABGP {
 
   private app = express();
 
@@ -55,4 +55,4 @@ class RPCBGP extends BGP {
 
 }
 
-export default RPCBGP;
+export default RPCABGP;

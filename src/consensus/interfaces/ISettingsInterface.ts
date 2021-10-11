@@ -7,6 +7,7 @@ export interface ISettingsInterface {
     min: number,
     max: number
   };
+  publicKeys?: string[];
   sendSignalToRandomPeer: boolean;
   reqMiddleware?: (packet: PacketModel) => Promise<PacketModel>;
   resMiddleware?: (packet: PacketModel, peerPublicKey: string) => Promise<PacketModel>;

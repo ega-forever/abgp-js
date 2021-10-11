@@ -1,26 +1,26 @@
+import { ABGP } from '../main';
 import { PacketModel } from '../models/PacketModel';
-import { BGP } from '../main';
 
 class MessageApi {
 
-  private bgp: BGP;
+  private abgp: ABGP;
 
-  constructor(bgp: BGP) {
-    this.bgp = bgp;
+  constructor(abgp: ABGP) {
+    this.abgp = abgp;
   }
 
   public async message(packet: PacketModel, peerPublicKey: string) {
-    packet = await this.bgp.resMiddleware(packet, peerPublicKey);
-    const node = this.bgp.nodes.get(peerPublicKey);
+    packet = await this.abgp.resMiddleware(packet, peerPublicKey);
+    const node = this.abgp.nodes.get(peerPublicKey);
     await node.write(node.address, Buffer.from(JSON.stringify(packet)));
   }
 
   public packet(type: number, data: any = null): PacketModel {
     return new PacketModel(
-      this.bgp.getStateRoot(),
-      this.bgp.publicKey,
+      this.abgp.getStateRoot(),
+      this.abgp.publicKey,
       type,
-      this.bgp.vectorClock,
+      this.abgp.dataUpdateTimestamp,
       data);
   }
 

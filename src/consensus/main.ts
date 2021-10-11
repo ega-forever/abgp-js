@@ -7,7 +7,7 @@ import { NodeModel } from './models/NodeModel';
 import { PacketModel } from './models/PacketModel';
 import { RequestProcessorService } from './services/RequestProcessorService';
 
-class BGP extends NodeModel {
+class ABGP extends NodeModel {
 
   public readonly nodeApi: NodeApi;
   public readonly messageApi: MessageApi;
@@ -41,9 +41,15 @@ class BGP extends NodeModel {
     this.requestProcessorService = new RequestProcessorService(this);
     this.nodeApi = new NodeApi(this);
     this.messageApi = new MessageApi(this);
+    if (options.publicKeys) {
+      for (const publicKey of options.publicKeys) {
+        this.publicKeys.add(publicKey);
+      }
+    }
+    this.publicKeys.add(this.publicKey);
   }
 
-  public quorum(responses: number) {
+  public quorum(responses: number) { //todo maybe remove?
     if (!this.nodes.size || !responses) return false;
 
     return responses >= this.majority();
@@ -60,9 +66,12 @@ class BGP extends NodeModel {
   public async emitPacket(packet: Buffer) {
     let parsedPacket = this.messageApi.decodePacket(packet);
     parsedPacket = await this.reqMiddleware(parsedPacket);
-    await this.requestProcessorService.process(parsedPacket);
+    const reply = await this.requestProcessorService.process(parsedPacket);
+    if (reply) {
+      await this.messageApi.message(reply, parsedPacket.publicKey);
+    }
   }
 
 }
 
-export {BGP};
+export { ABGP };
