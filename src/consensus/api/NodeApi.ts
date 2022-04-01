@@ -2,10 +2,9 @@ import eventTypes from '../constants/EventTypes';
 import EventTypes from '../constants/EventTypes';
 import MessageTypes from '../constants/MessageTypes';
 import { ABGP } from '../main';
-import { DataItem, NodeModel } from '../models/NodeModel';
+import { DbItem, NodeModel } from '../models/NodeModel';
 import { PacketModel } from '../models/PacketModel';
 import { MessageApi } from './MessageApi';
-import SignatureType from '../constants/SignatureType';
 
 class NodeApi {
 
@@ -98,8 +97,7 @@ class NodeApi {
 
   public dataRequest(packet: PacketModel) {
     const layers = packet.data.layers;
-    const data: DataItem[] = [];
-    const sortedPublicKeys = [...this.abgp.publicKeys.keys()].sort();
+    const data: DbItem[] = [];
 
     for (const layer of layers) {
       if (!this.abgp.state.has(layer)) {
@@ -108,26 +106,7 @@ class NodeApi {
       const stateItem = this.abgp.state.get(layer);
       const dbHash = this.abgp.hashData(`${stateItem.key}:${stateItem.value}:${stateItem.version}`);
       const dbItem = this.abgp.db.get(`0x${dbHash}`);
-
-      const publicKeysMapDouble = sortedPublicKeys.map((publicKey)=>{
-        return dbItem.publicKeys.has(publicKey) ? 1 : 0
-      }).join('');
-
-      const signatureMapObject = [...dbItem.signaturesMap.keys()]
-        .reduce((result, key) => {
-          result[key] = dbItem.signaturesMap.get(key);
-          return result;
-        }, {});
-
-      data.push({
-        hash: layer,
-        key: stateItem.key,
-        value: stateItem.value,
-        version: stateItem.version,
-        signaturesMap: signatureMapObject,
-        signatureType: dbItem.signatureType,
-        publicKeyMap: parseInt(publicKeysMapDouble, 2)
-      });
+      data.push(dbItem.toPlainObject([...this.abgp.publicKeys.keys()]) as any);
     }
 
     return this.messageApi.packet(MessageTypes.DATA_REP, {
@@ -141,10 +120,10 @@ class NodeApi {
       return null;
     }
 
-    const data: DataItem[] = packet.data.data;
+    const data: DbItem[] = packet.data.data;
 
     for (const item of data) {
-      this.abgp.remoteAppend(item);
+      this.abgp.remoteAppend(DbItem.fromPlainObject(item));
     }
 
     this.abgp.nodes.get(packet.publicKey).dataUpdateTimestamp = this.abgp.nodes.get(packet.publicKey).nextDataUpdateTimestamp;
