@@ -18,7 +18,7 @@ class RequestProcessorService {
     this.abgp = abgp;
     this.actionMap = new Map<number, Array<(packet: PacketModel) => Promise<PacketModel>>>();
 
-    this.actionMap.set(messageTypes.STATE_REQ, [
+ /*   this.actionMap.set(messageTypes.STATE_REQ, [
       this.nodeApi.validatePacket.bind(this.nodeApi),
       this.nodeApi.stateRequest.bind(this.nodeApi)
     ]);
@@ -26,7 +26,7 @@ class RequestProcessorService {
     this.actionMap.set(messageTypes.STATE_REP, [
       this.nodeApi.validatePacket.bind(this.nodeApi),
       this.nodeApi.stateResponse.bind(this.nodeApi)
-    ]);
+    ]);*/
 
     this.actionMap.set(messageTypes.DATA_REQ, [
       this.nodeApi.validatePacket.bind(this.nodeApi),

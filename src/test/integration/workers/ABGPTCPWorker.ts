@@ -32,10 +32,10 @@ const init = (params: any) => {
   }
 
   instance.on(eventTypes.STATE_SYNCED, () => {
-    logger.info(`index #${params.index} root ${instance.getStateRoot()} / stateItems: ${instance.state.size} / dbSize: ${instance.db.size} / lastTimestamp: ${instance.dataUpdateTimestamp}`);
+    logger.info(`index #${params.index} root ${instance.getStateRoot()} / dbSize: ${instance.db.size} / lastTimestamp: ${instance.lastUpdateTimestamp}`);
     process.send({
       type: 'state_synced',
-      args: [instance.getStateRoot(), instance.dataUpdateTimestamp, instance.db.size]
+      args: [instance.getStateRoot(), instance.lastUpdateTimestamp, instance.db.size]
     });
   });
 };

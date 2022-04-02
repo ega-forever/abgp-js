@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import MessageTypes from '../../consensus/constants/MessageTypes';
 import { ABGP } from '../../consensus/main';
 import { PacketModel } from '../../consensus/models/PacketModel';
-import { generateRandomRecords, getUniqueRoots, getUniqueTimestamps, syncNodesBetweenEachOther } from '../utils/helpers';
+import { generateRandomRecords, getUniqueRoots, syncNodesBetweenEachOther } from '../utils/helpers';
 
 export function testSuite(ctx: any = {}, nodesCount: number) {
 
@@ -65,17 +65,10 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
         const node1PacketAck = node1.messageApi.packet(MessageTypes.ACK);
         // @ts-ignore
         const node2ValidateState: PacketModel = await node2.requestProcessorService.process(node1PacketAck);
-        expect(node2ValidateState.type).to.eq(MessageTypes.STATE_REQ);
+        expect(node2ValidateState.type).to.eq(MessageTypes.DATA_REQ);
 
         // @ts-ignore
-        const node1StateRequest: PacketModel = await node1.requestProcessorService.process(node2ValidateState);
-        expect(node1StateRequest.type).to.eq(MessageTypes.STATE_REP);
-
-        // @ts-ignore
-        const node2StateResponse: PacketModel = await node2.requestProcessorService.process(node1StateRequest);
-
-        // @ts-ignore
-        const node1DataRequest: PacketModel = await node1.requestProcessorService.process(node2StateResponse);
+        const node1DataRequest: PacketModel = await node1.requestProcessorService.process(node2ValidateState);
 
         // @ts-ignore
         await node2.requestProcessorService.process(node1DataRequest);
@@ -91,9 +84,6 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
 
     const rootReduces = getUniqueRoots(ctx.nodes);
     expect(rootReduces.length).to.eq(1);
-
-    const timestampReduces = getUniqueTimestamps(ctx.nodes);
-    expect(timestampReduces.length).to.eq(1);
   });
 
   it(`should sync after drop (f, in N = 2f + 1)`, async () => {
@@ -122,11 +112,7 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
           continue;
         }
         // @ts-ignore
-        const node1StateRequest: PacketModel = await node1.requestProcessorService.process(node2ValidateState);
-        // @ts-ignore
-        const node2StateResponse: PacketModel = await node2.requestProcessorService.process(node1StateRequest);
-        // @ts-ignore
-        const node1DataRequest: PacketModel = await node1.requestProcessorService.process(node2StateResponse);
+        const node1DataRequest: PacketModel = await node1.requestProcessorService.process(node2ValidateState);
         // @ts-ignore
         await node2.requestProcessorService.process(node1DataRequest);
 
@@ -139,20 +125,16 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
     await syncNodesBetweenEachOther(ctx.nodes);
 
     for (const node of nodesMinor) {
-      node.dataUpdateTimestamp = 0;
-      node.nextDataUpdateTimestamp = 0;
-
-      for (const key of node.state.keys()) {
-        node.state.delete(key);
-      }
+      node.lastUpdateTimestamp = 0;
+      node.lastUpdateTimestampIndex = 0;
 
       for (const key of node.db.keys()) {
         node.db.delete(key);
       }
 
       for (const peerNode of node.nodes.values()) {
-        peerNode.dataUpdateTimestamp = 0;
-        peerNode.nextDataUpdateTimestamp = 0;
+        peerNode.lastUpdateTimestamp = 0;
+        peerNode.lastUpdateTimestampIndex = 0;
       }
 
       node.rebuildTree();
@@ -162,9 +144,6 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
 
     const rootReduces = getUniqueRoots(ctx.nodes);
     expect(rootReduces.length).to.eq(1);
-
-    const timestampReduces = getUniqueTimestamps(ctx.nodes);
-    expect(timestampReduces.length).to.eq(1);
   });
 
   it(`should fail to sync fake state with fake private and public keys (f, in N = 2f + 1)`, async () => {
@@ -220,45 +199,6 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
 
     const rootReduces = getUniqueRoots(ctx.nodes);
     expect(rootReduces.length).to.eq(nodesFail.length + 1);
-  });
-
-  it(`should sync when there were updates between state_req and data_req`, async() => {
-
-    const unsyncedNode: ABGP = ctx.nodes[0];
-    const updatedNode: ABGP = ctx.nodes[1];
-    const restNodes: ABGP[] = ctx.nodes.slice(2);
-
-    for (const node of [updatedNode, ...restNodes]) {
-      generateRandomRecords(node);
-    }
-
-    const updatedNodePacketAck = updatedNode.messageApi.packet(MessageTypes.ACK);
-    // @ts-ignore
-    const unsyncedNodeValidateState: PacketModel = await unsyncedNode.requestProcessorService.process(updatedNodePacketAck);
-    // @ts-ignore
-    const updatedNodeStateRequest: PacketModel = await updatedNode.requestProcessorService.process(unsyncedNodeValidateState);
-    // @ts-ignore
-    const unsyncedNodeStateResponse: PacketModel = await unsyncedNode.requestProcessorService.process(updatedNodeStateRequest);
-
-    generateRandomRecords(updatedNode);
-
-    // @ts-ignore
-    const updatedNodeDataRequest: PacketModel = await updatedNode.requestProcessorService.process(unsyncedNodeStateResponse);
-    // @ts-ignore
-    await unsyncedNode.requestProcessorService.process(updatedNodeDataRequest);
-
-    const updatedNodePacketAckAfterApply = updatedNode.messageApi.packet(MessageTypes.ACK);
-    // @ts-ignore
-    const unsyncedNodeValidateStateAfterApply: PacketModel = await unsyncedNode.requestProcessorService.process(updatedNodePacketAckAfterApply);
-    expect(unsyncedNodeValidateStateAfterApply.type).to.eq(MessageTypes.STATE_REQ);
-
-    await syncNodesBetweenEachOther(ctx.nodes);
-
-    const rootReduces = getUniqueRoots(ctx.nodes);
-    expect(rootReduces.length).to.eq(1);
-
-    const timestampReduces = getUniqueTimestamps(ctx.nodes);
-    expect(timestampReduces.length).to.eq(1);
   });
 
   afterEach(async () => {

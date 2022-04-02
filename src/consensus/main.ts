@@ -22,6 +22,7 @@ class ABGP extends NodeModel {
 
     this.gossipInterval = options.gossipInterval;
     this.sendSignalToRandomPeer = options.sendSignalToRandomPeer;
+    this.batchReplicationSize = options.batchReplicationSize || 10;
     this.logger = options.logger || {
       // tslint:disable-next-line
       error: console.log,

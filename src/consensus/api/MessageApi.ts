@@ -20,7 +20,8 @@ class MessageApi {
       this.abgp.getStateRoot(),
       this.abgp.publicKey,
       type,
-      this.abgp.dataUpdateTimestamp,
+      this.abgp.lastUpdateTimestamp,
+      this.abgp.lastUpdateTimestampIndex,
       data);
   }
 

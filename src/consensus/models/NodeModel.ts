@@ -13,10 +13,12 @@ import {
 
 export class DbItem { // todo remove state,but make data compaction
   public hash: string;
+  public stateHash: string;
   public key: string;
   public value: string;
   public version: number;
   public timestamp: number;
+  public timestampIndex: number;
   public signaturesMap: Map<string, string>; // signature to public key
   public signatureType: number;
   public publicKeys?: Set<string>;
@@ -27,10 +29,12 @@ export class DbItem { // todo remove state,but make data compaction
     const dbItem = new DbItem();
 
     dbItem.hash = obj.hash;
+    dbItem.stateHash = obj.stateHash;
     dbItem.key = obj.key;
     dbItem.value = obj.value;
     dbItem.version = obj.version;
     dbItem.timestamp = obj.timestamp;
+    dbItem.timestampIndex = obj.timestampIndex;
     dbItem.signaturesMap = obj.signaturesMap ? new Map(Object.entries(obj.signaturesMap)) : new Map<string, string>();
     dbItem.signatureType = obj.signatureType;
     dbItem.publicKeys = obj.publicKeys ? new Set(obj.publicKeys) : new Set<string>();
@@ -39,27 +43,25 @@ export class DbItem { // todo remove state,but make data compaction
     return dbItem;
   }
 
-  public getShortHash() {
-    return this.hash.replace('0x', '');
-  }
-
-  public toPlainObject(publicKeys?: string[]){
+  public toPlainObject(publicKeys?: string[]) {
     const signaturesMapObj = [...this.signaturesMap.keys()]
       .reduce((result, key) => {
         result[key] = this.signaturesMap.get(key);
         return result;
       }, {});
 
-    const publicKeysMapDouble = publicKeys ? publicKeys.sort().map((publicKey)=>{
+    const publicKeysMapDouble = publicKeys ? publicKeys.sort().map((publicKey) => {
       return this.publicKeys.has(publicKey) ? 1 : 0
     }).join('') : null;
 
     return {
       hash: this.hash,
+      stateHash: this.stateHash,
       key: this.key,
       value: this.value,
       version: this.version,
       timestamp: this.timestamp,
+      timestampIndex: this.timestampIndex,
       signaturesMap: signaturesMapObj,
       signatureType: this.signatureType,
       publicKeys: publicKeys ? null : (this.publicKeys ? [...this.publicKeys] : []),
@@ -68,38 +70,6 @@ export class DbItem { // todo remove state,but make data compaction
   }
 
 }
-
-
-/*
-export class DataItem {
-  public hash: string;
-  public key: string;
-  public value: string;
-  public version: number;
-  public signaturesMap: Object; // <string, string>
-  public signatureType: number;
-  public publicKeyMap: number;
-}
-*/
-
-export class StateItem {
-  public key: string;
-  public value: string;
-  public version: number;
-  public signature: string;
-  public signatureType: number;
-}
-
-/*
-export class DbItem {
-  public key: string;
-  public value: string;
-  public version: number;
-  public signaturesMap: Map<string, string>; // signature to public key
-  public signatureType: number;
-  public publicKeys: Set<string>;
-}
-*/
 
 class NodeModel extends EventEmitter {
 
@@ -111,15 +81,15 @@ class NodeModel extends EventEmitter {
     min: number,
     max: number
   };
+  public batchReplicationSize: number;
   public sendSignalToRandomPeer: boolean;
   public readonly privateKey: string;
   public readonly publicKey: string;
   public merkleTree: MerkleTree;
-  public dataUpdateTimestamp: number;
-  public nextDataUpdateTimestamp: number;
+  public lastUpdateTimestamp: number;
+  public lastUpdateTimestampIndex: number;
 
   public readonly nodes: Map<string, NodeModel> = new Map<string, NodeModel>();
-  public readonly state: Map<string, StateItem>;
   public readonly db: Map<string, DbItem>;
   private readonly nodeAddress: string;
   public readonly publicKeys: Set<string>
@@ -132,10 +102,10 @@ class NodeModel extends EventEmitter {
     this.privateKey = privateKey;
     this.publicKey = multiaddr.match(/\w+$/).toString();
     this.nodeAddress = multiaddr.split(/\w+$/)[0].replace(/\/$/, '');
-    this.state = new Map<string, StateItem>();
     this.merkleTree = new MerkleTree([], this.hashData);
     this.db = new Map<string, DbItem>();
-    this.dataUpdateTimestamp = 0;
+    this.lastUpdateTimestamp = 0;
+    this.lastUpdateTimestampIndex = 0;
     this.publicKeys = new Set<string>();
   }
 
@@ -153,55 +123,55 @@ class NodeModel extends EventEmitter {
     return this.merkleTree.getHexRoot();
   }
 
-  public getLayers(): string[][] {
-    return this.merkleTree.getHexLayers() as any;
-  }
-
   public append(key: string, value: string, version: number = 1) {
     const hash = this.hashData(`${key}:${value}:${version}`);
+    const stateHash = this.hashData(`${key}:${value}:${version}${1}`);
 
-    if (this.db.has(`0x${hash}`)) {
+    if (this.db.has(hash)) {
       return;
     }
+
+    const timestamp = Date.now();
+    const timestampIndex = [...this.db.values()].filter(v => v.timestamp === timestamp).length;
 
     const signature = buildPartialSignature(
       this.privateKey,
       hash
     );
 
-    const stateItem: StateItem = {
-      key,
-      value,
-      version,
-      signature,
-      signatureType: SignatureType.INTERMEDIATE
-    };
-
-    const signaturesMap = new Map<string, string>();
-    signaturesMap.set(this.publicKey, signature);
-
     const dbItem: DbItem = DbItem.fromPlainObject({
       hash,
+      stateHash,
       key,
       value,
       version,
-      signaturesMap,
-      timestamp: Date.now(),
+      signaturesMap: {
+        [this.publicKey]: signature
+      },
+      timestamp,
+      timestampIndex,
       signatureType: SignatureType.INTERMEDIATE,
       publicKeys: [this.publicKey]
     });
 
-    this.db.set(`0x${hash}`, dbItem);
-    const leaveHash = this.hashData(`${stateItem.key}:${stateItem.value}:${stateItem.version}:${stateItem.signature}`);
-    this.state.set(`0x${leaveHash}`, stateItem);
-    this.dataUpdateTimestamp = Date.now();
-    this.rebuildTree();
+
+    this.saveItem(dbItem);
     this.emit(EventTypes.STATE_UPDATE);
   }
 
-  public remoteAppend(remoteItem: DbItem) {
+  public remoteAppend(remoteItem: DbItem, peerNode: NodeModel) {
 
     const hash = this.hashData(`${remoteItem.key}:${remoteItem.value}:${remoteItem.version}`);
+
+    if (hash !== remoteItem.hash) {
+      return null;
+    }
+
+    if (remoteItem.timestamp < peerNode.lastUpdateTimestamp
+      || (remoteItem.timestamp === peerNode.lastUpdateTimestamp && remoteItem.timestampIndex < peerNode.lastUpdateTimestampIndex)
+    ) {
+      return null;
+    }
 
     const sortedPublicKeys = [...this.publicKeys.keys()].sort();
     const involvedPublicKeys: string[] = remoteItem.publicKeyMap.toString(2)
@@ -241,102 +211,110 @@ class NodeModel extends EventEmitter {
       }
     }
 
+    const timestamp = Date.now();
+    const timestampIndex = [...this.db.values()].filter(v => v.timestamp === timestamp).length;
 
     /** object is mutated here, so no need to save it to map **/
-    const dbItem: DbItem = this.db.get(`0x${hash}`) || DbItem.fromPlainObject({
-      hash: remoteItem.hash,
-      timestamp: remoteItem.timestamp,
-      key: remoteItem.key,
-      value: remoteItem.value,
-      version: remoteItem.version,
-      signatureType: SignatureType.INTERMEDIATE,
-      publicKeys: involvedPublicKeys
-    });
+    let dbItem: DbItem = this.db.get(hash);
 
-    if (dbItem.signatureType === SignatureType.MULTISIG && remoteItem.signatureType === SignatureType.INTERMEDIATE) {
+    if (dbItem && dbItem.signatureType === SignatureType.MULTISIG && remoteItem.signatureType === SignatureType.INTERMEDIATE) {
       return null;
     }
 
-    if (dbItem.signatureType === SignatureType.MULTISIG && remoteItem.signatureType === SignatureType.MULTISIG) {
+    if (dbItem && dbItem.signatureType === SignatureType.MULTISIG && remoteItem.signatureType === SignatureType.MULTISIG) {
 
       const localMultiSigPublicKey = [...dbItem.signaturesMap.keys()][0];
       const remoteMultiSigPublicKey = [...remoteItem.signaturesMap.keys()][0];
 
       if (localMultiSigPublicKey === remoteMultiSigPublicKey || localMultiSigPublicKey > remoteMultiSigPublicKey) {
+        this.updatePeerNodeLastTimestamp(peerNode, remoteItem.timestamp, remoteItem.timestampIndex);
         return null;
       }
 
-      const localMultiSig = dbItem.signaturesMap.get(localMultiSigPublicKey);
       const remoteMultiSig = remoteItem.signaturesMap.get(remoteMultiSigPublicKey);
-
-      const oldLeaveHash = this.hashData(`${remoteItem.key}:${remoteItem.value}:${remoteItem.version}:${localMultiSig}`);
-      this.state.delete(`0x${oldLeaveHash}`);
 
       dbItem.signaturesMap = new Map<string, string>();
       dbItem.signaturesMap.set(remoteMultiSigPublicKey, remoteMultiSig);
       dbItem.publicKeys = new Set<string>(involvedPublicKeys);
-      this.db.set(`0x${hash}`, dbItem);
+      dbItem.stateHash = remoteItem.stateHash;
+      dbItem.timestamp = timestamp;
+      dbItem.timestampIndex = timestampIndex;
 
-      const leaveHash = this.hashData(`${remoteItem.key}:${remoteItem.value}:${remoteItem.version}:${remoteMultiSig}`);
-      const stateItem: StateItem = {
-        key: remoteItem.key,
-        value: remoteItem.value,
-        version: remoteItem.version,
-        signature: remoteMultiSig,
-        signatureType: SignatureType.MULTISIG
-      };
-
-      this.state.set(`0x${leaveHash}`, stateItem);
-      this.dataUpdateTimestamp = Date.now();
-      this.rebuildTree();
+      this.saveItem(dbItem, peerNode, remoteItem.timestamp, remoteItem.timestampIndex);
       this.emit(EventTypes.STATE_UPDATE);
       return null;
     }
 
     if (remoteItem.signatureType === SignatureType.MULTISIG) {
-      dbItem.signaturesMap = new Map<string, string>();
 
       const remoteMultiSigPublicKey = [...remoteItem.signaturesMap.keys()][0];
       const remoteMultiSig = remoteItem.signaturesMap.get(remoteMultiSigPublicKey);
 
-      dbItem.signaturesMap.set(remoteMultiSigPublicKey, remoteMultiSig);
-      dbItem.publicKeys = new Set<string>(involvedPublicKeys);
-      dbItem.signatureType = SignatureType.MULTISIG;
+      if (!dbItem) {
+        dbItem = DbItem.fromPlainObject({
+          hash: remoteItem.hash,
+          stateHash: remoteItem.stateHash,
+          timestamp,
+          timestampIndex,
+          key: remoteItem.key,
+          value: remoteItem.value,
+          version: remoteItem.version,
+          signaturesMap: Object.fromEntries(remoteItem.signaturesMap),
+          signatureType: SignatureType.MULTISIG,
+          publicKeys: involvedPublicKeys
+        });
+      } else {
+        dbItem.stateHash = remoteItem.stateHash;
+        dbItem.timestamp = timestamp;
+        dbItem.timestampIndex = timestampIndex;
+        dbItem.signaturesMap = new Map<string, string>();
+        dbItem.signaturesMap.set(remoteMultiSigPublicKey, remoteMultiSig);
+        dbItem.publicKeys = new Set<string>(involvedPublicKeys);
+        dbItem.signatureType = SignatureType.MULTISIG;
+      }
 
-      const stateItem: StateItem = {
-        key: remoteItem.key,
-        value: remoteItem.value,
-        version: remoteItem.version,
-        signature: remoteMultiSig,
-        signatureType: SignatureType.MULTISIG
-      };
-
-      this.db.set(`0x${hash}`, dbItem);
-      const leaveHash = this.hashData(`${stateItem.key}:${stateItem.value}:${stateItem.version}:${stateItem.signature}`);
-      this.state.set(`0x${leaveHash}`, stateItem);
-      this.dataUpdateTimestamp = Date.now();
-      this.removeIntermediateStateItems(remoteItem.key, remoteItem.version);
-      this.rebuildTree();
+      this.saveItem(dbItem, peerNode, remoteItem.timestamp, remoteItem.timestampIndex);
       this.emit(EventTypes.STATE_UPDATE);
       return null;
     }
 
-    const signature = buildPartialSignature(
-      this.privateKey,
-      hash
-    );
+    if (!dbItem) {
+      dbItem = DbItem.fromPlainObject({
+        hash: remoteItem.hash,
+        stateHash: remoteItem.stateHash,
+        timestamp,
+        timestampIndex,
+        key: remoteItem.key,
+        value: remoteItem.value,
+        version: remoteItem.version,
+        signaturesMap: Object.fromEntries(remoteItem.signaturesMap),
+        signatureType: SignatureType.INTERMEDIATE,
+        publicKeys: involvedPublicKeys
+      });
 
-    dbItem.signaturesMap.set(this.publicKey, signature);
-    dbItem.publicKeys.add(this.publicKey);
+      const signature = buildPartialSignature(
+        this.privateKey,
+        hash
+      );
 
-    for (const publicKey of remoteItem.signaturesMap.keys()) {
-      const signature = remoteItem.signaturesMap.get(publicKey);
-      dbItem.signaturesMap.set(publicKey, signature);
-      dbItem.publicKeys.add(publicKey);
+      dbItem.signaturesMap.set(this.publicKey, signature);
+      dbItem.publicKeys.add(this.publicKey);
+      dbItem.stateHash = this.hashData(`${dbItem.hash}:${dbItem.value}:${dbItem.version}${dbItem.publicKeys.size}`);
+    } else {
+      for (const publicKey of remoteItem.signaturesMap.keys()) {
+        const signature = remoteItem.signaturesMap.get(publicKey);
+        dbItem.signaturesMap.set(publicKey, signature);
+        dbItem.publicKeys.add(publicKey);
+      }
+
+      dbItem.timestamp = timestamp;
+      dbItem.timestampIndex = timestampIndex;
+      dbItem.stateHash = this.hashData(`${dbItem.hash}:${dbItem.value}:${dbItem.version}${dbItem.publicKeys.size}`);
     }
 
     if (dbItem.signaturesMap.size >= this.majority()) {
       const publicKeysForMusig = [...dbItem.signaturesMap.keys()].sort().slice(0, this.majority());
+      const totalPublicKeys = dbItem.publicKeys.size;
       const signaturesForMusig = publicKeysForMusig.map((publicKey) => dbItem.signaturesMap.get(publicKey));
       const multiPublicKey = buildSharedPublicKeyX(publicKeysForMusig, hash);
 
@@ -344,68 +322,33 @@ class NodeModel extends EventEmitter {
       dbItem.signaturesMap = new Map<string, string>();
       dbItem.signaturesMap.set(multiPublicKey, multiSignature);
       dbItem.signatureType = SignatureType.MULTISIG;
-      dbItem.publicKeys = new Set<string>(publicKeysForMusig); // todo
-
-      const stateItem: StateItem = {
-        key: remoteItem.key,
-        value: remoteItem.value,
-        version: remoteItem.version,
-        signature: multiSignature,
-        signatureType: SignatureType.MULTISIG
-      };
-
-      this.db.set(`0x${hash}`, dbItem);
-      const leaveHash = this.hashData(`${stateItem.key}:${stateItem.value}:${stateItem.version}:${stateItem.signature}`);
-      this.state.set(`0x${leaveHash}`, stateItem);
-      this.dataUpdateTimestamp = Date.now();
-      this.removeIntermediateStateItems(remoteItem.key, remoteItem.version);
-      this.rebuildTree();
-      this.emit(EventTypes.STATE_UPDATE);
-      return null;
+      dbItem.publicKeys = new Set<string>(publicKeysForMusig);
+      dbItem.stateHash = this.hashData(`${dbItem.hash}:${dbItem.value}:${dbItem.version}${totalPublicKeys + 1}`);
     }
 
-    for (const signature of dbItem.signaturesMap.values()) {
-      const stateItem: StateItem = {
-        key: remoteItem.key,
-        value: remoteItem.value,
-        version: remoteItem.version,
-        signature,
-        signatureType: SignatureType.INTERMEDIATE
-      };
-
-      const leaveHash = this.hashData(`${stateItem.key}:${stateItem.value}:${stateItem.version}:${stateItem.signature}`);
-      this.state.set(`0x${leaveHash}`, stateItem);
-      this.dataUpdateTimestamp = Date.now();
-    }
-
-    this.db.set(`0x${hash}`, dbItem);
-    this.rebuildTree();
+    this.saveItem(dbItem, peerNode, remoteItem.timestamp, remoteItem.timestampIndex);
     this.emit(EventTypes.STATE_UPDATE);
   }
 
-  public removeIntermediateStateItems(key: string, version: number) {
-    const intermediateHashes = this.getStateHashesByKey(key, version, SignatureType.INTERMEDIATE);
-    for (const hash of intermediateHashes) {
-      this.state.delete(hash);
-      this.dataUpdateTimestamp = Date.now();
+  private saveItem(item: DbItem, peerNode?: NodeModel, peerTimestamp?: number, peerTimestampIndex?: number) {
+    this.db.set(item.hash, item);
+    this.lastUpdateTimestamp = item.timestamp;
+    this.lastUpdateTimestampIndex = item.timestampIndex;
+    this.rebuildTree();
+
+    if (peerNode) {
+      this.updatePeerNodeLastTimestamp(peerNode, peerTimestamp, peerTimestampIndex);
     }
+  }
+
+  private updatePeerNodeLastTimestamp(peerNode?: NodeModel, peerTimestamp?: number, peerTimestampIndex?: number) {
+    peerNode.lastUpdateTimestamp = peerTimestamp;
+    peerNode.lastUpdateTimestampIndex = peerTimestampIndex;
   }
 
   public rebuildTree() {
-    const leaves = new Array(...this.state.keys()).sort();
-    this.merkleTree = new MerkleTree(leaves, this.hashData);
-  }
-
-  public getStateHashesByKey(key: string, version: number, signatureType: number) {
-    const hashes = [];
-    for (const hash of this.state.keys()) {
-      const item = this.state.get(hash);
-      if (item.key === key && item.version === version && item.signatureType === signatureType) {
-        hashes.push(hash);
-      }
-    }
-
-    return hashes;
+    const stateHashes = [...this.db.values()].map(v => v.stateHash).sort();
+    this.merkleTree = new MerkleTree(stateHashes, this.hashData);
   }
 
   public write(address: string, packet: Buffer): void {

@@ -42,7 +42,7 @@ class NodeApi {
   }
 
   public validatePacket(packet: PacketModel) {
-    if (!this.abgp.nodes.has(packet.publicKey) || packet.dataUpdateTimestamp > Date.now()) {
+    if (!this.abgp.nodes.has(packet.publicKey) || packet.lastUpdateTimestamp > Date.now()) {
       return null;
     }
 
@@ -51,63 +51,31 @@ class NodeApi {
 
   public validateState(packet: PacketModel) {
 
-    if (this.abgp.getStateRoot() === packet.root && this.abgp.nodes.get(packet.publicKey).dataUpdateTimestamp === packet.dataUpdateTimestamp) {
+    const peerNode = this.abgp.nodes.get(packet.publicKey);
+
+    if ( // todo add validation by state hash
+      peerNode.lastUpdateTimestamp === packet.lastUpdateTimestamp &&
+      peerNode.lastUpdateTimestampIndex === packet.lastUpdateTimestampIndex) {
       this.abgp.emit(EventTypes.STATE_SYNCED, packet.publicKey);
       return null;
     }
-
-    if (this.abgp.getStateRoot() === packet.root && this.abgp.nodes.get(packet.publicKey).dataUpdateTimestamp !== packet.dataUpdateTimestamp) {
-      this.abgp.nodes.get(packet.publicKey).dataUpdateTimestamp = packet.dataUpdateTimestamp;
-
-      if (this.abgp.dataUpdateTimestamp < packet.dataUpdateTimestamp) {
-        this.abgp.dataUpdateTimestamp = packet.dataUpdateTimestamp;
-      }
-
-      this.abgp.emit(EventTypes.STATE_SYNCED, packet.publicKey);
-      return null;
-    }
-
-    if (packet.dataUpdateTimestamp === this.abgp.nodes.get(packet.publicKey).dataUpdateTimestamp) {
-      return null;
-    }
-
-    this.abgp.nodes.get(packet.publicKey).nextDataUpdateTimestamp = packet.dataUpdateTimestamp;
-    return this.messageApi.packet(MessageTypes.STATE_REQ, {
-      leave: packet.root
-    });
-  }
-
-  public stateRequest(packet: PacketModel) {
-    const layers = this.abgp.getLayers();
-    return this.messageApi.packet(MessageTypes.STATE_REP, {
-      layers
-    });
-  }
-
-  public stateResponse(packet: PacketModel) {
-    const layers = packet.data.layers[0];
-    const localLayers = this.abgp.getLayers()[0];
-
-    const unknownLayers = layers.filter((layer) => !localLayers.includes(layer));
 
     return this.messageApi.packet(MessageTypes.DATA_REQ, {
-      layers: unknownLayers
+      lastUpdateTimestamp: peerNode.lastUpdateTimestamp,
+      lastUpdateTimestampIndex: peerNode.lastUpdateTimestampIndex
     });
   }
 
   public dataRequest(packet: PacketModel) {
-    const layers = packet.data.layers;
-    const data: DbItem[] = [];
+    const publicKeys = [...this.abgp.publicKeys.keys()];
 
-    for (const layer of layers) {
-      if (!this.abgp.state.has(layer)) {
-        continue;
-      }
-      const stateItem = this.abgp.state.get(layer);
-      const dbHash = this.abgp.hashData(`${stateItem.key}:${stateItem.value}:${stateItem.version}`);
-      const dbItem = this.abgp.db.get(`0x${dbHash}`);
-      data.push(dbItem.toPlainObject([...this.abgp.publicKeys.keys()]) as any);
-    }
+    const data = [...this.abgp.db.values()]
+      .filter(v=>
+        v.timestamp > packet.data.lastUpdateTimestamp ||
+        (v.timestamp === packet.data.lastUpdateTimestamp && v.timestampIndex > packet.data.lastUpdateTimestampIndex)
+      )
+     // .slice(0, this.abgp.batchReplicationSize) todo
+      .map(v=> v.toPlainObject(publicKeys));
 
     return this.messageApi.packet(MessageTypes.DATA_REP, {
       data
@@ -115,20 +83,16 @@ class NodeApi {
   }
 
   public dataResponse(packet: PacketModel) {
-
-    if (packet.dataUpdateTimestamp < this.abgp.nodes.get(packet.publicKey).nextDataUpdateTimestamp) {
-      return null;
-    }
-
-    const data: DbItem[] = packet.data.data;
+    const peerNode = this.abgp.nodes.get(packet.publicKey);
+    const data: DbItem[] = packet.data.data
+      .sort((a, b) =>
+        (a.timestamp > b.timestamp ||
+          (a.timestamp === b.timestamp && a.timestampIndex > b.timestampIndex)
+        ) ? 1 : -1
+      );
 
     for (const item of data) {
-      this.abgp.remoteAppend(DbItem.fromPlainObject(item));
-    }
-
-    this.abgp.nodes.get(packet.publicKey).dataUpdateTimestamp = this.abgp.nodes.get(packet.publicKey).nextDataUpdateTimestamp;
-    if (this.abgp.dataUpdateTimestamp < this.abgp.nodes.get(packet.publicKey).nextDataUpdateTimestamp) {
-      this.abgp.dataUpdateTimestamp = this.abgp.nodes.get(packet.publicKey).nextDataUpdateTimestamp;
+      this.abgp.remoteAppend(DbItem.fromPlainObject(item), peerNode);
     }
   }
 

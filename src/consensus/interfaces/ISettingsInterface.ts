@@ -9,6 +9,7 @@ export interface ISettingsInterface {
   };
   publicKeys?: string[];
   sendSignalToRandomPeer: boolean;
+  batchReplicationSize?: number;
   reqMiddleware?: (packet: PacketModel) => Promise<PacketModel>;
   resMiddleware?: (packet: PacketModel, peerPublicKey: string) => Promise<PacketModel>;
   logger: {

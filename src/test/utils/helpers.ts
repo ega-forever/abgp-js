@@ -54,14 +54,10 @@ export const syncNodesBetweenEachOther = async (nodes: ABGP[]) => {
           continue;
         }
         // @ts-ignore
-        const node1StateRequest: PacketModel = await node1.requestProcessorService.process(node2ValidateState);
-        if (!node1StateRequest) {
+        const node1DataRequest: PacketModel = await node1.requestProcessorService.process(node2ValidateState);
+        if (!node1DataRequest) {
           continue;
         }
-        // @ts-ignore
-        const node2StateResponse: PacketModel = await node2.requestProcessorService.process(node1StateRequest);
-        // @ts-ignore
-        const node1DataRequest: PacketModel = await node1.requestProcessorService.process(node2StateResponse);
         // @ts-ignore
         await node2.requestProcessorService.process(node1DataRequest);
       }
@@ -72,14 +68,6 @@ export const syncNodesBetweenEachOther = async (nodes: ABGP[]) => {
 export const getUniqueRoots = (nodes: ABGP[]) => {
   const roots = nodes.map((node) => node.getStateRoot());
   return Object.keys(roots.reduce((acc, cur) => {
-    acc[cur] = 1;
-    return acc;
-  }, {} as any));
-};
-
-export const getUniqueTimestamps = (nodes: ABGP[]) => {
-  const timestamps = nodes.map((node) => node.dataUpdateTimestamp);
-  return Object.keys(timestamps.reduce((acc, cur) => {
     acc[cur] = 1;
     return acc;
   }, {} as any));
@@ -114,7 +102,7 @@ export const awaitNodesSynced = async (nodes: any[], keys: any[]) => {
         });
 
         const uniqueRoots = Object.keys([...stateReplyMapInitialNodes.values()].reduce((acc, cur) => {
-          acc[cur ? cur.stateRoot : '0x'] = 1;
+          acc[cur ? cur.stateRoot : '0'] = 1;
           return acc;
         }, {} as any));
 

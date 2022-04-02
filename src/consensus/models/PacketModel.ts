@@ -4,20 +4,23 @@ class PacketModel {
   public publicKey: string;
   public type: number;
   public data: any;
-  public dataUpdateTimestamp: number;
+  public lastUpdateTimestamp: number;
+  public lastUpdateTimestampIndex: number;
   public timestamp: number;
 
   constructor(
     root: string,
     publicKey: string,
     type: number,
-    dataUpdateTimestamp: number,
+    lastUpdateTimestamp: number,
+    lastUpdateTimestampIndex: number,
     data: any = null
-    ) {
+  ) {
     this.root = root;
     this.type = type;
     this.publicKey = publicKey;
-    this.dataUpdateTimestamp = dataUpdateTimestamp;
+    this.lastUpdateTimestamp = lastUpdateTimestamp;
+    this.lastUpdateTimestampIndex = lastUpdateTimestampIndex;
     this.data = data;
     this.timestamp = Date.now();
   }
