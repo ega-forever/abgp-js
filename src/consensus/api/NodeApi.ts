@@ -74,7 +74,12 @@ class NodeApi {
         v.timestamp > packet.data.lastUpdateTimestamp ||
         (v.timestamp === packet.data.lastUpdateTimestamp && v.timestampIndex > packet.data.lastUpdateTimestampIndex)
       )
-     // .slice(0, this.abgp.batchReplicationSize) todo
+      .sort((a, b) =>
+        (a.timestamp > b.timestamp ||
+          (a.timestamp === b.timestamp && a.timestampIndex > b.timestampIndex)
+        ) ? 1 : -1
+      )
+      .slice(0, this.abgp.batchReplicationSize)
       .map(v=> v.toPlainObject(publicKeys));
 
     return this.messageApi.packet(MessageTypes.DATA_REP, {

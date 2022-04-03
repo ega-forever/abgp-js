@@ -2,9 +2,7 @@ import Promise from 'bluebird';
 import bunyan from 'bunyan';
 import { expect } from 'chai';
 import crypto from 'crypto';
-import MessageTypes from '../../consensus/constants/MessageTypes';
 import { ABGP } from '../../consensus/main';
-import { PacketModel } from '../../consensus/models/PacketModel';
 import { generateRandomRecords, getUniqueRoots, syncNodesBetweenEachOther } from '../utils/helpers';
 
 export function testSuite(ctx: any = {}, nodesCount: number) {
@@ -49,38 +47,13 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
 
     const nodesWithRecords: ABGP[] = ctx.nodes.slice(0, 2);
 
+    let totalRecordsGenerated = 0;
+
     for (const node of nodesWithRecords) {
-      generateRandomRecords(node);
+      totalRecordsGenerated += generateRandomRecords(node);
     }
 
-    for (let i = 0; i < ctx.nodes.length; i++) {
-      for (let s = 0; s < ctx.nodes.length; s++) {
-        if (i === s) {
-          continue;
-        }
-
-        const node1: ABGP = ctx.nodes[i];
-        const node2: ABGP = ctx.nodes[s];
-
-        const node1PacketAck = node1.messageApi.packet(MessageTypes.ACK);
-        // @ts-ignore
-        const node2ValidateState: PacketModel = await node2.requestProcessorService.process(node1PacketAck);
-        expect(node2ValidateState.type).to.eq(MessageTypes.DATA_REQ);
-
-        // @ts-ignore
-        const node1DataRequest: PacketModel = await node1.requestProcessorService.process(node2ValidateState);
-
-        // @ts-ignore
-        await node2.requestProcessorService.process(node1DataRequest);
-
-        // @ts-ignore
-        const node2ValidateStateAfterApply = await node2.requestProcessorService.process(node1PacketAck);
-
-        expect(node2ValidateStateAfterApply).to.eq(null);
-      }
-    }
-
-    await syncNodesBetweenEachOther(ctx.nodes);
+    await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
 
     const rootReduces = getUniqueRoots(ctx.nodes);
     expect(rootReduces.length).to.eq(1);
@@ -92,37 +65,13 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
     const nodesMajority: ABGP[] = ctx.nodes.slice(0, majority);
     const nodesMinor: ABGP[] = ctx.nodes.slice(majority);
 
+    let totalRecordsGenerated = 0;
+
     for (const node of nodesMajority) {
-      generateRandomRecords(node);
+      totalRecordsGenerated += generateRandomRecords(node);
     }
 
-    for (let i = 0; i < ctx.nodes.length; i++) {
-      for (let s = 0; s < ctx.nodes.length; s++) {
-        if (i === s) {
-          continue;
-        }
-
-        const node1: ABGP = ctx.nodes[i];
-        const node2: ABGP = ctx.nodes[s];
-
-        const node1PacketAck = node1.messageApi.packet(MessageTypes.ACK);
-        // @ts-ignore
-        const node2ValidateState: PacketModel = await node2.requestProcessorService.process(node1PacketAck);
-        if (!node2ValidateState) {
-          continue;
-        }
-        // @ts-ignore
-        const node1DataRequest: PacketModel = await node1.requestProcessorService.process(node2ValidateState);
-        // @ts-ignore
-        await node2.requestProcessorService.process(node1DataRequest);
-
-        // @ts-ignore
-        const node2ValidateStateAfterApply = await node2.requestProcessorService.process(node1PacketAck);
-        expect(node2ValidateStateAfterApply).to.eq(null);
-      }
-    }
-
-    await syncNodesBetweenEachOther(ctx.nodes);
+    await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
 
     for (const node of nodesMinor) {
       node.lastUpdateTimestamp = 0;
@@ -140,7 +89,7 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
       node.rebuildTree();
     }
 
-    await syncNodesBetweenEachOther(ctx.nodes);
+    await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
 
     const rootReduces = getUniqueRoots(ctx.nodes);
     expect(rootReduces.length).to.eq(1);
@@ -152,8 +101,10 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
     const nodesMajority: ABGP[] = ctx.nodes.slice(0, majority);
     const nodesFail: ABGP[] = ctx.nodes.slice(majority);
 
+    let totalRecordsGenerated = 0;
+
     for (const node of nodesMajority) {
-      generateRandomRecords(node);
+      totalRecordsGenerated += generateRandomRecords(node);
     }
 
     for (const node of nodesFail) {
@@ -169,7 +120,7 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
       generateRandomRecords(node);
     }
 
-    await syncNodesBetweenEachOther(ctx.nodes);
+    await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
 
     const rootReduces = getUniqueRoots(ctx.nodes);
     expect(rootReduces.length).to.eq(nodesFail.length + 1);
@@ -181,8 +132,10 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
     const nodesMajority: ABGP[] = ctx.nodes.slice(0, majority);
     const nodesFail: ABGP[] = ctx.nodes.slice(majority);
 
+    let totalRecordsGenerated = 0;
+
     for (const node of nodesMajority) {
-      generateRandomRecords(node);
+      totalRecordsGenerated += generateRandomRecords(node);
     }
 
     for (const node of nodesFail) {
@@ -192,10 +145,10 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
       // @ts-ignore
       node.privateKey = c.getPrivateKey().toString('hex');
 
-      generateRandomRecords(node);
+      totalRecordsGenerated += generateRandomRecords(node);
     }
 
-    await syncNodesBetweenEachOther(ctx.nodes);
+    await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
 
     const rootReduces = getUniqueRoots(ctx.nodes);
     expect(rootReduces.length).to.eq(nodesFail.length + 1);

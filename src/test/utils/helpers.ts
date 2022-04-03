@@ -16,6 +16,8 @@ export const generateRandomRecords = (node: ABGP, amount?: number) => {
     };
     node.append(record.key, record.key, record.version);
   }
+
+  return amount;
 };
 
 export const generateRandomRecordsWorker = (node: any, amount?: number) => {
@@ -36,8 +38,8 @@ export const generateRandomRecordsWorker = (node: any, amount?: number) => {
   return amount;
 };
 
-export const syncNodesBetweenEachOther = async (nodes: ABGP[]) => {
-  for (let n = 0; n < nodes.length * nodes.length; n++) {
+export const syncNodesBetweenEachOther = async (nodes: ABGP[], totalGeneratedRecords: number, batchSize: number) => {
+  for (let n = 0; n < nodes.length * nodes.length * Math.round(totalGeneratedRecords / batchSize); n++) {
     for (let i = 0; i < nodes.length; i++) {
       for (let s = 0; s < nodes.length; s++) {
         if (i === s) {
