@@ -3,7 +3,13 @@ import bunyan from 'bunyan';
 import { expect } from 'chai';
 import crypto from 'crypto';
 import { ABGP } from '../../consensus/main';
-import { generateRandomRecords, getUniqueRoots, syncNodesBetweenEachOther } from '../utils/helpers';
+import {
+  areNotUniqueHashes,
+  generateRandomRecords,
+  getUniqueDbItemsCount,
+  getUniqueRoots,
+  syncNodesBetweenEachOther
+} from '../utils/helpers';
 
 export function testSuite(ctx: any = {}, nodesCount: number) {
 
@@ -50,13 +56,20 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
     let totalRecordsGenerated = 0;
 
     for (const node of nodesWithRecords) {
-      totalRecordsGenerated += generateRandomRecords(node);
+      totalRecordsGenerated += generateRandomRecords(node).amount;
     }
 
     await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
 
+
+    const uniqueDbItemsCount = getUniqueDbItemsCount(ctx.nodes);
+    expect(Object.keys(uniqueDbItemsCount).length).to.eq(0);
+
     const rootReduces = getUniqueRoots(ctx.nodes);
     expect(rootReduces.length).to.eq(1);
+
+    const checkAllHashesAreSimilar = areNotUniqueHashes(ctx.nodes);
+    expect(checkAllHashesAreSimilar).to.eq(false);
   });
 
   it(`should sync after drop (f, in N = 2f + 1)`, async () => {
@@ -68,7 +81,7 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
     let totalRecordsGenerated = 0;
 
     for (const node of nodesMajority) {
-      totalRecordsGenerated += generateRandomRecords(node);
+      totalRecordsGenerated += generateRandomRecords(node).amount;
     }
 
     await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
@@ -86,7 +99,7 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
         peerNode.lastUpdateTimestampIndex = 0;
       }
 
-      node.rebuildTree();
+      node.stateRoot = '0';
     }
 
     await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
@@ -101,10 +114,14 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
     const nodesMajority: ABGP[] = ctx.nodes.slice(0, majority);
     const nodesFail: ABGP[] = ctx.nodes.slice(majority);
 
-    let totalRecordsGenerated = 0;
+    let totalRecordsGeneratedAmount = 0;
+    const hashes = [];
+    const failHashes = [];
 
     for (const node of nodesMajority) {
-      totalRecordsGenerated += generateRandomRecords(node);
+      const generated = generateRandomRecords(node);
+      totalRecordsGeneratedAmount += generated.amount;
+      hashes.push(...generated.hashes);
     }
 
     for (const node of nodesFail) {
@@ -112,18 +129,30 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
       c.generateKeys();
 
       // @ts-ignore
-      node.privateKey = c.getPrivateKey().toString('hex');
+      node['privateKey'] = c.getPrivateKey().toString('hex');
 
       // @ts-ignore
-      node.publicKey = c.getPublicKey('hex', 'compressed');
+      node['publicKey'] = c.getPublicKey('hex', 'compressed');
 
       generateRandomRecords(node);
     }
 
-    await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
+    await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGeneratedAmount, 10);
 
-    const rootReduces = getUniqueRoots(ctx.nodes);
-    expect(rootReduces.length).to.eq(nodesFail.length + 1);
+
+    for (const node of nodesMajority) {
+      for (const hash of failHashes) {
+        const failedRecord = node.db.get(hash);
+        expect(failedRecord).to.eq(undefined);
+      }
+      for (const hash of hashes) {
+        const record = node.db.get(hash);
+        expect(record).to.not.eq(undefined);
+      }
+    }
+
+    const rootReduces = getUniqueRoots(nodesMajority);
+    expect(rootReduces.length).to.eq(1);
   });
 
   it(`should fail to sync fake state with fake private key and real public key (f, in N = 2f + 1)`, async () => {
@@ -132,10 +161,14 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
     const nodesMajority: ABGP[] = ctx.nodes.slice(0, majority);
     const nodesFail: ABGP[] = ctx.nodes.slice(majority);
 
-    let totalRecordsGenerated = 0;
+    let totalRecordsGeneratedAmount = 0;
+    const hashes = [];
+    const failHashes = [];
 
     for (const node of nodesMajority) {
-      totalRecordsGenerated += generateRandomRecords(node);
+      const generated = generateRandomRecords(node);
+      totalRecordsGeneratedAmount += generated.amount;
+      hashes.push(...generated.hashes);
     }
 
     for (const node of nodesFail) {
@@ -143,15 +176,28 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
       c.generateKeys();
 
       // @ts-ignore
-      node.privateKey = c.getPrivateKey().toString('hex');
+      node['privateKey'] = c.getPrivateKey().toString('hex');
 
-      totalRecordsGenerated += generateRandomRecords(node);
+      const generated = generateRandomRecords(node);
+      totalRecordsGeneratedAmount += generated.amount;
+      failHashes.push(...generated.hashes);
     }
 
-    await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
+    await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGeneratedAmount, 10);
+
+    for (const node of nodesMajority) {
+      for (const hash of failHashes) {
+        const failedRecord = node.db.get(hash);
+        expect(failedRecord).to.eq(undefined);
+      }
+      for (const hash of hashes) {
+        const record = node.db.get(hash);
+        expect(record).to.not.eq(undefined);
+      }
+    }
 
     const rootReduces = getUniqueRoots(ctx.nodes);
-    expect(rootReduces.length).to.eq(nodesFail.length + 1);
+    expect(rootReduces.length).to.eq(1);
   });
 
   afterEach(async () => {

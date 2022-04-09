@@ -8,16 +8,19 @@ export const generateRandomRecords = (node: ABGP, amount?: number) => {
     amount = 7 + Math.ceil((15 - 7) * Math.random());
   }
 
+  const hashes = [];
+
   for (let i = 0; i < amount; i++) {
     const record = {
       key: Math.random().toString(16).substr(2) + i,
       value: Math.random().toString(16).substr(2) + i,
       version: 1
     };
-    node.append(record.key, record.key, record.version);
+    const hash = node.append(record.key, record.key, record.version);
+    hashes.push(hash);
   }
 
-  return amount;
+  return { amount, hashes };
 };
 
 export const generateRandomRecordsWorker = (node: any, amount?: number) => {
@@ -32,7 +35,7 @@ export const generateRandomRecordsWorker = (node: any, amount?: number) => {
       value: Math.random().toString(16).substr(2) + i,
       version: 1
     };
-    node.send({type: 'append', args: [record.key, record.key, record.version]});
+    node.send({ type: 'append', args: [record.key, record.key, record.version] });
   }
 
   return amount;
@@ -50,11 +53,13 @@ export const syncNodesBetweenEachOther = async (nodes: ABGP[], totalGeneratedRec
         const node2: ABGP = nodes[s];
 
         const node1PacketAck = node1.messageApi.packet(MessageTypes.ACK);
+
         // @ts-ignore
         const node2ValidateState: PacketModel = await node2.requestProcessorService.process(node1PacketAck);
         if (!node2ValidateState) {
           continue;
         }
+
         // @ts-ignore
         const node1DataRequest: PacketModel = await node1.requestProcessorService.process(node2ValidateState);
         if (!node1DataRequest) {
@@ -69,10 +74,42 @@ export const syncNodesBetweenEachOther = async (nodes: ABGP[], totalGeneratedRec
 
 export const getUniqueRoots = (nodes: ABGP[]) => {
   const roots = nodes.map((node) => node.getStateRoot());
-  return Object.keys(roots.reduce((acc, cur) => {
-    acc[cur] = 1;
-    return acc;
-  }, {} as any));
+  const rootSet = new Set<string>(roots);
+  return [...rootSet];
+};
+
+export const areNotUniqueHashes = (nodes: ABGP[]) => {
+  const keys: any = {};
+
+  for (const node of nodes) {
+    for (const key of node.db.keys()) {
+
+      if (!keys[key]) {
+        keys[key] = new Set<string>();
+      }
+      keys[key].add(node.db.get(key).stateHash);
+    }
+  }
+
+  return !!Object.values(keys).find((v: any) => v.size > 1);
+}
+
+export const getUniqueDbItemsCount = (nodes: ABGP[]) => {
+
+  let state = {};
+
+  for (const node of nodes) {
+    for (const item of node.db.values()) {
+      state[item.stateHash] = state[item.stateHash] ? state[item.stateHash] + 1 : 1;
+
+      if (state[item.stateHash] === nodes.length) {
+        delete state[item.stateHash];
+      }
+
+    }
+  }
+
+  return state;
 };
 
 export const awaitNodesSynced = async (nodes: any[], keys: any[]) => {
@@ -81,7 +118,7 @@ export const awaitNodesSynced = async (nodes: any[], keys: any[]) => {
     stateRoot: string,
     dataUpdateTimestamp: number,
     dbSize: number
-  }> = new Map<string, {stateRoot: string; dataUpdateTimestamp: number; dbSize: number}>();
+  }> = new Map<string, { stateRoot: string; dataUpdateTimestamp: number; dbSize: number }>();
 
   const promises: Array<Promise<any>> = [];
 

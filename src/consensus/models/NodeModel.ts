@@ -1,6 +1,5 @@
 import crypto from 'crypto';
 import { EventEmitter } from 'events';
-import { MerkleTree } from 'merkletreejs';
 import EventTypes from '../constants/EventTypes';
 import SignatureType from '../constants/SignatureType';
 import {
@@ -9,6 +8,10 @@ import {
   buildSharedSignature,
   partialSignatureVerify, verify
 } from '../utils/cryptoUtils';
+import BN from 'bn.js';
+import { ec as EC } from 'elliptic';
+
+const ec = new EC('secp256k1');
 
 
 export class DbItem { // todo remove state,but make data compaction
@@ -69,6 +72,11 @@ export class DbItem { // todo remove state,but make data compaction
     }
   }
 
+  public cloneObject(){
+    const obj = this.toPlainObject();
+    return DbItem.fromPlainObject(obj);
+  }
+
 }
 
 class NodeModel extends EventEmitter {
@@ -85,7 +93,7 @@ class NodeModel extends EventEmitter {
   public sendSignalToRandomPeer: boolean;
   public readonly privateKey: string;
   public readonly publicKey: string;
-  public merkleTree: MerkleTree;
+  public stateRoot: string;
   public lastUpdateTimestamp: number;
   public lastUpdateTimestampIndex: number;
 
@@ -102,10 +110,10 @@ class NodeModel extends EventEmitter {
     this.privateKey = privateKey;
     this.publicKey = multiaddr.match(/\w+$/).toString();
     this.nodeAddress = multiaddr.split(/\w+$/)[0].replace(/\/$/, '');
-    this.merkleTree = new MerkleTree([], this.hashData);
     this.db = new Map<string, DbItem>();
     this.lastUpdateTimestamp = 0;
     this.lastUpdateTimestampIndex = 0;
+    this.stateRoot = '0';
     this.publicKeys = new Set<string>();
   }
 
@@ -119,8 +127,22 @@ class NodeModel extends EventEmitter {
     return Math.floor(this.publicKeys.size / 2) + 1;
   }
 
+  private getDbItem(hash: string){
+    const item = this.db.get(hash);
+
+    if(!item){
+      return null;
+    }
+
+    return item.cloneObject();
+  }
+
+  private setDbItem(dbItem: DbItem){
+    this.db.set(dbItem.hash, dbItem);
+  }
+
   public getStateRoot() {
-    return this.merkleTree.getHexRoot();
+    return this.stateRoot;
   }
 
   public append(key: string, value: string, version: number = 1) {
@@ -157,6 +179,7 @@ class NodeModel extends EventEmitter {
 
     this.saveItem(dbItem);
     this.emit(EventTypes.STATE_UPDATE);
+    return hash;
   }
 
   public remoteAppend(remoteItem: DbItem, peerNode: NodeModel) {
@@ -215,7 +238,7 @@ class NodeModel extends EventEmitter {
     const timestampIndex = [...this.db.values()].filter(v => v.timestamp === timestamp).length;
 
     /** object is mutated here, so no need to save it to map **/
-    let dbItem: DbItem = this.db.get(hash);
+    let dbItem: DbItem = this.getDbItem(hash);
 
     if (dbItem && dbItem.signatureType === SignatureType.MULTISIG && remoteItem.signatureType === SignatureType.INTERMEDIATE) {
       return null;
@@ -331,24 +354,27 @@ class NodeModel extends EventEmitter {
   }
 
   private saveItem(item: DbItem, peerNode?: NodeModel, peerTimestamp?: number, peerTimestampIndex?: number) {
-    this.db.set(item.hash, item);
+    const prevItem = this.getDbItem(item.hash);
+
+    this.setDbItem(item);
     this.lastUpdateTimestamp = item.timestamp;
     this.lastUpdateTimestampIndex = item.timestampIndex;
-    this.rebuildTree();
 
     if (peerNode) {
       this.updatePeerNodeLastTimestamp(peerNode, peerTimestamp, peerTimestampIndex);
+    }
+
+    if (
+      item.signatureType === SignatureType.MULTISIG &&
+      ((prevItem && prevItem.signatureType === SignatureType.INTERMEDIATE) || !prevItem)
+    ) {
+      this.stateRoot = new BN(this.stateRoot, 16).add(new BN(item.stateHash, 16)).mod(ec.n).toString(16);
     }
   }
 
   private updatePeerNodeLastTimestamp(peerNode?: NodeModel, peerTimestamp?: number, peerTimestampIndex?: number) {
     peerNode.lastUpdateTimestamp = peerTimestamp;
     peerNode.lastUpdateTimestampIndex = peerTimestampIndex;
-  }
-
-  public rebuildTree() {
-    const stateHashes = [...this.db.values()].map(v => v.stateHash).sort();
-    this.merkleTree = new MerkleTree(stateHashes, this.hashData);
   }
 
   public write(address: string, packet: Buffer): void {
