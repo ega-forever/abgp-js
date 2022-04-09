@@ -33,8 +33,8 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
       const instance = new ABGP({
         address: ctx.keys[index].publicKey,
         gossipInterval: {
-          min: 500,
-          max: 1000
+          min: 150,
+          max: 300
         },
         sendSignalToRandomPeer: false,
         logger: bunyan.createLogger({ name: 'abgp.logger', level: 60 }),

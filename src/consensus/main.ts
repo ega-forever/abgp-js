@@ -39,6 +39,8 @@ export default class ABGP extends NodeModel {
       trace: console.log
     };
 
+    this.majorityAmount = options.majorityAmount;
+
     this.reqMiddleware = options.reqMiddleware ? options.reqMiddleware :
       async (packet: PacketModel) => packet;
 
@@ -55,12 +57,6 @@ export default class ABGP extends NodeModel {
       }
     }
     this.publicKeys.add(this.publicKey);
-  }
-
-  public quorum(responses: number) { // todo maybe remove?
-    if (!this.nodes.size || !responses) return false;
-
-    return responses >= this.majority();
   }
 
   public connect(): void {

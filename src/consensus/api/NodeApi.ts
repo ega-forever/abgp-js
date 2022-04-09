@@ -50,7 +50,8 @@ export default class NodeApi {
   public validateState(packet: PacketModel) {
     const peerNode = this.abgp.nodes.get(packet.publicKey);
 
-    if ( // todo add validation by state hash
+    if (
+      peerNode.getStateRoot() === packet.root &&
       peerNode.lastUpdateTimestamp === packet.lastUpdateTimestamp &&
       peerNode.lastUpdateTimestampIndex === packet.lastUpdateTimestampIndex) {
       this.abgp.emit(EventTypes.STATE_SYNCED, packet.publicKey);
@@ -91,7 +92,7 @@ export default class NodeApi {
         ) ? 1 : -1));
 
     for (const item of data) {
-      this.abgp.remoteAppend(DbItem.fromPlainObject(item), peerNode);
+      this.abgp.remoteAppend(DbItem.fromPlainObject(item), peerNode, packet.root);
     }
   }
 }

@@ -5,6 +5,30 @@ import crypto from 'crypto';
 import * as path from 'path';
 import { awaitNodesSynced, generateRandomRecordsWorker } from '../../utils/helpers';
 
+const runInstance = (index: number, keys: any, settings: any, implementationType: any, connectionLinkMap: any) => {
+  const implementationTypes = {
+    RPC: 'ABGPRPCWorker.ts',
+    TCP: 'ABGPTCPWorker.ts'
+  };
+
+  const instance = fork(path.join(__dirname, `../workers/${implementationTypes[implementationType]}`), [], {
+    execArgv: ['-r', 'ts-node/register']
+  });
+  instance.send({
+    args: [
+      {
+        index,
+        keys,
+        settings,
+        links: connectionLinkMap ? connectionLinkMap.get(index) : null
+      }
+    ],
+    type: 'init'
+  });
+
+  return instance;
+};
+
 export default function testSuite(ctx: any = {}, nodesCount: number = 0, implementationType: string = 'TCP', sendSignalToRandomPeer: boolean = true, connectionLinkMap: Map<number, number[]> = null) {
   beforeEach(async () => {
     const instances: any = [];
@@ -12,8 +36,8 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 0, impleme
     ctx.keys = [];
     ctx.settings = {
       gossipInterval: {
-        min: 300,
-        max: 1000
+        min: 150,
+        max: 300
       },
       sendSignalToRandomPeer
     };
@@ -33,27 +57,9 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 0, impleme
       });
     }
 
-    const implementationTypes = {
-      RPC: 'ABGPRPCWorker.ts',
-      TCP: 'ABGPTCPWorker.ts'
-    };
-
     for (let index = 0; index < ctx.keys.length; index++) {
-      const instance = fork(path.join(__dirname, `../workers/${implementationTypes[implementationType]}`), [], {
-        execArgv: ['-r', 'ts-node/register']
-      });
+      const instance = runInstance(index, ctx.keys, ctx.settings, implementationType, connectionLinkMap);
       instances.push(instance);
-      instance.send({
-        args: [
-          {
-            index,
-            keys: ctx.keys,
-            settings: ctx.settings,
-            links: connectionLinkMap ? connectionLinkMap.get(index) : null
-          }
-        ],
-        type: 'init'
-      });
     }
 
     const kill = () => {
@@ -91,6 +97,38 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 0, impleme
     for (const instance of otherNodes) {
       instance.send({ type: 'connect' });
     }
+
+    const [resultsAllNodesOnline] = await awaitNodesSynced(ctx.instances, ctx.keys);
+    const dbSizeAllNodesOnline = resultsAllNodesOnline[2][0];
+
+    expect(parseInt(dbSizeAllNodesOnline, 10)).to.eq(totalGeneratedAmount);
+  });
+
+  it('should sync changes, after node dropped', async () => {
+    let totalGeneratedAmount = 0;
+
+    for (const instance of ctx.instances) {
+      instance.send({ type: 'connect' });
+      totalGeneratedAmount += generateRandomRecordsWorker(instance);
+    }
+
+    const [results] = await awaitNodesSynced(ctx.instances, ctx.keys);
+    const dbSize = results[2][0];
+
+    expect(parseInt(dbSize, 10)).to.eq(totalGeneratedAmount);
+
+    const dropIndex = ctx.instances.length - 1;
+    ctx.instances[dropIndex].kill();
+
+    ctx.instances[dropIndex] = runInstance(
+      dropIndex,
+      ctx.keys,
+      ctx.settings,
+      implementationType,
+      connectionLinkMap
+    );
+
+    ctx.instances[dropIndex].send({ type: 'connect' });
 
     const [resultsAllNodesOnline] = await awaitNodesSynced(ctx.instances, ctx.keys);
     const dbSizeAllNodesOnline = resultsAllNodesOnline[2][0];

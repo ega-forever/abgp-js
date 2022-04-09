@@ -118,6 +118,8 @@ class NodeModel extends EventEmitter {
 
   public readonly publicKeys: Set<string>;
 
+  public majorityAmount: number;
+
   public constructor(
     privateKey: string,
     multiaddr: string
@@ -139,8 +141,8 @@ class NodeModel extends EventEmitter {
       .digest('hex');
   }
 
-  public majority() { // todo majority should be set in config, and node links should be checked by majority
-    return Math.floor(this.publicKeys.size / 2) + 1;
+  public majority() {
+    return this.majorityAmount || Math.floor(this.publicKeys.size / 2) + 1;
   }
 
   private getDbItem(hash: string) {
@@ -197,7 +199,7 @@ class NodeModel extends EventEmitter {
     return hash;
   }
 
-  public remoteAppend(remoteItem: DbItem, peerNode: NodeModel) {
+  public remoteAppend(remoteItem: DbItem, peerNode: NodeModel, peerNodeRoot: string) {
     const hash = this.hashData(`${remoteItem.key}:${remoteItem.value}:${remoteItem.version}`);
 
     if (hash !== remoteItem.hash) {
@@ -263,7 +265,7 @@ class NodeModel extends EventEmitter {
       const remoteMultiSigPublicKey = [...remoteItem.signaturesMap.keys()][0];
 
       if (localMultiSigPublicKey === remoteMultiSigPublicKey || localMultiSigPublicKey > remoteMultiSigPublicKey) {
-        this.updatePeerNodeLastTimestamp(peerNode, remoteItem.timestamp, remoteItem.timestampIndex);
+        this.updatePeerNodeLastState(peerNode, peerNodeRoot, remoteItem.timestamp, remoteItem.timestampIndex);
         return null;
       }
 
@@ -276,7 +278,7 @@ class NodeModel extends EventEmitter {
       dbItem.timestamp = timestamp;
       dbItem.timestampIndex = timestampIndex;
 
-      this.saveItem(dbItem, peerNode, remoteItem.timestamp, remoteItem.timestampIndex);
+      this.saveItem(dbItem, peerNode, peerNodeRoot, remoteItem.timestamp, remoteItem.timestampIndex);
       this.emit(EventTypes.STATE_UPDATE);
       return null;
     }
@@ -308,7 +310,7 @@ class NodeModel extends EventEmitter {
         dbItem.signatureType = SignatureType.MULTISIG;
       }
 
-      this.saveItem(dbItem, peerNode, remoteItem.timestamp, remoteItem.timestampIndex);
+      this.saveItem(dbItem, peerNode, peerNodeRoot, remoteItem.timestamp, remoteItem.timestampIndex);
       this.emit(EventTypes.STATE_UPDATE);
       return null;
     }
@@ -361,11 +363,11 @@ class NodeModel extends EventEmitter {
       dbItem.stateHash = this.hashData(`${dbItem.hash}:${dbItem.value}:${dbItem.version}${totalPublicKeys + 1}`);
     }
 
-    this.saveItem(dbItem, peerNode, remoteItem.timestamp, remoteItem.timestampIndex);
+    this.saveItem(dbItem, peerNode, peerNodeRoot, remoteItem.timestamp, remoteItem.timestampIndex);
     this.emit(EventTypes.STATE_UPDATE);
   }
 
-  private saveItem(item: DbItem, peerNode?: NodeModel, peerTimestamp?: number, peerTimestampIndex?: number) {
+  private saveItem(item: DbItem, peerNode?: NodeModel, peerRoot?: string, peerTimestamp?: number, peerTimestampIndex?: number) {
     const prevItem = this.getDbItem(item.hash);
 
     this.setDbItem(item);
@@ -373,7 +375,7 @@ class NodeModel extends EventEmitter {
     this.lastUpdateTimestampIndex = item.timestampIndex;
 
     if (peerNode) {
-      this.updatePeerNodeLastTimestamp(peerNode, peerTimestamp, peerTimestampIndex);
+      this.updatePeerNodeLastState(peerNode, peerRoot, peerTimestamp, peerTimestampIndex);
     }
 
     if (
@@ -384,7 +386,9 @@ class NodeModel extends EventEmitter {
     }
   }
 
-  private updatePeerNodeLastTimestamp(peerNode?: NodeModel, peerTimestamp?: number, peerTimestampIndex?: number) {
+  private updatePeerNodeLastState(peerNode?: NodeModel, peerRoot?: string, peerTimestamp?: number, peerTimestampIndex?: number) {
+    // eslint-disable-next-line no-param-reassign
+    peerNode.stateRoot = peerRoot;
     // eslint-disable-next-line no-param-reassign
     peerNode.lastUpdateTimestamp = peerTimestamp;
     // eslint-disable-next-line no-param-reassign
