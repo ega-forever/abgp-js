@@ -1,20 +1,27 @@
-import { MessageApi } from './api/MessageApi';
-import { NodeApi } from './api/NodeApi';
-import { GossipController } from './controllers/GossipController';
+import MessageApi from './api/MessageApi';
+import NodeApi from './api/NodeApi';
+import GossipController from './controllers/GossipController';
 import { ILoggerInterface } from './interfaces/ILoggerInterface';
 import { ISettingsInterface } from './interfaces/ISettingsInterface';
 import { NodeModel } from './models/NodeModel';
-import { PacketModel } from './models/PacketModel';
-import { RequestProcessorService } from './services/RequestProcessorService';
+import PacketModel from './models/PacketModel';
+import RequestProcessorService from './services/RequestProcessorService';
 
-class ABGP extends NodeModel {
-
+export default class ABGP extends NodeModel {
   public readonly nodeApi: NodeApi;
+
   public readonly messageApi: MessageApi;
+
   public readonly gossipCtrl: GossipController;
+
+  // eslint-disable-next-line no-unused-vars
   public readonly reqMiddleware: (packet: PacketModel) => Promise<PacketModel>;
+
+  // eslint-disable-next-line no-unused-vars
   public readonly resMiddleware: (packet: PacketModel, peerPublicKey: string) => Promise<PacketModel>;
+
   public readonly logger: ILoggerInterface;
+
   private readonly requestProcessorService: RequestProcessorService;
 
   constructor(options: ISettingsInterface) {
@@ -24,11 +31,11 @@ class ABGP extends NodeModel {
     this.sendSignalToRandomPeer = options.sendSignalToRandomPeer;
     this.batchReplicationSize = options.batchReplicationSize || 10;
     this.logger = options.logger || {
-      // tslint:disable-next-line
+      // eslint-disable-next-line no-console
       error: console.log,
-      // tslint:disable-next-line
+      // eslint-disable-next-line no-console
       info: console.log,
-      // tslint:disable-next-line
+      // eslint-disable-next-line no-console
       trace: console.log
     };
 
@@ -50,7 +57,7 @@ class ABGP extends NodeModel {
     this.publicKeys.add(this.publicKey);
   }
 
-  public quorum(responses: number) { //todo maybe remove?
+  public quorum(responses: number) { // todo maybe remove?
     if (!this.nodes.size || !responses) return false;
 
     return responses >= this.majority();
@@ -72,7 +79,4 @@ class ABGP extends NodeModel {
       await this.messageApi.message(reply, parsedPacket.publicKey);
     }
   }
-
 }
-
-export { ABGP };

@@ -1,11 +1,16 @@
-class PacketModel {
-
+export default class PacketModel {
   public root: string;
+
   public publicKey: string;
+
   public type: number;
+
   public data: any;
+
   public lastUpdateTimestamp: number;
+
   public lastUpdateTimestampIndex: number;
+
   public timestamp: number;
 
   constructor(
@@ -24,7 +29,4 @@ class PacketModel {
     this.data = data;
     this.timestamp = Date.now();
   }
-
 }
-
-export { PacketModel };

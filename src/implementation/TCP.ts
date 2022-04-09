@@ -1,8 +1,8 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import msg from 'axon';
-import {ABGP} from '../consensus/main';
+import ABGP from '../consensus/main';
 
 class TCPABGP extends ABGP {
-
   private sockets: Map<string, any> = new Map<string, any>();
 
   public initialize() {
@@ -28,7 +28,6 @@ class TCPABGP extends ABGP {
    * @api private
    */
   public async write(address: string, packet: Buffer): Promise<void> {
-
     if (!this.sockets.has(address)) {
       this.sockets.set(address, msg.socket('pub-emitter'));
 
@@ -49,7 +48,6 @@ class TCPABGP extends ABGP {
     this.initialize();
     await super.connect();
   }
-
 }
 
 export default TCPABGP;

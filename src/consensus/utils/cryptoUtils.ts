@@ -1,15 +1,19 @@
 // tslint:disable:variable-name
 import BN from 'bn.js';
 import { ec as EC } from 'elliptic';
-import { MerkleTree } from 'merkletreejs';
 
 const ec = new EC('secp256k1');
 
-export const buildPublicKeysRoot = (
-  publicKeys: string[]
-) => {
-  const merkleTree = new MerkleTree(publicKeys);
-  return merkleTree.getHexRoot();
+export const pubKeyToPoint = (pubKey) => {
+  const pubKeyEven = (pubKey[0] - 0x02) === 0;
+  return ec.curve.pointFromX(pubKey.slice(1, 33).toString('hex'), !pubKeyEven);
+};
+
+export const pointToPublicKey = (P): Buffer => {
+  const buffer = Buffer.allocUnsafe(1);
+  // keep sign, if is odd
+  buffer.writeUInt8(P.getY().isEven() ? 0x02 : 0x03, 0);
+  return Buffer.concat([buffer, P.getX().toArrayLike(Buffer)]);
 };
 
 /* X = X1 * a1 + X2 * a2 + ..Xn * an */
@@ -32,19 +36,17 @@ export const buildSharedPublicKeyX = (
 export const buildPartialSignature = (
   privateKeyK: string,
   dataHash: string
-): string => {
-  return new BN(privateKeyK, 16)
-    .mul(new BN(dataHash, 16))
-    .mod(ec.n)
-    .toString(16);
-};
+): string => new BN(privateKeyK, 16)
+  .mul(new BN(dataHash, 16))
+  .mod(ec.n)
+  .toString(16);
 
 /* let s1 * G = k1 * a1 * e * G = k1 * a1 * G * e = X1 * a1 * e */
 export const partialSignatureVerify = (
   partialSignature: string,
   publicKey: string,
-  hash: string): boolean => {
-
+  hash: string
+): boolean => {
   const spG = ec.g.mul(partialSignature);
   const check = pubKeyToPoint(Buffer.from(publicKey, 'hex')).mul(hash);
   return pointToPublicKey(spG).toString('hex') === pointToPublicKey(check).toString('hex');
@@ -64,21 +66,9 @@ export const buildSharedSignature = (partialSignatures: string[]): string => {
 /* sG = X * e */
 export const verify = (
   signature: string,
-  sharedPublicKeyX: string): boolean => {
-
+  sharedPublicKeyX: string
+): boolean => {
   const sg = ec.g.mul(signature);
   const check = pubKeyToPoint(Buffer.from(sharedPublicKeyX, 'hex'));
   return pointToPublicKey(sg).toString('hex') === pointToPublicKey(check).toString('hex');
-};
-
-export const pubKeyToPoint = (pubKey) => {
-  const pubKeyEven = (pubKey[0] - 0x02) === 0;
-  return ec.curve.pointFromX(pubKey.slice(1, 33).toString('hex'), !pubKeyEven);
-};
-
-export const pointToPublicKey = (P): Buffer => {
-  const buffer = Buffer.allocUnsafe(1);
-  // keep sign, if is odd
-  buffer.writeUInt8(P.getY().isEven() ? 0x02 : 0x03, 0);
-  return Buffer.concat([buffer, P.getX().toArrayLike(Buffer)]);
 };

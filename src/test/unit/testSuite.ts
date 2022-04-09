@@ -1,8 +1,11 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Promise from 'bluebird';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import bunyan from 'bunyan';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { expect } from 'chai';
 import crypto from 'crypto';
-import { ABGP } from '../../consensus/main';
+import ABGP from '../../consensus/main';
 import {
   areNotUniqueHashes,
   generateRandomRecords,
@@ -11,10 +14,8 @@ import {
   syncNodesBetweenEachOther
 } from '../utils/helpers';
 
-export function testSuite(ctx: any = {}, nodesCount: number) {
-
+export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
   beforeEach(async () => {
-
     ctx.keys = [];
 
     ctx.nodes = [];
@@ -40,17 +41,16 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
         privateKey: ctx.keys[index].privateKey
       });
 
-      for (let i = 0; i < nodesCount; i++)
-        if (i !== index)
+      for (let i = 0; i < nodesCount; i++) {
+        if (i !== index) {
           instance.nodeApi.join(ctx.keys[i].publicKey);
-
+        }
+      }
       ctx.nodes.push(instance);
     }
-
   });
 
-  it(`should sync state`, async () => {
-
+  it('should sync state', async () => {
     const nodesWithRecords: ABGP[] = ctx.nodes.slice(0, 2);
 
     let totalRecordsGenerated = 0;
@@ -60,7 +60,6 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
     }
 
     await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
-
 
     const uniqueDbItemsCount = getUniqueDbItemsCount(ctx.nodes);
     expect(Object.keys(uniqueDbItemsCount).length).to.eq(0);
@@ -72,8 +71,7 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
     expect(checkAllHashesAreSimilar).to.eq(false);
   });
 
-  it(`should sync after drop (f, in N = 2f + 1)`, async () => {
-
+  it('should sync after drop (f, in N = 2f + 1)', async () => {
     const majority = Math.ceil(ctx.nodes.length / 2) + 1;
     const nodesMajority: ABGP[] = ctx.nodes.slice(0, majority);
     const nodesMinor: ABGP[] = ctx.nodes.slice(majority);
@@ -108,8 +106,7 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
     expect(rootReduces.length).to.eq(1);
   });
 
-  it(`should fail to sync fake state with fake private and public keys (f, in N = 2f + 1)`, async () => {
-
+  it('should fail to sync fake state with fake private and public keys (f, in N = 2f + 1)', async () => {
     const majority = Math.floor(ctx.nodes.length / 2) + 1;
     const nodesMajority: ABGP[] = ctx.nodes.slice(0, majority);
     const nodesFail: ABGP[] = ctx.nodes.slice(majority);
@@ -129,16 +126,15 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
       c.generateKeys();
 
       // @ts-ignore
-      node['privateKey'] = c.getPrivateKey().toString('hex');
+      node.privateKey = c.getPrivateKey().toString('hex');
 
       // @ts-ignore
-      node['publicKey'] = c.getPublicKey('hex', 'compressed');
+      node.publicKey = c.getPublicKey('hex', 'compressed');
 
       generateRandomRecords(node);
     }
 
     await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGeneratedAmount, 10);
-
 
     for (const node of nodesMajority) {
       for (const hash of failHashes) {
@@ -155,8 +151,7 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
     expect(rootReduces.length).to.eq(1);
   });
 
-  it(`should fail to sync fake state with fake private key and real public key (f, in N = 2f + 1)`, async () => {
-
+  it('should fail to sync fake state with fake private key and real public key (f, in N = 2f + 1)', async () => {
     const majority = Math.floor(ctx.nodes.length / 2) + 1;
     const nodesMajority: ABGP[] = ctx.nodes.slice(0, majority);
     const nodesFail: ABGP[] = ctx.nodes.slice(majority);
@@ -176,7 +171,7 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
       c.generateKeys();
 
       // @ts-ignore
-      node['privateKey'] = c.getPrivateKey().toString('hex');
+      node.privateKey = c.getPrivateKey().toString('hex');
 
       const generated = generateRandomRecords(node);
       totalRecordsGeneratedAmount += generated.amount;
@@ -203,5 +198,4 @@ export function testSuite(ctx: any = {}, nodesCount: number) {
   afterEach(async () => {
     await Promise.delay(1000);
   });
-
 }

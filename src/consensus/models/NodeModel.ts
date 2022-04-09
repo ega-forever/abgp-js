@@ -1,5 +1,7 @@
 import crypto from 'crypto';
 import { EventEmitter } from 'events';
+import BN from 'bn.js';
+import { ec as EC } from 'elliptic';
 import EventTypes from '../constants/EventTypes';
 import SignatureType from '../constants/SignatureType';
 import {
@@ -8,25 +10,31 @@ import {
   buildSharedSignature,
   partialSignatureVerify, verify
 } from '../utils/cryptoUtils';
-import BN from 'bn.js';
-import { ec as EC } from 'elliptic';
 
 const ec = new EC('secp256k1');
 
-
-export class DbItem { // todo remove state,but make data compaction
+export class DbItem {
   public hash: string;
-  public stateHash: string;
-  public key: string;
-  public value: string;
-  public version: number;
-  public timestamp: number;
-  public timestampIndex: number;
-  public signaturesMap: Map<string, string>; // signature to public key
-  public signatureType: number;
-  public publicKeys?: Set<string>;
-  public publicKeyMap?: number;
 
+  public stateHash: string;
+
+  public key: string;
+
+  public value: string;
+
+  public version: number;
+
+  public timestamp: number;
+
+  public timestampIndex: number;
+
+  public signaturesMap: Map<string, string>; // signature to public key
+
+  public signatureType: number;
+
+  public publicKeys?: Set<string>;
+
+  public publicKeyMap?: number;
 
   public static fromPlainObject(obj: any) {
     const dbItem = new DbItem();
@@ -49,13 +57,12 @@ export class DbItem { // todo remove state,but make data compaction
   public toPlainObject(publicKeys?: string[]) {
     const signaturesMapObj = [...this.signaturesMap.keys()]
       .reduce((result, key) => {
+        // eslint-disable-next-line no-param-reassign
         result[key] = this.signaturesMap.get(key);
         return result;
       }, {});
 
-    const publicKeysMapDouble = publicKeys ? publicKeys.sort().map((publicKey) => {
-      return this.publicKeys.has(publicKey) ? 1 : 0
-    }).join('') : null;
+    const publicKeysMapDouble = publicKeys ? publicKeys.sort().map((publicKey) => (this.publicKeys.has(publicKey) ? 1 : 0)).join('') : null;
 
     return {
       hash: this.hash,
@@ -69,18 +76,16 @@ export class DbItem { // todo remove state,but make data compaction
       signatureType: this.signatureType,
       publicKeys: publicKeys ? null : (this.publicKeys ? [...this.publicKeys] : []),
       publicKeyMap: this.publicKeyMap || parseInt(publicKeysMapDouble, 2)
-    }
+    };
   }
 
-  public cloneObject(){
+  public cloneObject() {
     const obj = this.toPlainObject();
     return DbItem.fromPlainObject(obj);
   }
-
 }
 
 class NodeModel extends EventEmitter {
-
   get address(): string {
     return this.nodeAddress;
   }
@@ -89,18 +94,29 @@ class NodeModel extends EventEmitter {
     min: number,
     max: number
   };
+
   public batchReplicationSize: number;
+
   public sendSignalToRandomPeer: boolean;
+
   public readonly privateKey: string;
+
   public readonly publicKey: string;
+
   public stateRoot: string;
+
   public lastUpdateTimestamp: number;
+
   public lastUpdateTimestampIndex: number;
 
+  // eslint-disable-next-line no-use-before-define
   public readonly nodes: Map<string, NodeModel> = new Map<string, NodeModel>();
+
   public readonly db: Map<string, DbItem>;
+
   private readonly nodeAddress: string;
-  public readonly publicKeys: Set<string>
+
+  public readonly publicKeys: Set<string>;
 
   public constructor(
     privateKey: string,
@@ -127,17 +143,17 @@ class NodeModel extends EventEmitter {
     return Math.floor(this.publicKeys.size / 2) + 1;
   }
 
-  private getDbItem(hash: string){
+  private getDbItem(hash: string) {
     const item = this.db.get(hash);
 
-    if(!item){
+    if (!item) {
       return null;
     }
 
     return item.cloneObject();
   }
 
-  private setDbItem(dbItem: DbItem){
+  private setDbItem(dbItem: DbItem) {
     this.db.set(dbItem.hash, dbItem);
   }
 
@@ -154,7 +170,7 @@ class NodeModel extends EventEmitter {
     }
 
     const timestamp = Date.now();
-    const timestampIndex = [...this.db.values()].filter(v => v.timestamp === timestamp).length;
+    const timestampIndex = [...this.db.values()].filter((v) => v.timestamp === timestamp).length;
 
     const signature = buildPartialSignature(
       this.privateKey,
@@ -176,14 +192,12 @@ class NodeModel extends EventEmitter {
       publicKeys: [this.publicKey]
     });
 
-
     this.saveItem(dbItem);
     this.emit(EventTypes.STATE_UPDATE);
     return hash;
   }
 
   public remoteAppend(remoteItem: DbItem, peerNode: NodeModel) {
-
     const hash = this.hashData(`${remoteItem.key}:${remoteItem.value}:${remoteItem.version}`);
 
     if (hash !== remoteItem.hash) {
@@ -206,7 +220,7 @@ class NodeModel extends EventEmitter {
         }
 
         const publicKey = sortedPublicKeys[index];
-        arr.push(publicKey)
+        arr.push(publicKey);
 
         return arr;
       }, []);
@@ -235,9 +249,9 @@ class NodeModel extends EventEmitter {
     }
 
     const timestamp = Date.now();
-    const timestampIndex = [...this.db.values()].filter(v => v.timestamp === timestamp).length;
+    const timestampIndex = [...this.db.values()].filter((v) => v.timestamp === timestamp).length;
 
-    /** object is mutated here, so no need to save it to map **/
+    /** object is mutated here, so no need to save it to map * */
     let dbItem: DbItem = this.getDbItem(hash);
 
     if (dbItem && dbItem.signatureType === SignatureType.MULTISIG && remoteItem.signatureType === SignatureType.INTERMEDIATE) {
@@ -245,7 +259,6 @@ class NodeModel extends EventEmitter {
     }
 
     if (dbItem && dbItem.signatureType === SignatureType.MULTISIG && remoteItem.signatureType === SignatureType.MULTISIG) {
-
       const localMultiSigPublicKey = [...dbItem.signaturesMap.keys()][0];
       const remoteMultiSigPublicKey = [...remoteItem.signaturesMap.keys()][0];
 
@@ -269,7 +282,6 @@ class NodeModel extends EventEmitter {
     }
 
     if (remoteItem.signatureType === SignatureType.MULTISIG) {
-
       const remoteMultiSigPublicKey = [...remoteItem.signaturesMap.keys()][0];
       const remoteMultiSig = remoteItem.signaturesMap.get(remoteMultiSigPublicKey);
 
@@ -373,14 +385,16 @@ class NodeModel extends EventEmitter {
   }
 
   private updatePeerNodeLastTimestamp(peerNode?: NodeModel, peerTimestamp?: number, peerTimestampIndex?: number) {
+    // eslint-disable-next-line no-param-reassign
     peerNode.lastUpdateTimestamp = peerTimestamp;
+    // eslint-disable-next-line no-param-reassign
     peerNode.lastUpdateTimestampIndex = peerTimestampIndex;
   }
 
+  // eslint-disable-next-line no-unused-vars
   public write(address: string, packet: Buffer): void {
     throw new Error('should be implemented!');
   }
-
 }
 
 export { NodeModel };

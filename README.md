@@ -7,7 +7,6 @@ ABGP Consensus Algorithm implementation in Node.js.
 consensus features
 * authenticated Gossip protocol (each node have its own private/public keypair)
 * replication confirmed by multisignature (using ECC)
-* for state validation and synchronization is used merkle tree
 * M-of-N links supported (no need to directly connect all nodes between each other)
 * 2f+1 BFT
 
@@ -16,29 +15,23 @@ implementation features
 
 ## How does it work?
 
-###Algorithm
+### Algorithm
 The algorithm represents an authenticated gossip protocol version of the original algorithm.
 This means, that each network peer (i.e. node) should be aware of the rest peers in network. 
 For peer validation the ECC signatures (SECP256K1 in current implementation) are used. As a result, each peer has its own private/public keypair.
 All peers should know about all public keys. For instance, in cluster of nodes [A, B, C], the node A should have public keys of [A (self public key), B, C].
 
-The algorithm have 3 data structures: the db (i.e. database), the state and merkle tree: 
+The algorithm have 2 data structures: the db (i.e. database) and peers state: 
 1) The db keeps all current data. The data represents as key-value-version pair + signatures and involved public keys
-2) The state stores all log entries. Each log entry has key-value-version pair, signature and hash. The hash (SHA256) calculates by key-value-version pair and signature
-3) merkle tree stores state's hashes
-Also, each peer keeps recent state of other linked peers (merkle root and last updated timestamp)
+2) The state of other linked peers represents the  (merkle root and last updated timestamp)
 
 The communication between peers happens in one direction. For instance in cluster of nodes [A, B, C], if node A sends ACK message to node B, 
 then node B will not send the reply immediately, so don't expect atomic sync between 2 peers. 
 
-There are 5 types of messages:
+There are 3 types of messages:
 1) ACK - each node sends periodically this packet, which contains merkle root and last updated timestamp. So, if node A sends ACK message to node B,
 then node B check its state + its local state of node A. If node A has more recent state, then node B send to node A STATE_REQ message.
-2) STATE_REQ - state request is a request for obtaining the current state. If node A sends STATE_REQ message to node B, then node B should collect all merkle leaves
-and send to node A back with STATE_REP message (warning! there is no optimisation here, like partial tree sync - so the whole tree will be sent). 
-3) STATE_REP -  the reply to STATE_REQ. This message contains the whole merkle tree. Once node receives this message, it compares this tree against its own local tree. 
-In case there are missed hashes in local tree, which persists in received one, then node request the data for these hashes with DATA_REQ message
-4) DATA_REQ - this message contains all hashes, for which the data has to be returned. The node should send back the DATA_REP with an array of requested log entries
+4) DATA_REQ - this message contains last seen state of peer, with which sync happens (comparing local state against remove).
 5) DATA_REP - contains an array of requested log entries. These log entries then are applied to local state
 
 
@@ -50,7 +43,6 @@ There are 2 types of append:
 During the local append, a single new state item is generated. The state item includes key-value-version pair, signature and hash.
 The signature is obtained by signing hash of item with private key: ``signature = privateKey * SHA256(key, value, version)``. 
 Then a hash for state is formed as: SHA256(key, value, version, signature). 
-Then this state hash appends to the merkle tree, and merkle tree rebuilds.
 
 During the remote append, several state items can be generated. There are several possible scenarios:
 1) received new state item from remote peer with the same key-value-version pair (N = 2f+1, f > 1, signatures amount < f+1). In this case, 

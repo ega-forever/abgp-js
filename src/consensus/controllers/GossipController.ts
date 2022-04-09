@@ -1,13 +1,15 @@
-import { MessageApi } from '../api/MessageApi';
-import { NodeApi } from '../api/NodeApi';
+import MessageApi from '../api/MessageApi';
+import NodeApi from '../api/NodeApi';
 import messageTypes from '../constants/MessageTypes';
-import { ABGP } from '../main';
+import ABGP from '../main';
 
-class GossipController {
-
+export default class GossipController {
   private abgp: ABGP;
-  private messageApi: MessageApi;
-  private nodeApi: NodeApi;
+
+  private readonly messageApi: MessageApi;
+
+  private readonly nodeApi: NodeApi;
+
   private runBeat: boolean;
 
   constructor(abgp: ABGP) {
@@ -22,7 +24,6 @@ class GossipController {
   }
 
   public async watchBeat() {
-
     this.runBeat = true;
 
     while (this.runBeat) {
@@ -40,14 +41,12 @@ class GossipController {
         nodes.map((node) => {
           const packet = this.messageApi.packet(messageTypes.ACK);
           return this.messageApi.message(packet, node.publicKey);
-        }));
+        })
+      );
 
-      this.abgp.logger.trace(`sent ack signal to peers`);
+      this.abgp.logger.trace('sent ack signal to peers');
       const interval = Math.random() * (this.abgp.gossipInterval.max - this.abgp.gossipInterval.min) + this.abgp.gossipInterval.min;
       await new Promise((res) => setTimeout(res, interval));
     }
-
   }
 }
-
-export { GossipController };

@@ -1,8 +1,7 @@
-import { ABGP } from '../main';
-import { PacketModel } from '../models/PacketModel';
+import ABGP from '../main';
+import PacketModel from '../models/PacketModel';
 
-class MessageApi {
-
+export default class MessageApi {
   private abgp: ABGP;
 
   constructor(abgp: ABGP) {
@@ -10,9 +9,9 @@ class MessageApi {
   }
 
   public async message(packet: PacketModel, peerPublicKey: string) {
-    packet = await this.abgp.resMiddleware(packet, peerPublicKey);
+    const middlewaredPacket = await this.abgp.resMiddleware(packet, peerPublicKey);
     const node = this.abgp.nodes.get(peerPublicKey);
-    await node.write(node.address, Buffer.from(JSON.stringify(packet)));
+    await node.write(node.address, Buffer.from(JSON.stringify(middlewaredPacket)));
   }
 
   public packet(type: number, data: any = null): PacketModel {
@@ -22,13 +21,11 @@ class MessageApi {
       type,
       this.abgp.lastUpdateTimestamp,
       this.abgp.lastUpdateTimestampIndex,
-      data);
+      data
+    );
   }
 
   public decodePacket(message: Buffer): PacketModel {
     return JSON.parse(message.toString());
   }
-
 }
-
-export { MessageApi };

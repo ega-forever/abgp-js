@@ -1,6 +1,6 @@
+// eslint-disable-next-line arrow-body-style, import/prefer-default-export
 export const getCombinations = (elements, n, pairs = [], pair = []): string[][] => {
   return elements.reduce((accumulator, val, index) => {
-
     pair.push(val);
 
     if (n > 1) {

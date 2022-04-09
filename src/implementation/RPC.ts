@@ -1,21 +1,20 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import axios from 'axios';
 import bodyParser from 'body-parser';
 import express from 'express';
-import {URL} from 'url';
-import {ABGP} from '../consensus/main';
+import { URL } from 'url';
+import ABGP from '../consensus/main';
 
 class RPCABGP extends ABGP {
-
   private app = express();
 
   public initialize() {
-
     this.app.use(bodyParser.json());
 
     this.app.post('/', (req, res) => {
       const packet = Buffer.from(req.body.data, 'hex');
       this.emitPacket(packet);
-      res.send({ok: 1});
+      res.send({ ok: 1 });
     });
 
     const url = new URL(this.address);
@@ -33,7 +32,6 @@ class RPCABGP extends ABGP {
    * @api private
    */
   public async write(address: string, packet: Buffer): Promise<void> {
-
     await axios.post(address, {
       data: packet.toString('hex')
     }, {
@@ -52,7 +50,6 @@ class RPCABGP extends ABGP {
     this.initialize();
     await super.connect();
   }
-
 }
 
 export default RPCABGP;

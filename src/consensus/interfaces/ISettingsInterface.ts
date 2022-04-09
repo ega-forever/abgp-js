@@ -1,5 +1,6 @@
-import {PacketModel} from '../models/PacketModel';
+import PacketModel from '../models/PacketModel';
 
+/* eslint-disable no-unused-vars */
 export interface ISettingsInterface {
   privateKey: string;
   address: string;

@@ -1,15 +1,14 @@
-import eventTypes from '../constants/EventTypes';
 import EventTypes from '../constants/EventTypes';
 import MessageTypes from '../constants/MessageTypes';
-import { ABGP } from '../main';
+import ABGP from '../main';
 import { DbItem, NodeModel } from '../models/NodeModel';
-import { PacketModel } from '../models/PacketModel';
-import { MessageApi } from './MessageApi';
+import PacketModel from '../models/PacketModel';
+import MessageApi from './MessageApi';
 
-class NodeApi {
-
+export default class NodeApi {
   private readonly abgp: ABGP;
-  private messageApi: MessageApi;
+
+  private readonly messageApi: MessageApi;
 
   constructor(abgp: ABGP) {
     this.abgp = abgp;
@@ -17,11 +16,11 @@ class NodeApi {
   }
 
   public join(multiaddr: string): NodeModel {
-
     const publicKey = multiaddr.match(/\w+$/).toString();
 
-    if (this.abgp.publicKey === publicKey)
+    if (this.abgp.publicKey === publicKey) {
       return;
+    }
 
     const node = new NodeModel(null, multiaddr);
     this.abgp.publicKeys.add(node.publicKey);
@@ -30,15 +29,14 @@ class NodeApi {
     node.once('end', () => this.leave(node.publicKey));
 
     this.abgp.nodes.set(publicKey, node);
-    this.abgp.emit(eventTypes.NODE_JOIN, node);
+    this.abgp.emit(EventTypes.NODE_JOIN, node);
     return node;
   }
 
   public leave(publicKey: string): void {
-
     const node = this.abgp.nodes.get(publicKey);
     this.abgp.nodes.delete(publicKey);
-    this.abgp.emit(eventTypes.NODE_LEAVE, node);
+    this.abgp.emit(EventTypes.NODE_LEAVE, node);
   }
 
   public validatePacket(packet: PacketModel) {
@@ -50,7 +48,6 @@ class NodeApi {
   }
 
   public validateState(packet: PacketModel) {
-
     const peerNode = this.abgp.nodes.get(packet.publicKey);
 
     if ( // todo add validation by state hash
@@ -70,17 +67,15 @@ class NodeApi {
     const publicKeys = [...this.abgp.publicKeys.keys()];
 
     const data = [...this.abgp.db.values()]
-      .filter(v=>
+      .filter((v) =>
         v.timestamp > packet.data.lastUpdateTimestamp ||
-        (v.timestamp === packet.data.lastUpdateTimestamp && v.timestampIndex > packet.data.lastUpdateTimestampIndex)
-      )
+        (v.timestamp === packet.data.lastUpdateTimestamp && v.timestampIndex > packet.data.lastUpdateTimestampIndex))
       .sort((a, b) =>
-        (a.timestamp > b.timestamp ||
+        ((a.timestamp > b.timestamp ||
           (a.timestamp === b.timestamp && a.timestampIndex > b.timestampIndex)
-        ) ? 1 : -1
-      )
+        ) ? 1 : -1))
       .slice(0, this.abgp.batchReplicationSize)
-      .map(v=> v.toPlainObject(publicKeys));
+      .map((v) => v.toPlainObject(publicKeys));
 
     return this.messageApi.packet(MessageTypes.DATA_REP, {
       data
@@ -91,16 +86,12 @@ class NodeApi {
     const peerNode = this.abgp.nodes.get(packet.publicKey);
     const data: DbItem[] = packet.data.data
       .sort((a, b) =>
-        (a.timestamp > b.timestamp ||
+        ((a.timestamp > b.timestamp ||
           (a.timestamp === b.timestamp && a.timestampIndex > b.timestampIndex)
-        ) ? 1 : -1
-      );
+        ) ? 1 : -1));
 
     for (const item of data) {
       this.abgp.remoteAppend(DbItem.fromPlainObject(item), peerNode);
     }
   }
-
 }
-
-export { NodeApi };

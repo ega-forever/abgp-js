@@ -1,13 +1,12 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { expect } from 'chai';
 import { fork } from 'child_process';
 import crypto from 'crypto';
 import * as path from 'path';
 import { awaitNodesSynced, generateRandomRecordsWorker } from '../../utils/helpers';
 
-export function testSuite(ctx: any = {}, nodesCount: number = 0, implementationType: string = 'TCP', sendSignalToRandomPeer: boolean = true, connectionLinkMap: Map<number, number[]> = null) {
-
+export default function testSuite(ctx: any = {}, nodesCount: number = 0, implementationType: string = 'TCP', sendSignalToRandomPeer: boolean = true, connectionLinkMap: Map<number, number[]> = null) {
   beforeEach(async () => {
-
     const instances: any = [];
 
     ctx.keys = [];
@@ -58,8 +57,7 @@ export function testSuite(ctx: any = {}, nodesCount: number = 0, implementationT
     }
 
     const kill = () => {
-      for (const instance of instances)
-        instance.kill();
+      for (const instance of instances) instance.kill();
     };
 
     process.on('SIGINT', kill);
@@ -73,8 +71,7 @@ export function testSuite(ctx: any = {}, nodesCount: number = 0, implementationT
     }
   });
 
-  it(`should sync changes, once most nodes online (51%), then all nodes online`, async () => {
-
+  it('should sync changes, once most nodes online (51%), then all nodes online', async () => {
     const majority = Math.floor(ctx.instances.length / 2) + 1;
     const initialNodes = ctx.instances.slice(0, majority);
     const otherNodes = ctx.instances.slice(majority);
@@ -99,7 +96,5 @@ export function testSuite(ctx: any = {}, nodesCount: number = 0, implementationT
     const dbSizeAllNodesOnline = resultsAllNodesOnline[2][0];
 
     expect(parseInt(dbSizeAllNodesOnline, 10)).to.eq(totalGeneratedAmount);
-
   });
-
 }

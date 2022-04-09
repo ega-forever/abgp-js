@@ -1,10 +1,10 @@
 import MessageTypes from '../../consensus/constants/MessageTypes';
-import { ABGP } from '../../consensus/main';
-import { PacketModel } from '../../consensus/models/PacketModel';
+import ABGP from '../../consensus/main';
+import PacketModel from '../../consensus/models/PacketModel';
 
 export const generateRandomRecords = (node: ABGP, amount?: number) => {
-
   if (!amount) {
+    // eslint-disable-next-line no-param-reassign
     amount = 7 + Math.ceil((15 - 7) * Math.random());
   }
 
@@ -24,8 +24,8 @@ export const generateRandomRecords = (node: ABGP, amount?: number) => {
 };
 
 export const generateRandomRecordsWorker = (node: any, amount?: number) => {
-
   if (!amount) {
+    // eslint-disable-next-line no-param-reassign
     amount = 7 + Math.ceil((15 - 7) * Math.random());
   }
 
@@ -83,7 +83,6 @@ export const areNotUniqueHashes = (nodes: ABGP[]) => {
 
   for (const node of nodes) {
     for (const key of node.db.keys()) {
-
       if (!keys[key]) {
         keys[key] = new Set<string>();
       }
@@ -92,11 +91,10 @@ export const areNotUniqueHashes = (nodes: ABGP[]) => {
   }
 
   return !!Object.values(keys).find((v: any) => v.size > 1);
-}
+};
 
 export const getUniqueDbItemsCount = (nodes: ABGP[]) => {
-
-  let state = {};
+  const state = {};
 
   for (const node of nodes) {
     for (const item of node.db.values()) {
@@ -105,7 +103,6 @@ export const getUniqueDbItemsCount = (nodes: ABGP[]) => {
       if (state[item.stateHash] === nodes.length) {
         delete state[item.stateHash];
       }
-
     }
   }
 
@@ -113,7 +110,6 @@ export const getUniqueDbItemsCount = (nodes: ABGP[]) => {
 };
 
 export const awaitNodesSynced = async (nodes: any[], keys: any[]) => {
-
   const stateReplyMapInitialNodes: Map<string, {
     stateRoot: string,
     dataUpdateTimestamp: number,
@@ -123,13 +119,12 @@ export const awaitNodesSynced = async (nodes: any[], keys: any[]) => {
   const promises: Array<Promise<any>> = [];
 
   for (let i = 0; i < nodes.length; i++) {
-    const publicKey = keys[i].publicKey;
+    const { publicKey } = keys[i];
     stateReplyMapInitialNodes.set(publicKey, null);
 
     const promise = new Promise((res) => {
       nodes[i].on('message', (msg: any) => {
-        if (msg.type !== 'state_synced')
-          return;
+        if (msg.type !== 'state_synced') return;
 
         const stateRoot = msg.args[0];
         const dataUpdateTimestamp = msg.args[1];
@@ -158,7 +153,6 @@ export const awaitNodesSynced = async (nodes: any[], keys: any[]) => {
         if (uniqueRoots.length === 1 && uniqueDbSizes.length === 1) {
           return res([uniqueRoots, uniqueTimestamps, uniqueDbSizes]);
         }
-
       });
     });
     promises.push(promise);

@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import * as bunyan from 'bunyan';
 import eventTypes from '../../../consensus/constants/EventTypes';
 import RPCABGP from '../../../implementation/RPC';
@@ -5,13 +6,12 @@ import RPCABGP from '../../../implementation/RPC';
 let instance: RPCABGP = null;
 
 const init = (params: any) => {
-
   const logger = bunyan.createLogger({ name: `abgp.logger[${params.index}]`, level: 50 });
 
   logger.trace(`params ${JSON.stringify(params)}`);
 
   const indexNodesLinks: number[] = params.links || params.keys.map((s, i) => i);
-  const allPublicKeys: string[] = params.keys.map(key=> key.publicKey);
+  const allPublicKeys: string[] = params.keys.map((key) => key.publicKey);
 
   instance = new RPCABGP({
     address: `http://127.0.0.1:${2000 + params.index}/${params.publicKey || params.keys[params.index].publicKey}`,
