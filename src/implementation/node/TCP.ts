@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import msg from 'axon';
-import ABGP from '../consensus/main';
+import ABGP from '../../consensus/main';
 
 class TCPABGP extends ABGP {
   private sockets: Map<string, any> = new Map<string, any>();

@@ -1,9 +1,10 @@
 import EventTypes from '../constants/EventTypes';
 import MessageTypes from '../constants/MessageTypes';
 import ABGP from '../main';
-import { DbItem, NodeModel } from '../models/NodeModel';
+import NodeModel from '../models/NodeModel';
 import PacketModel from '../models/PacketModel';
 import MessageApi from './MessageApi';
+import RecordModel from '../models/RecordModel';
 
 export default class NodeApi {
   private readonly abgp: ABGP;
@@ -64,35 +65,25 @@ export default class NodeApi {
     });
   }
 
-  public dataRequest(packet: PacketModel) {
+  public async dataRequest(packet: PacketModel) {
     const publicKeys = [...this.abgp.publicKeys.keys()];
-
-    const data = [...this.abgp.db.values()]
-      .filter((v) =>
-        v.timestamp > packet.data.lastUpdateTimestamp ||
-        (v.timestamp === packet.data.lastUpdateTimestamp && v.timestampIndex > packet.data.lastUpdateTimestampIndex))
-      .sort((a, b) =>
-        ((a.timestamp > b.timestamp ||
-          (a.timestamp === b.timestamp && a.timestampIndex > b.timestampIndex)
-        ) ? 1 : -1))
-      .slice(0, this.abgp.batchReplicationSize)
-      .map((v) => v.toPlainObject(publicKeys));
-
+    const records = await this.abgp.storage.getAfterTimestamp(packet.data.lastUpdateTimestamp, packet.data.lastUpdateTimestampIndex, this.abgp.batchReplicationSize);
+    const data = records.map((v) => v.toPlainObject(publicKeys));
     return this.messageApi.packet(MessageTypes.DATA_REP, {
       data
     });
   }
 
-  public dataResponse(packet: PacketModel) {
+  public async dataResponse(packet: PacketModel) {
     const peerNode = this.abgp.nodes.get(packet.publicKey);
-    const data: DbItem[] = packet.data.data
+    const data: any[] = packet.data.data
       .sort((a, b) =>
         ((a.timestamp > b.timestamp ||
           (a.timestamp === b.timestamp && a.timestampIndex > b.timestampIndex)
         ) ? 1 : -1));
 
     for (const item of data) {
-      this.abgp.remoteAppend(DbItem.fromPlainObject(item), peerNode, packet.root);
+      await this.abgp.appendApi.remoteAppend(RecordModel.fromPlainObject(item), peerNode, packet.root);
     }
   }
 }

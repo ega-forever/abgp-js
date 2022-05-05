@@ -152,8 +152,8 @@ Please check tests for usage examples
 
 | Node.js | 
 | --- | 
-| [TCP](src/implementation/TCP.ts) | 
-| [HTTP](src/implementation/RPC.ts) | 
+| [TCP](src/implementation/node/TCP.ts) | 
+| [HTTP](src/implementation/node/RPC.ts) | 
 
 
 However, you still can implement your own protocol.

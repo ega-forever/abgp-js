@@ -2,7 +2,7 @@ import MessageTypes from '../../consensus/constants/MessageTypes';
 import ABGP from '../../consensus/main';
 import PacketModel from '../../consensus/models/PacketModel';
 
-export const generateRandomRecords = (node: ABGP, amount?: number) => {
+export const generateRandomRecords = async (node: ABGP, amount?: number) => {
   if (!amount) {
     // eslint-disable-next-line no-param-reassign
     amount = 7 + Math.ceil((15 - 7) * Math.random());
@@ -16,7 +16,7 @@ export const generateRandomRecords = (node: ABGP, amount?: number) => {
       value: Math.random().toString(16).substr(2) + i,
       version: 1
     };
-    const hash = node.append(record.key, record.key, record.version);
+    const hash = await node.appendApi.append(record.key, record.key, record.version);
     hashes.push(hash);
   }
 
@@ -78,30 +78,33 @@ export const getUniqueRoots = (nodes: ABGP[]) => {
   return [...rootSet];
 };
 
-export const areNotUniqueHashes = (nodes: ABGP[]) => {
+export const areNotUniqueHashes = async (nodes: ABGP[], totalRecordsCount: number) => {
   const keys: any = {};
 
   for (const node of nodes) {
-    for (const key of node.db.keys()) {
-      if (!keys[key]) {
-        keys[key] = new Set<string>();
+    const records = await node.storage.getAfterTimestamp(0, -1, totalRecordsCount);
+    for (const record of records) {
+      if (!keys[record.hash]) {
+        keys[record.hash] = new Set<string>();
       }
-      keys[key].add(node.db.get(key).stateHash);
+      keys[record.hash].add(record.stateHash);
     }
   }
 
   return !!Object.values(keys).find((v: any) => v.size > 1);
 };
 
-export const getUniqueDbItemsCount = (nodes: ABGP[]) => {
+export const getUniqueDbItemsCount = async (nodes: ABGP[], totalRecordsCount: number) => {
   const state = {};
 
   for (const node of nodes) {
-    for (const item of node.db.values()) {
-      state[item.stateHash] = state[item.stateHash] ? state[item.stateHash] + 1 : 1;
+    const records = await node.storage.getAfterTimestamp(0, -1, totalRecordsCount);
 
-      if (state[item.stateHash] === nodes.length) {
-        delete state[item.stateHash];
+    for (const record of records) {
+      state[record.stateHash] = state[record.stateHash] ? state[record.stateHash] + 1 : 1;
+
+      if (state[record.stateHash] === nodes.length) {
+        delete state[record.stateHash];
       }
     }
   }
@@ -112,8 +115,7 @@ export const getUniqueDbItemsCount = (nodes: ABGP[]) => {
 export const awaitNodesSynced = async (nodes: any[], keys: any[]) => {
   const stateReplyMapInitialNodes: Map<string, {
     stateRoot: string,
-    dataUpdateTimestamp: number,
-    dbSize: number
+    dataUpdateTimestamp: number
   }> = new Map<string, { stateRoot: string; dataUpdateTimestamp: number; dbSize: number }>();
 
   const promises: Array<Promise<any>> = [];
@@ -128,11 +130,9 @@ export const awaitNodesSynced = async (nodes: any[], keys: any[]) => {
 
         const stateRoot = msg.args[0];
         const dataUpdateTimestamp = msg.args[1];
-        const dbSize = msg.args[2];
         stateReplyMapInitialNodes.set(publicKey, {
           stateRoot,
-          dataUpdateTimestamp,
-          dbSize
+          dataUpdateTimestamp
         });
 
         const uniqueRoots = Object.keys([...stateReplyMapInitialNodes.values()].reduce((acc, cur) => {
@@ -145,13 +145,10 @@ export const awaitNodesSynced = async (nodes: any[], keys: any[]) => {
           return acc;
         }, {} as any));
 
-        const uniqueDbSizes = Object.keys([...stateReplyMapInitialNodes.values()].reduce((acc, cur) => {
-          acc[cur ? cur.dbSize : 0] = 1;
-          return acc;
-        }, {} as any));
+        console.log('test', uniqueRoots)
 
-        if (uniqueRoots.length === 1 && uniqueDbSizes.length === 1) {
-          return res([uniqueRoots, uniqueTimestamps, uniqueDbSizes]);
+        if (uniqueRoots.length === 1) {
+          return res([uniqueRoots, uniqueTimestamps]);
         }
       });
     });

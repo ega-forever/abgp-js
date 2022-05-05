@@ -3,7 +3,7 @@ import axios from 'axios';
 import bodyParser from 'body-parser';
 import express from 'express';
 import { URL } from 'url';
-import ABGP from '../consensus/main';
+import ABGP from '../../consensus/main';
 
 class RPCABGP extends ABGP {
   private app = express();

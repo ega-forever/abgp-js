@@ -1,7 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as bunyan from 'bunyan';
 import eventTypes from '../../../consensus/constants/EventTypes';
-import TCPABGP from '../../../implementation/TCP';
+import TCPABGP from '../../../implementation/node/TCP';
+import PlainStorage from '../../../implementation/storage/PlainStorage';
 
 let instance: TCPABGP = null;
 
@@ -22,7 +23,8 @@ const init = (params: any) => {
     sendSignalToRandomPeer: params.sendSignalToRandomPeer,
     logger,
     privateKey: params.keys[params.index].privateKey,
-    publicKeys: allPublicKeys
+    publicKeys: allPublicKeys,
+    storage: new PlainStorage()
   });
 
   for (const index of indexNodesLinks) {
@@ -32,10 +34,10 @@ const init = (params: any) => {
   }
 
   instance.on(eventTypes.STATE_SYNCED, () => {
-    logger.info(`index #${params.index} root ${instance.getStateRoot()} / dbSize: ${instance.db.size} / lastTimestamp: ${instance.lastUpdateTimestamp}`);
+    logger.info(`index #${params.index} root ${instance.getStateRoot()} / lastTimestamp: ${instance.lastUpdateTimestamp}`);
     process.send({
       type: 'state_synced',
-      args: [instance.getStateRoot(), instance.lastUpdateTimestamp, instance.db.size]
+      args: [instance.getStateRoot(), instance.lastUpdateTimestamp]
     });
   });
 };
@@ -50,6 +52,6 @@ process.on('message', (m: any) => {
   }
 
   if (m.type === 'append') {
-    instance.append(m.args[0], m.args[1], m.args[2]);
+    instance.appendApi.append(m.args[0], m.args[1], m.args[2]);
   }
 });
