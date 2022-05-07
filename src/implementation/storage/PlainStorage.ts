@@ -19,7 +19,7 @@ export default class PlainStorage implements IStorageInterface {
   }
 
   async save(record: RecordModel): Promise<void> {
-    this.db.set(record.hash, record);
+    this.db.set(record.hash, record.cloneObject());
   }
 
   async has(hash: string): Promise<boolean> {

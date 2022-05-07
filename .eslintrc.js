@@ -6,6 +6,9 @@ module.exports = {
     mocha: true
   },
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    'project': './tsconfig.json'
+  },
   plugins: [
     '@typescript-eslint'
   ],
@@ -45,6 +48,7 @@ module.exports = {
     'no-promise-executor-return': 0,
     'operator-linebreak': 0,
     'no-nested-ternary': 0,
-    'no-plusplus': 0
+    'no-plusplus': 0,
+    '@typescript-eslint/no-floating-promises': ['error']
   }
 };

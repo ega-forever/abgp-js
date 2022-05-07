@@ -66,7 +66,7 @@ export default class NodeApi {
   }
 
   public async dataRequest(packet: PacketModel) {
-    const publicKeys = [...this.abgp.publicKeys.keys()];
+    const publicKeys = [...this.abgp.publicKeys.keys()].sort();
     const records = await this.abgp.storage.getAfterTimestamp(packet.data.lastUpdateTimestamp, packet.data.lastUpdateTimestampIndex, this.abgp.batchReplicationSize);
     const data = records.map((v) => v.toPlainObject(publicKeys));
     return this.messageApi.packet(MessageTypes.DATA_REP, {
@@ -82,8 +82,10 @@ export default class NodeApi {
           (a.timestamp === b.timestamp && a.timestampIndex > b.timestampIndex)
         ) ? 1 : -1));
 
+    const sortedPublicKeys = [...this.abgp.publicKeys.keys()].sort();
+
     for (const item of data) {
-      await this.abgp.appendApi.remoteAppend(RecordModel.fromPlainObject(item), peerNode, packet.root);
+      await this.abgp.appendApi.remoteAppend(RecordModel.fromPlainObject(item, sortedPublicKeys), peerNode, packet.root);
     }
   }
 }

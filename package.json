@@ -6,6 +6,7 @@
     "tsc:watch": "tsc -w",
     "tsc:build": "tsc",
     "test": "mocha --timeout 180000 -r ts-node/register src/test/**/*.spec.ts src/test/**/**/*.spec.ts",
+    "test1": "mocha --timeout 180000 -r ts-node/register src/test/integration/consensus.spec.ts",
     "lint": "eslint src/**/*.ts",
     "build_web": "webpack",
     "build_dist": "rm -rf dist && npm run tsc:build && npm run build_web"

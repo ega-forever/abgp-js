@@ -87,6 +87,7 @@ export default class ABGP extends NodeModel {
   }
 
   public connect(): void {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     this.gossipCtrl.watchBeat();
   }
 

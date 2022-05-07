@@ -13,6 +13,7 @@ import SignatureType from '../constants/SignatureType';
 import EventTypes from '../constants/EventTypes';
 import NodeModel from '../models/NodeModel';
 import RecordModel from '../models/RecordModel';
+import { isEqualSet } from '../utils/utils';
 
 const ec = new EC('secp256k1');
 
@@ -45,19 +46,17 @@ export default class AppendApi {
       hash
     );
 
-    const record: RecordModel = RecordModel.fromPlainObject({
+    const record: RecordModel = new RecordModel({
       hash,
       stateHash,
       key,
       value,
       version,
-      signaturesMap: {
-        [this.abgp.publicKey]: signature
-      },
+      signaturesMap: new Map<string, string>([[this.abgp.publicKey, signature]]),
       timestamp,
       timestampIndex,
       signatureType: SignatureType.INTERMEDIATE,
-      publicKeys: [this.abgp.publicKey]
+      publicKeys: new Set<string>([this.abgp.publicKey])
     });
 
     await this.saveItem(record);
@@ -78,21 +77,6 @@ export default class AppendApi {
       return null;
     }
 
-    const sortedPublicKeys = [...this.abgp.publicKeys.keys()].sort();
-    const involvedPublicKeys: string[] = remoteRecord.publicKeyMap.toString(2)
-      .padStart(this.abgp.publicKeys.size, '0')
-      .split('')
-      .reduce((arr, elem, index) => {
-        if (elem === '0') {
-          return arr;
-        }
-
-        const publicKey = sortedPublicKeys[index];
-        arr.push(publicKey);
-
-        return arr;
-      }, []);
-
     if (remoteRecord.signatureType === SignatureType.INTERMEDIATE) {
       for (const publicKey of remoteRecord.signaturesMap.keys()) {
         const signature = remoteRecord.signaturesMap.get(publicKey);
@@ -102,7 +86,7 @@ export default class AppendApi {
         }
       }
     } else {
-      const calcMultiPublicKey = buildSharedPublicKeyX(involvedPublicKeys, hash);
+      const calcMultiPublicKey = buildSharedPublicKeyX(Array.from(remoteRecord.publicKeys), hash);
       const multiPublicKey = [...remoteRecord.signaturesMap.keys()][0];
 
       if (calcMultiPublicKey !== multiPublicKey) {
@@ -119,10 +103,14 @@ export default class AppendApi {
     const timestamp = Date.now();
     const timestampIndex = (await this.abgp.storage.getByTimestamp(timestamp)).length;
 
-    /** object is mutated here, so no need to save it to map * */
     let localRecord: RecordModel = await this.abgp.storage.get(hash);
 
     if (localRecord && localRecord.signatureType === SignatureType.MULTISIG && remoteRecord.signatureType === SignatureType.INTERMEDIATE) {
+      return null;
+    }
+
+    if (localRecord && isEqualSet(localRecord.publicKeys, remoteRecord.publicKeys)) {
+      this.updatePeerNodeLastState(peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
       return null;
     }
 
@@ -137,9 +125,8 @@ export default class AppendApi {
 
       const remoteMultiSig = remoteRecord.signaturesMap.get(remoteMultiSigPublicKey);
 
-      localRecord.signaturesMap = new Map<string, string>();
-      localRecord.signaturesMap.set(remoteMultiSigPublicKey, remoteMultiSig);
-      localRecord.publicKeys = new Set<string>(involvedPublicKeys);
+      localRecord.signaturesMap = new Map<string, string>([[remoteMultiSigPublicKey, remoteMultiSig]]);
+      localRecord.publicKeys = new Set<string>(remoteRecord.publicKeys);
       localRecord.stateHash = remoteRecord.stateHash;
       localRecord.timestamp = timestamp;
       localRecord.timestampIndex = timestampIndex;
@@ -154,7 +141,7 @@ export default class AppendApi {
       const remoteMultiSig = remoteRecord.signaturesMap.get(remoteMultiSigPublicKey);
 
       if (!localRecord) {
-        localRecord = RecordModel.fromPlainObject({
+        localRecord = new RecordModel({
           hash: remoteRecord.hash,
           stateHash: remoteRecord.stateHash,
           timestamp,
@@ -162,17 +149,16 @@ export default class AppendApi {
           key: remoteRecord.key,
           value: remoteRecord.value,
           version: remoteRecord.version,
-          signaturesMap: Object.fromEntries(remoteRecord.signaturesMap),
+          signaturesMap: new Map<string, string>(remoteRecord.signaturesMap),
           signatureType: SignatureType.MULTISIG,
-          publicKeys: involvedPublicKeys
+          publicKeys: new Set<string>(remoteRecord.publicKeys)
         });
       } else {
         localRecord.stateHash = remoteRecord.stateHash;
         localRecord.timestamp = timestamp;
         localRecord.timestampIndex = timestampIndex;
-        localRecord.signaturesMap = new Map<string, string>();
-        localRecord.signaturesMap.set(remoteMultiSigPublicKey, remoteMultiSig);
-        localRecord.publicKeys = new Set<string>(involvedPublicKeys);
+        localRecord.signaturesMap = new Map<string, string>([[remoteMultiSigPublicKey, remoteMultiSig]]);
+        localRecord.publicKeys = new Set<string>(remoteRecord.publicKeys);
         localRecord.signatureType = SignatureType.MULTISIG;
       }
 
@@ -182,18 +168,10 @@ export default class AppendApi {
     }
 
     if (!localRecord) {
-      localRecord = RecordModel.fromPlainObject({
-        hash: remoteRecord.hash,
-        stateHash: remoteRecord.stateHash,
-        timestamp,
-        timestampIndex,
-        key: remoteRecord.key,
-        value: remoteRecord.value,
-        version: remoteRecord.version,
-        signaturesMap: Object.fromEntries(remoteRecord.signaturesMap),
-        signatureType: SignatureType.INTERMEDIATE,
-        publicKeys: involvedPublicKeys
-      });
+      localRecord = remoteRecord.cloneObject();
+      localRecord.timestamp = timestamp;
+      localRecord.timestampIndex = timestampIndex;
+      localRecord.signatureType = SignatureType.INTERMEDIATE;
 
       const signature = buildPartialSignature(
         this.abgp.privateKey,
@@ -222,8 +200,7 @@ export default class AppendApi {
       const multiPublicKey = buildSharedPublicKeyX(publicKeysForMusig, hash);
 
       const multiSignature = buildSharedSignature(signaturesForMusig);
-      localRecord.signaturesMap = new Map<string, string>();
-      localRecord.signaturesMap.set(multiPublicKey, multiSignature);
+      localRecord.signaturesMap = new Map<string, string>([[multiPublicKey, multiSignature]]);
       localRecord.signatureType = SignatureType.MULTISIG;
       localRecord.publicKeys = new Set<string>(publicKeysForMusig);
       localRecord.stateHash = AppendApi.hashData(`${localRecord.hash}:${localRecord.value}:${localRecord.version}${totalPublicKeys + 1}`);

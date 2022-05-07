@@ -13,6 +13,7 @@ class RPCABGP extends ABGP {
 
     this.app.post('/', (req, res) => {
       const packet = Buffer.from(req.body.data, 'hex');
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       this.emitPacket(packet);
       res.send({ ok: 1 });
     });

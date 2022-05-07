@@ -12,6 +12,7 @@ class TCPABGP extends ABGP {
 
     this.sockets.get(this.address).bind(this.address);
     this.sockets.get(this.address).on('message', (data: Buffer) => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       this.emitPacket(data);
     });
 
