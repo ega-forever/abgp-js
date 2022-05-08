@@ -14,8 +14,6 @@ export interface IRecord {
   getByTimestamp(timestamp: number): Promise<RecordModel[]>;
 
   getAfterTimestamp(timestamp: number, timestampIndex: number, limit: number): Promise<RecordModel[]>;
-
-  getLast(signatureType: number): Promise<RecordModel | null>;
 }
 
 export interface IState {
