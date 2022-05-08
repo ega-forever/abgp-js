@@ -1,6 +1,9 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { expect } from 'chai';
 import MessageTypes from '../../consensus/constants/MessageTypes';
 import ABGP from '../../consensus/main';
 import PacketModel from '../../consensus/models/PacketModel';
+import SignatureType from '../../consensus/constants/SignatureType';
 
 export const generateRandomRecords = async (node: ABGP, amount?: number) => {
   if (!amount) {
@@ -87,7 +90,7 @@ export const areNotUniqueHashes = async (nodes: ABGP[], totalRecordsCount: numbe
       if (!keys[record.hash]) {
         keys[record.hash] = new Set<string>();
       }
-      keys[record.hash].add(record.stateHash);
+      keys[record.hash].add(record.hash);
     }
   }
 
@@ -101,10 +104,33 @@ export const getUniqueDbItemsCount = async (nodes: ABGP[], totalRecordsCount: nu
     const records = await node.storage.Record.getAfterTimestamp(0, -1, totalRecordsCount);
 
     for (const record of records) {
-      state[record.stateHash] = state[record.stateHash] ? state[record.stateHash] + 1 : 1;
+      state[record.hash] = state[record.hash] ? state[record.hash] + 1 : 1;
 
-      if (state[record.stateHash] === nodes.length) {
-        delete state[record.stateHash];
+      if (state[record.hash] === nodes.length) {
+        delete state[record.hash];
+      }
+    }
+  }
+
+  return state;
+};
+
+export const getUniqueMultiSigDbItemsCount = async (nodes: ABGP[], totalRecordsCount: number) => {
+  const state = {};
+
+  for (const node of nodes) {
+    const records = await node.storage.Record.getAfterTimestamp(0, -1, totalRecordsCount);
+
+    for (const record of records) {
+      if (record.signatureType !== SignatureType.MULTISIG) {
+        continue;
+      }
+
+      expect(record.stateHash).to.not.eq(null);
+      state[record.hash] = state[record.hash] ? state[record.hash] + 1 : 1;
+
+      if (state[record.hash] === nodes.length) {
+        delete state[record.hash];
       }
     }
   }

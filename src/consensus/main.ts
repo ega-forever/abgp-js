@@ -6,7 +6,6 @@ import { ISettingsInterface } from './interfaces/ISettingsInterface';
 import NodeModel from './models/NodeModel';
 import PacketModel from './models/PacketModel';
 import RequestProcessorService from './services/RequestProcessorService';
-import { IStorageInterface } from './interfaces/IStorageInterface';
 import AppendApi from './api/AppendApi';
 
 export default class ABGP extends NodeModel {

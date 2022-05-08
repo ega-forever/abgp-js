@@ -53,8 +53,8 @@ class PlainStorageRecord implements IRecord {
   async getLast(signatureType: number): Promise<RecordModel | null> {
     const item = [...this.db.values()]
       .sort((a, b) =>
-        ((a.timestamp > b.timestamp ||
-          (a.timestamp === b.timestamp && a.timestampIndex > b.timestampIndex)
+        ((a.timestamp < b.timestamp ||
+          (a.timestamp === b.timestamp && a.timestampIndex < b.timestampIndex)
         ) ? 1 : -1))
       .find((v) => v.signatureType === signatureType);
 

@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 export const isEqualSet = (as: Set<string>, bs: Set<string>) => {
   if (as.size !== bs.size) {
     return false;

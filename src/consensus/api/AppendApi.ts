@@ -213,17 +213,17 @@ export default class AppendApi {
 
   private async saveItem(item: RecordModel, peerNode?: NodeModel, peerRoot?: string, peerTimestamp?: number, peerTimestampIndex?: number) {
     const prevItem = await this.abgp.storage.Record.get(item.hash);
+    const lastState = await this.abgp.getState();
 
     if (
       item.signatureType === SignatureType.MULTISIG &&
       ((prevItem && prevItem.signatureType === SignatureType.INTERMEDIATE) || !prevItem)
     ) {
-      const lastRecord = await this.abgp.storage.Record.getLast(SignatureType.MULTISIG);
       // eslint-disable-next-line no-param-reassign
-      item.stateHash = lastRecord ? new BN(lastRecord.stateHash, 16).add(new BN(item.hash, 16)).mod(ec.n).toString(16) :
-        new BN(item.hash, 16).mod(ec.n).toString(16);
-
+      item.stateHash = new BN(lastState.root, 16).add(new BN(item.hash, 16)).mod(ec.n).toString(16);
       await this.abgp.saveState(item.timestamp, item.timestampIndex, item.stateHash);
+    } else {
+      await this.abgp.saveState(item.timestamp, item.timestampIndex, lastState.root);
     }
 
     await this.abgp.storage.Record.save(item);
@@ -231,21 +231,5 @@ export default class AppendApi {
     if (peerNode) {
       await peerNode.saveState(peerTimestamp, peerTimestampIndex, peerRoot);
     }
-
-/*    const sortedPublicKeys = [...this.abgp.publicKeys.keys()].sort();
-
-    // @ts-ignore
-    const data = [...this.abgp.storage.db.values()]
-      .map((s) => ({
-        ...s,
-        signatures: Object.fromEntries(s.signaturesMap),
-        publicKeys: Array.from(s.publicKeys)
-      }));
-
-    fs.writeFileSync(`${sortedPublicKeys.indexOf(this.abgp.publicKey)}.json`, JSON.stringify({ //todo remove
-      publicKey: this.abgp.publicKey,
-      sortedPublicKeys,
-      data
-    }));*/
   }
 }

@@ -51,8 +51,6 @@ export default class NodeModel extends EventEmitter {
     });
   }
 
-  // todo function to update state root from AppendApi
-
   // eslint-disable-next-line no-unused-vars
   public write(address: string, packet: Buffer): void {
     throw new Error('should be implemented!');

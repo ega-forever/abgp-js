@@ -9,7 +9,7 @@ import ABGP from '../../consensus/main';
 import {
   areNotUniqueHashes,
   generateRandomRecords,
-  getUniqueDbItemsCount,
+  getUniqueDbItemsCount, getUniqueMultiSigDbItemsCount,
   getUniqueRoots,
   syncNodesBetweenEachOther
 } from '../utils/helpers';
@@ -40,7 +40,8 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
         sendSignalToRandomPeer: false,
         logger: bunyan.createLogger({ name: 'abgp.logger', level: 60 }),
         privateKey: ctx.keys[index].privateKey,
-        storage: new PlainStorage()
+        storage: new PlainStorage(),
+        batchReplicationSize: 10
       });
 
       for (let i = 0; i < nodesCount; i++) {
@@ -61,10 +62,13 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
       totalRecordsGenerated += (await generateRandomRecords(node)).amount;
     }
 
-    await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
+    await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, totalRecordsGenerated);
 
     const uniqueDbItemsCount = await getUniqueDbItemsCount(ctx.nodes, totalRecordsGenerated);
     expect(Object.keys(uniqueDbItemsCount).length).to.eq(0);
+
+    const uniqueMultisigDbItemsCount = await getUniqueMultiSigDbItemsCount(ctx.nodes, totalRecordsGenerated);
+    expect(Object.keys(uniqueMultisigDbItemsCount).length).to.eq(0);
 
     const rootReduces = await getUniqueRoots(ctx.nodes);
     expect(rootReduces.length).to.eq(1);
