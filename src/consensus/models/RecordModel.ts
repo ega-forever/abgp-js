@@ -1,7 +1,7 @@
 class RecordModelBase {
   public hash: string;
 
-  public stateHash: string;
+  public stateHash?: string;
 
   public key: string;
 

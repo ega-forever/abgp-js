@@ -14,14 +14,18 @@ import EventTypes from '../constants/EventTypes';
 import NodeModel from '../models/NodeModel';
 import RecordModel from '../models/RecordModel';
 import { isEqualSet } from '../utils/utils';
+import Semaphore from '../utils/Semaphore';
 
 const ec = new EC('secp256k1');
 
 export default class AppendApi {
-  private abgp: ABGP;
+  private readonly abgp: ABGP;
+
+  private readonly semaphore: Semaphore;
 
   constructor(abgp: ABGP) {
     this.abgp = abgp;
+    this.semaphore = new Semaphore(1);
   }
 
   private static hashData(data: string) {
@@ -32,14 +36,13 @@ export default class AppendApi {
 
   public async append(key: string, value: string, version: number = 1) {
     const hash = AppendApi.hashData(`${key}:${value}:${version}`);
-    const stateHash = AppendApi.hashData(`${key}:${value}:${version}${1}`);
 
-    if (await this.abgp.storage.has(hash)) {
+    if (await this.abgp.storage.Record.has(hash)) {
       return;
     }
 
     const timestamp = Date.now();
-    const timestampIndex = (await this.abgp.storage.getByTimestamp(timestamp)).length;
+    const timestampIndex = (await this.abgp.storage.Record.getByTimestamp(timestamp)).length;
 
     const signature = buildPartialSignature(
       this.abgp.privateKey,
@@ -48,7 +51,6 @@ export default class AppendApi {
 
     const record: RecordModel = new RecordModel({
       hash,
-      stateHash,
       key,
       value,
       version,
@@ -59,7 +61,7 @@ export default class AppendApi {
       publicKeys: new Set<string>([this.abgp.publicKey])
     });
 
-    await this.saveItem(record);
+    await this.saveItemSafe(record);
     this.abgp.emit(EventTypes.STATE_UPDATE);
     return hash;
   }
@@ -71,8 +73,10 @@ export default class AppendApi {
       return null;
     }
 
-    if (remoteRecord.timestamp < peerNode.lastUpdateTimestamp
-      || (remoteRecord.timestamp === peerNode.lastUpdateTimestamp && remoteRecord.timestampIndex < peerNode.lastUpdateTimestampIndex)
+    const peerNodeState = await peerNode.getState();
+
+    if (remoteRecord.timestamp < peerNodeState.timestamp
+      || (remoteRecord.timestamp === peerNodeState.timestamp && remoteRecord.timestampIndex < peerNodeState.timestampIndex)
     ) {
       return null;
     }
@@ -101,16 +105,16 @@ export default class AppendApi {
     }
 
     const timestamp = Date.now();
-    const timestampIndex = (await this.abgp.storage.getByTimestamp(timestamp)).length;
+    const timestampIndex = (await this.abgp.storage.Record.getByTimestamp(timestamp)).length;
 
-    let localRecord: RecordModel = await this.abgp.storage.get(hash);
+    let localRecord: RecordModel = await this.abgp.storage.Record.get(hash);
 
     if (localRecord && localRecord.signatureType === SignatureType.MULTISIG && remoteRecord.signatureType === SignatureType.INTERMEDIATE) {
       return null;
     }
 
     if (localRecord && isEqualSet(localRecord.publicKeys, remoteRecord.publicKeys)) {
-      this.updatePeerNodeLastState(peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
+      await peerNode.saveState(remoteRecord.timestamp, remoteRecord.timestampIndex, peerNodeRoot);
       return null;
     }
 
@@ -119,7 +123,7 @@ export default class AppendApi {
       const remoteMultiSigPublicKey = [...remoteRecord.signaturesMap.keys()][0];
 
       if (localMultiSigPublicKey === remoteMultiSigPublicKey || localMultiSigPublicKey > remoteMultiSigPublicKey) {
-        this.updatePeerNodeLastState(peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
+        await peerNode.saveState(remoteRecord.timestamp, remoteRecord.timestampIndex, peerNodeRoot);
         return null;
       }
 
@@ -127,11 +131,10 @@ export default class AppendApi {
 
       localRecord.signaturesMap = new Map<string, string>([[remoteMultiSigPublicKey, remoteMultiSig]]);
       localRecord.publicKeys = new Set<string>(remoteRecord.publicKeys);
-      localRecord.stateHash = remoteRecord.stateHash;
       localRecord.timestamp = timestamp;
       localRecord.timestampIndex = timestampIndex;
 
-      await this.saveItem(localRecord, peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
+      await this.saveItemSafe(localRecord, peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
       this.abgp.emit(EventTypes.STATE_UPDATE);
       return null;
     }
@@ -143,7 +146,6 @@ export default class AppendApi {
       if (!localRecord) {
         localRecord = new RecordModel({
           hash: remoteRecord.hash,
-          stateHash: remoteRecord.stateHash,
           timestamp,
           timestampIndex,
           key: remoteRecord.key,
@@ -154,7 +156,6 @@ export default class AppendApi {
           publicKeys: new Set<string>(remoteRecord.publicKeys)
         });
       } else {
-        localRecord.stateHash = remoteRecord.stateHash;
         localRecord.timestamp = timestamp;
         localRecord.timestampIndex = timestampIndex;
         localRecord.signaturesMap = new Map<string, string>([[remoteMultiSigPublicKey, remoteMultiSig]]);
@@ -162,7 +163,7 @@ export default class AppendApi {
         localRecord.signatureType = SignatureType.MULTISIG;
       }
 
-      await this.saveItem(localRecord, peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
+      await this.saveItemSafe(localRecord, peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
       this.abgp.emit(EventTypes.STATE_UPDATE);
       return null;
     }
@@ -180,7 +181,6 @@ export default class AppendApi {
 
       localRecord.signaturesMap.set(this.abgp.publicKey, signature);
       localRecord.publicKeys.add(this.abgp.publicKey);
-      localRecord.stateHash = AppendApi.hashData(`${localRecord.hash}:${localRecord.value}:${localRecord.version}${localRecord.publicKeys.size}`);
     } else {
       for (const publicKey of remoteRecord.signaturesMap.keys()) {
         const signature = remoteRecord.signaturesMap.get(publicKey);
@@ -190,12 +190,10 @@ export default class AppendApi {
 
       localRecord.timestamp = timestamp;
       localRecord.timestampIndex = timestampIndex;
-      localRecord.stateHash = AppendApi.hashData(`${localRecord.hash}:${localRecord.value}:${localRecord.version}${localRecord.publicKeys.size}`);
     }
 
     if (localRecord.signaturesMap.size >= this.abgp.majority()) {
       const publicKeysForMusig = [...localRecord.signaturesMap.keys()].sort().slice(0, this.abgp.majority());
-      const totalPublicKeys = localRecord.publicKeys.size;
       const signaturesForMusig = publicKeysForMusig.map((publicKey) => localRecord.signaturesMap.get(publicKey));
       const multiPublicKey = buildSharedPublicKeyX(publicKeysForMusig, hash);
 
@@ -203,38 +201,51 @@ export default class AppendApi {
       localRecord.signaturesMap = new Map<string, string>([[multiPublicKey, multiSignature]]);
       localRecord.signatureType = SignatureType.MULTISIG;
       localRecord.publicKeys = new Set<string>(publicKeysForMusig);
-      localRecord.stateHash = AppendApi.hashData(`${localRecord.hash}:${localRecord.value}:${localRecord.version}${totalPublicKeys + 1}`);
     }
 
-    await this.saveItem(localRecord, peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
+    await this.saveItemSafe(localRecord, peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
     this.abgp.emit(EventTypes.STATE_UPDATE);
   }
 
+  private async saveItemSafe(item: RecordModel, peerNode?: NodeModel, peerRoot?: string, peerTimestamp?: number, peerTimestampIndex?: number) {
+    await this.semaphore.callFunction(this.saveItem.bind(this), item, peerNode, peerRoot, peerTimestamp, peerTimestampIndex);
+  }
+
   private async saveItem(item: RecordModel, peerNode?: NodeModel, peerRoot?: string, peerTimestamp?: number, peerTimestampIndex?: number) {
-    const prevItem = await this.abgp.storage.get(item.hash);
-
-    await this.abgp.storage.save(item);
-    this.abgp.lastUpdateTimestamp = item.timestamp;
-    this.abgp.lastUpdateTimestampIndex = item.timestampIndex;
-
-    if (peerNode) {
-      this.updatePeerNodeLastState(peerNode, peerRoot, peerTimestamp, peerTimestampIndex);
-    }
+    const prevItem = await this.abgp.storage.Record.get(item.hash);
 
     if (
       item.signatureType === SignatureType.MULTISIG &&
       ((prevItem && prevItem.signatureType === SignatureType.INTERMEDIATE) || !prevItem)
     ) {
-      this.abgp.stateRoot = new BN(this.abgp.stateRoot, 16).add(new BN(item.stateHash, 16)).mod(ec.n).toString(16);
-    }
-  }
+      const lastRecord = await this.abgp.storage.Record.getLast(SignatureType.MULTISIG);
+      // eslint-disable-next-line no-param-reassign
+      item.stateHash = lastRecord ? new BN(lastRecord.stateHash, 16).add(new BN(item.hash, 16)).mod(ec.n).toString(16) :
+        new BN(item.hash, 16).mod(ec.n).toString(16);
 
-  private updatePeerNodeLastState(peerNode?: NodeModel, peerRoot?: string, peerTimestamp?: number, peerTimestampIndex?: number) {
-    // eslint-disable-next-line no-param-reassign
-    peerNode.stateRoot = peerRoot;
-    // eslint-disable-next-line no-param-reassign
-    peerNode.lastUpdateTimestamp = peerTimestamp;
-    // eslint-disable-next-line no-param-reassign
-    peerNode.lastUpdateTimestampIndex = peerTimestampIndex;
+      await this.abgp.saveState(item.timestamp, item.timestampIndex, item.stateHash);
+    }
+
+    await this.abgp.storage.Record.save(item);
+
+    if (peerNode) {
+      await peerNode.saveState(peerTimestamp, peerTimestampIndex, peerRoot);
+    }
+
+/*    const sortedPublicKeys = [...this.abgp.publicKeys.keys()].sort();
+
+    // @ts-ignore
+    const data = [...this.abgp.storage.db.values()]
+      .map((s) => ({
+        ...s,
+        signatures: Object.fromEntries(s.signaturesMap),
+        publicKeys: Array.from(s.publicKeys)
+      }));
+
+    fs.writeFileSync(`${sortedPublicKeys.indexOf(this.abgp.publicKey)}.json`, JSON.stringify({ //todo remove
+      publicKey: this.abgp.publicKey,
+      sortedPublicKeys,
+      data
+    }));*/
   }
 }

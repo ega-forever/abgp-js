@@ -23,7 +23,7 @@ export default class NodeApi {
       return;
     }
 
-    const node = new NodeModel(null, multiaddr);
+    const node = new NodeModel(null, multiaddr, this.abgp.storage);
     this.abgp.publicKeys.add(node.publicKey);
 
     node.write = this.abgp.write.bind(this.abgp);
@@ -48,26 +48,27 @@ export default class NodeApi {
     return packet;
   }
 
-  public validateState(packet: PacketModel) {
+  public async validateState(packet: PacketModel) {
     const peerNode = this.abgp.nodes.get(packet.publicKey);
+    const peerNodeState = await peerNode.getState();
 
     if (
-      peerNode.getStateRoot() === packet.root &&
-      peerNode.lastUpdateTimestamp === packet.lastUpdateTimestamp &&
-      peerNode.lastUpdateTimestampIndex === packet.lastUpdateTimestampIndex) {
+      peerNodeState.root === packet.root &&
+      peerNodeState.timestamp === packet.lastUpdateTimestamp &&
+      peerNodeState.timestampIndex === packet.lastUpdateTimestampIndex) {
       this.abgp.emit(EventTypes.STATE_SYNCED, packet.publicKey);
       return null;
     }
 
     return this.messageApi.packet(MessageTypes.DATA_REQ, {
-      lastUpdateTimestamp: peerNode.lastUpdateTimestamp,
-      lastUpdateTimestampIndex: peerNode.lastUpdateTimestampIndex
+      lastUpdateTimestamp: peerNodeState.timestamp,
+      lastUpdateTimestampIndex: peerNodeState.timestampIndex
     });
   }
 
   public async dataRequest(packet: PacketModel) {
     const publicKeys = [...this.abgp.publicKeys.keys()].sort();
-    const records = await this.abgp.storage.getAfterTimestamp(packet.data.lastUpdateTimestamp, packet.data.lastUpdateTimestampIndex, this.abgp.batchReplicationSize);
+    const records = await this.abgp.storage.Record.getAfterTimestamp(packet.data.lastUpdateTimestamp, packet.data.lastUpdateTimestampIndex, this.abgp.batchReplicationSize);
     const data = records.map((v) => v.toPlainObject(publicKeys));
     return this.messageApi.packet(MessageTypes.DATA_REP, {
       data

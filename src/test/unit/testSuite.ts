@@ -66,7 +66,7 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
     const uniqueDbItemsCount = await getUniqueDbItemsCount(ctx.nodes, totalRecordsGenerated);
     expect(Object.keys(uniqueDbItemsCount).length).to.eq(0);
 
-    const rootReduces = getUniqueRoots(ctx.nodes);
+    const rootReduces = await getUniqueRoots(ctx.nodes);
     expect(rootReduces.length).to.eq(1);
 
     const checkAllHashesAreSimilar = await areNotUniqueHashes(ctx.nodes, totalRecordsGenerated);
@@ -87,26 +87,21 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
     await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
 
     for (const node of nodesMinor) {
-      node.lastUpdateTimestamp = 0;
-      node.lastUpdateTimestampIndex = 0;
-
-      const records = await node.storage.getAfterTimestamp(0, -1, totalRecordsGenerated);
+      await node.saveState(0, 0, '0');
+      const records = await node.storage.Record.getAfterTimestamp(0, -1, totalRecordsGenerated);
 
       for (const record of records) {
-        await node.storage.del(record.hash);
+        await node.storage.Record.del(record.hash);
       }
 
       for (const peerNode of node.nodes.values()) {
-        peerNode.lastUpdateTimestamp = 0;
-        peerNode.lastUpdateTimestampIndex = 0;
+        await peerNode.saveState(0, -1, '0');
       }
-
-      node.stateRoot = '0';
     }
 
     await syncNodesBetweenEachOther(ctx.nodes, totalRecordsGenerated, 10);
 
-    const rootReduces = getUniqueRoots(ctx.nodes);
+    const rootReduces = await getUniqueRoots(ctx.nodes);
     expect(rootReduces.length).to.eq(1);
   });
 
@@ -142,16 +137,16 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
 
     for (const node of nodesMajority) {
       for (const hash of failHashes) {
-        const failedRecord = await node.storage.get(hash);
+        const failedRecord = await node.storage.Record.get(hash);
         expect(failedRecord).to.eq(undefined);
       }
       for (const hash of hashes) {
-        const record = await node.storage.get(hash);
+        const record = await node.storage.Record.get(hash);
         expect(record).to.not.eq(undefined);
       }
     }
 
-    const rootReduces = getUniqueRoots(nodesMajority);
+    const rootReduces = await getUniqueRoots(nodesMajority);
     expect(rootReduces.length).to.eq(1);
   });
 
@@ -186,16 +181,16 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
 
     for (const node of nodesMajority) {
       for (const hash of failHashes) {
-        const failedRecord = await node.storage.get(hash);
+        const failedRecord = await node.storage.Record.get(hash);
         expect(failedRecord).to.eq(null);
       }
       for (const hash of hashes) {
-        const record = await node.storage.get(hash);
+        const record = await node.storage.Record.get(hash);
         expect(record).to.not.eq(null);
       }
     }
 
-    const rootReduces = getUniqueRoots(ctx.nodes);
+    const rootReduces = await getUniqueRoots(ctx.nodes);
     expect(rootReduces.length).to.eq(1);
   });
 

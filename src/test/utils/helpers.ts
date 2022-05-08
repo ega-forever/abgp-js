@@ -52,7 +52,7 @@ export const syncNodesBetweenEachOther = async (nodes: ABGP[], totalGeneratedRec
         const node1: ABGP = nodes[i];
         const node2: ABGP = nodes[s];
 
-        const node1PacketAck = node1.messageApi.packet(MessageTypes.ACK);
+        const node1PacketAck = await node1.messageApi.packet(MessageTypes.ACK);
 
         // @ts-ignore
         const node2ValidateState: PacketModel = await node2.requestProcessorService.process(node1PacketAck);
@@ -72,9 +72,9 @@ export const syncNodesBetweenEachOther = async (nodes: ABGP[], totalGeneratedRec
   }
 };
 
-export const getUniqueRoots = (nodes: ABGP[]) => {
-  const roots = nodes.map((node) => node.getStateRoot());
-  const rootSet = new Set<string>(roots);
+export const getUniqueRoots = async (nodes: ABGP[]) => {
+  const states = await Promise.all(nodes.map((node) => node.getState()));
+  const rootSet = new Set<string>(states.map((s) => s.root));
   return [...rootSet];
 };
 
@@ -82,7 +82,7 @@ export const areNotUniqueHashes = async (nodes: ABGP[], totalRecordsCount: numbe
   const keys: any = {};
 
   for (const node of nodes) {
-    const records = await node.storage.getAfterTimestamp(0, -1, totalRecordsCount);
+    const records = await node.storage.Record.getAfterTimestamp(0, -1, totalRecordsCount);
     for (const record of records) {
       if (!keys[record.hash]) {
         keys[record.hash] = new Set<string>();
@@ -98,7 +98,7 @@ export const getUniqueDbItemsCount = async (nodes: ABGP[], totalRecordsCount: nu
   const state = {};
 
   for (const node of nodes) {
-    const records = await node.storage.getAfterTimestamp(0, -1, totalRecordsCount);
+    const records = await node.storage.Record.getAfterTimestamp(0, -1, totalRecordsCount);
 
     for (const record of records) {
       state[record.stateHash] = state[record.stateHash] ? state[record.stateHash] + 1 : 1;
@@ -144,8 +144,6 @@ export const awaitNodesSynced = async (nodes: any[], keys: any[]) => {
           acc[cur ? cur.dataUpdateTimestamp : 0] = 1;
           return acc;
         }, {} as any));
-
-        console.log('test', uniqueRoots)
 
         if (uniqueRoots.length === 1) {
           return res([uniqueRoots, uniqueTimestamps]);

@@ -1,16 +1,16 @@
 import testSuite from './consensus/testSuite';
 
-//describe('consensus tests (3 nodes, TCP, random peer selection, links n-to-n)', () => testSuite({}, 3, 'TCP', true));
+describe('consensus tests (3 nodes, TCP, random peer selection, links n-to-n)', () => testSuite({}, 3, 'TCP', true));
 
-//describe('consensus tests (4 nodes, TCP, random peer selection, links n-to-n)', () => testSuite({}, 4, 'TCP', true));
+describe('consensus tests (4 nodes, TCP, random peer selection, links n-to-n)', () => testSuite({}, 4, 'TCP', true));
 
-describe('consensus tests (5 nodes, TCP, random peer selection, links n-to-n)', () => testSuite({}, 5, 'TCP', true));
+ describe('consensus tests (5 nodes, TCP, random peer selection, links n-to-n)', () => testSuite({}, 5, 'TCP', true));
 
-//describe('consensus tests (3 nodes, TCP, all peers selection, links n-to-n)', () => testSuite({}, 3, 'TCP', false));
+describe('consensus tests (3 nodes, TCP, all peers selection, links n-to-n)', () => testSuite({}, 3, 'TCP', false));
 
-//describe('consensus tests (4 nodes, TCP, all peers selection, links n-to-n)', () => testSuite({}, 4, 'TCP', false));
+describe('consensus tests (4 nodes, TCP, all peers selection, links n-to-n)', () => testSuite({}, 4, 'TCP', false));
 
-//describe('consensus tests (5 nodes, TCP, all peer selection, links n-to-n)', () => testSuite({}, 5, 'TCP', false));
+describe('consensus tests (5 nodes, TCP, all peer selection, links n-to-n)', () => testSuite({}, 5, 'TCP', false));
 /*
 
 describe('consensus tests (3 nodes, RPC, random peer selection, links n-to-n)', () => testSuite({}, 3, 'RPC', true));

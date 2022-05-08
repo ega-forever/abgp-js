@@ -42,17 +42,14 @@ export default class ABGP extends NodeModel {
 
   public readonly logger: ILoggerInterface;
 
-  public readonly storage: IStorageInterface;
-
   private readonly requestProcessorService: RequestProcessorService;
 
   constructor(options: ISettingsInterface) {
-    super(options.privateKey, options.address);
+    super(options.privateKey, options.address, options.storage);
 
     this.gossipInterval = options.gossipInterval;
     this.sendSignalToRandomPeer = options.sendSignalToRandomPeer;
     this.batchReplicationSize = options.batchReplicationSize || 10;
-    this.storage = options.storage;
     this.logger = options.logger || {
       // eslint-disable-next-line no-console
       error: console.log,

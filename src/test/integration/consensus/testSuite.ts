@@ -77,7 +77,6 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 0, impleme
     }
   });
 
-/*
   it('should sync changes, once most nodes online (51%), then all nodes online', async () => {
     const majority = Math.floor(ctx.instances.length / 2) + 1;
     const initialNodes = ctx.instances.slice(0, majority);
@@ -98,7 +97,6 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 0, impleme
     const [resultsAllNodesOnline] = await awaitNodesSynced(ctx.instances, ctx.keys);
     expect(resultsAllNodesOnline[0].length).to.eq(1);
   });
-*/
 
   it('should sync changes, after node dropped', async () => {
     for (const instance of ctx.instances) {
@@ -108,8 +106,6 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 0, impleme
 
     const [results] = await awaitNodesSynced(ctx.instances, ctx.keys);
     expect(results[0].length).to.eq(1);
-
-    console.log('before')
 
     const dropIndex = ctx.instances.length - 1;
     ctx.instances[dropIndex].kill();
@@ -125,7 +121,6 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 0, impleme
     ctx.instances[dropIndex].send({ type: 'connect' });
 
     const [resultsAfterResync] = await awaitNodesSynced(ctx.instances, ctx.keys);
-    console.log('after')
     expect(resultsAfterResync[0].length).to.eq(1);
   });
 }

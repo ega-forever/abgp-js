@@ -33,11 +33,12 @@ const init = (params: any) => {
     }
   }
 
-  instance.on(eventTypes.STATE_SYNCED, () => {
-    logger.info(`index #${params.index} root ${instance.getStateRoot()} / lastTimestamp: ${instance.lastUpdateTimestamp}`);
+  instance.on(eventTypes.STATE_SYNCED, async () => {
+    const state = await instance.getState();
+    logger.info(`index #${params.index} root ${state.root} / lastTimestamp: ${state.timestamp}`);
     process.send({
       type: 'state_synced',
-      args: [instance.getStateRoot(), instance.lastUpdateTimestamp]
+      args: [state.root, state.timestamp]
     });
   });
 };
@@ -48,10 +49,12 @@ process.on('message', (m: any) => {
   }
 
   if (m.type === 'connect') {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     instance.connect();
   }
 
   if (m.type === 'append') {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     instance.appendApi.append(m.args[0], m.args[1], m.args[2]);
   }
 });

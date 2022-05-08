@@ -1,4 +1,6 @@
 import { EventEmitter } from 'events';
+import { IStorageInterface } from '../interfaces/IStorageInterface';
+import StateModel from './StateModel';
 
 export default class NodeModel extends EventEmitter {
   get address(): string {
@@ -9,29 +11,44 @@ export default class NodeModel extends EventEmitter {
 
   public readonly publicKey: string;
 
-  public stateRoot: string;
-
-  public lastUpdateTimestamp: number;
-
-  public lastUpdateTimestampIndex: number;
-
   private readonly nodeAddress: string;
+
+  public readonly storage: IStorageInterface;
 
   public constructor(
     privateKey: string,
-    multiaddr: string
+    multiaddr: string,
+    storage: IStorageInterface
   ) {
     super();
     this.privateKey = privateKey;
     this.publicKey = multiaddr.match(/\w+$/).toString();
     this.nodeAddress = multiaddr.split(/\w+$/)[0].replace(/\/$/, '');
-    this.lastUpdateTimestamp = 0;
-    this.lastUpdateTimestampIndex = 0;
-    this.stateRoot = '0';
+    this.storage = storage;
   }
 
-  public getStateRoot() {
-    return this.stateRoot;
+  public async getState(): Promise<StateModel> {
+    const state = await this.storage.State.get(this.publicKey);
+
+    if (state) {
+      return state;
+    }
+
+    return {
+      timestamp: 0,
+      timestampIndex: -1,
+      root: '0',
+      publicKey: this.publicKey
+    };
+  }
+
+  public async saveState(timestamp: number, timestampIndex: number, root: string) {
+    await this.storage.State.save({
+      timestamp,
+      timestampIndex,
+      root,
+      publicKey: this.publicKey
+    });
   }
 
   // todo function to update state root from AppendApi

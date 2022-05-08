@@ -38,8 +38,8 @@ export default class GossipController {
       }
 
       await Promise.all(
-        nodes.map((node) => {
-          const packet = this.messageApi.packet(messageTypes.ACK);
+        nodes.map(async (node) => {
+          const packet = await this.messageApi.packet(messageTypes.ACK);
           return this.messageApi.message(packet, node.publicKey);
         })
       );

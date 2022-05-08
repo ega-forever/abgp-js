@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 import RecordModel from '../models/RecordModel';
+import StateModel from '../models/StateModel';
 
-export interface IStorageInterface {
+export interface IRecord {
   save(record: RecordModel): Promise<void>;
 
   get(hash: string): Promise<RecordModel | null>;
@@ -14,4 +15,17 @@ export interface IStorageInterface {
 
   getAfterTimestamp(timestamp: number, timestampIndex: number, limit: number): Promise<RecordModel[]>;
 
+  getLast(signatureType: number): Promise<RecordModel | null>;
+}
+
+export interface IState {
+  save(state: StateModel): Promise<void>;
+
+  get(publicKey: string): Promise<StateModel>;
+}
+
+export interface IStorageInterface {
+  Record: IRecord;
+
+  State: IState;
 }

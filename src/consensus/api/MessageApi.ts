@@ -14,13 +14,14 @@ export default class MessageApi {
     await node.write(node.address, Buffer.from(JSON.stringify(middlewaredPacket)));
   }
 
-  public packet(type: number, data: any = null): PacketModel {
+  public async packet(type: number, data: any = null): Promise<PacketModel> {
+    const state = await this.abgp.getState();
     return new PacketModel(
-      this.abgp.getStateRoot(),
+      state.root,
       this.abgp.publicKey,
       type,
-      this.abgp.lastUpdateTimestamp,
-      this.abgp.lastUpdateTimestampIndex,
+      state.timestamp,
+      state.timestampIndex,
       data
     );
   }

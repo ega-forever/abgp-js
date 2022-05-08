@@ -1,7 +1,8 @@
 import RecordModel from '../../consensus/models/RecordModel';
-import { IStorageInterface } from '../../consensus/interfaces/IStorageInterface';
+import { IRecord, IState, IStorageInterface } from '../../consensus/interfaces/IStorageInterface';
+import StateModel from '../../consensus/models/StateModel';
 
-export default class PlainStorage implements IStorageInterface {
+class PlainStorageRecord implements IRecord {
   private readonly db: Map<string, RecordModel>;
 
   public constructor() {
@@ -47,5 +48,54 @@ export default class PlainStorage implements IStorageInterface {
 
   async del(hash: string): Promise<void> {
     this.db.delete(hash);
+  }
+
+  async getLast(signatureType: number): Promise<RecordModel | null> {
+    const item = [...this.db.values()]
+      .sort((a, b) =>
+        ((a.timestamp > b.timestamp ||
+          (a.timestamp === b.timestamp && a.timestampIndex > b.timestampIndex)
+        ) ? 1 : -1))
+      .find((v) => v.signatureType === signatureType);
+
+    return item ? item.cloneObject() : null;
+  }
+}
+
+class PlainStorageState implements IState {
+  private readonly db: Map<string, StateModel>;
+
+  public constructor() {
+    this.db = new Map<string, StateModel>();
+  }
+
+  async get(publicKey: string): Promise<StateModel> {
+    const state = this.db.get(publicKey);
+
+    if (!state) {
+      return {
+        timestamp: 0,
+        timestampIndex: -1,
+        root: '0',
+        publicKey
+      };
+    }
+
+    return state;
+  }
+
+  async save(state: StateModel): Promise<void> {
+    this.db.set(state.publicKey, state);
+  }
+}
+
+export default class PlainStorage implements IStorageInterface {
+  public readonly Record: IRecord;
+
+  public readonly State: IState;
+
+  public constructor() {
+    this.Record = new PlainStorageRecord();
+    this.State = new PlainStorageState();
   }
 }
