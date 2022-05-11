@@ -13,19 +13,17 @@ import SignatureType from '../constants/SignatureType';
 import EventTypes from '../constants/EventTypes';
 import NodeModel from '../models/NodeModel';
 import RecordModel from '../models/RecordModel';
-import { isEqualSet } from '../utils/utils';
+import { isEqualSet, isSetIncludesAllKeys } from '../utils/utils';
 import Semaphore from '../utils/Semaphore';
+import Benchmark from '../utils/BenchmarkDecorator';
 
 const ec = new EC('secp256k1');
 
 export default class AppendApi {
   private readonly abgp: ABGP;
 
-  private readonly semaphore: Semaphore;
-
   constructor(abgp: ABGP) {
     this.abgp = abgp;
-    this.semaphore = new Semaphore(1);
   }
 
   private static hashData(data: string) {
@@ -61,15 +59,17 @@ export default class AppendApi {
       publicKeys: new Set<string>([this.abgp.publicKey])
     });
 
-    await this.saveItemSafe(record);
+    await this.saveItem(record);
     this.abgp.emit(EventTypes.STATE_UPDATE);
     return hash;
   }
 
+  @Benchmark
   public async remoteAppend(remoteRecord: RecordModel, peerNode: NodeModel, peerNodeRoot: string) {
     const hash = AppendApi.hashData(`${remoteRecord.key}:${remoteRecord.value}:${remoteRecord.version}`);
 
     if (hash !== remoteRecord.hash) {
+      this.abgp.logger.trace(`different hashes for record ${hash} vs ${remoteRecord.hash} on public key ${peerNode.publicKey}`);
       return null;
     }
 
@@ -78,6 +78,7 @@ export default class AppendApi {
     if (remoteRecord.timestamp < peerNodeState.timestamp
       || (remoteRecord.timestamp === peerNodeState.timestamp && remoteRecord.timestampIndex < peerNodeState.timestampIndex)
     ) {
+      this.abgp.logger.trace(`supplied outdated remote record with timestamp ${remoteRecord.timestamp} vs ${peerNodeState.timestamp}`);
       return null;
     }
 
@@ -86,6 +87,7 @@ export default class AppendApi {
         const signature = remoteRecord.signaturesMap.get(publicKey);
         const isValid = partialSignatureVerify(signature, publicKey, hash);
         if (!isValid) {
+          this.abgp.logger.trace(`wrong INTERMEDIATE signature for record ${remoteRecord.hash} and public key ${peerNode.publicKey}`);
           return null;
         }
       }
@@ -94,12 +96,14 @@ export default class AppendApi {
       const multiPublicKey = [...remoteRecord.signaturesMap.keys()][0];
 
       if (calcMultiPublicKey !== multiPublicKey) {
+        this.abgp.logger.trace(`wrong MULTISIG publickey for record ${remoteRecord.hash} and public key ${peerNode.publicKey}`);
         return null;
       }
 
       const multisig = remoteRecord.signaturesMap.get(multiPublicKey);
       const isValid = verify(multisig, multiPublicKey);
       if (!isValid) {
+        this.abgp.logger.trace(`wrong MULTISIG signature for record ${remoteRecord.hash} and public key ${peerNode.publicKey}`);
         return null;
       }
     }
@@ -109,12 +113,14 @@ export default class AppendApi {
 
     let localRecord: RecordModel = await this.abgp.storage.Record.get(hash);
 
-    if (localRecord && localRecord.signatureType === SignatureType.MULTISIG && remoteRecord.signatureType === SignatureType.INTERMEDIATE) {
-      return null;
-    }
-
-    if (localRecord && isEqualSet(localRecord.publicKeys, remoteRecord.publicKeys)) {
+    if (
+      (localRecord && localRecord.signatureType === SignatureType.MULTISIG && remoteRecord.signatureType === SignatureType.INTERMEDIATE) ||
+      (localRecord && isSetIncludesAllKeys(remoteRecord.publicKeys, localRecord.publicKeys)) ||
+      (localRecord && isEqualSet(localRecord.publicKeys, remoteRecord.publicKeys)
+      )
+    ) {
       await peerNode.saveState(remoteRecord.timestamp, remoteRecord.timestampIndex, peerNodeRoot);
+      this.abgp.logger.trace(`update peer node state (record is not updated with hash ${remoteRecord.hash} and public key ${peerNode.publicKey})`);
       return null;
     }
 
@@ -124,6 +130,7 @@ export default class AppendApi {
 
       if (localMultiSigPublicKey === remoteMultiSigPublicKey || localMultiSigPublicKey > remoteMultiSigPublicKey) {
         await peerNode.saveState(remoteRecord.timestamp, remoteRecord.timestampIndex, peerNodeRoot);
+        this.abgp.logger.trace(`update peer node state (MULTISIG record is not updated with hash ${remoteRecord.hash} and public key ${peerNode.publicKey})`);
         return null;
       }
 
@@ -134,8 +141,9 @@ export default class AppendApi {
       localRecord.timestamp = timestamp;
       localRecord.timestampIndex = timestampIndex;
 
-      await this.saveItemSafe(localRecord, peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
+      await this.saveItem(localRecord, peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
       this.abgp.emit(EventTypes.STATE_UPDATE);
+      this.abgp.logger.trace(`update peer node state and record (higher MULTISIG signatures) for record with hash ${remoteRecord.hash} and public key ${peerNode.publicKey})`);
       return null;
     }
 
@@ -163,8 +171,9 @@ export default class AppendApi {
         localRecord.signatureType = SignatureType.MULTISIG;
       }
 
-      await this.saveItemSafe(localRecord, peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
+      await this.saveItem(localRecord, peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
       this.abgp.emit(EventTypes.STATE_UPDATE);
+      this.abgp.logger.trace(`save MULTISIG record (no local record exist) with hash ${remoteRecord.hash} and public key ${peerNode.publicKey})`);
       return null;
     }
 
@@ -203,17 +212,18 @@ export default class AppendApi {
       localRecord.publicKeys = new Set<string>(publicKeysForMusig);
     }
 
-    await this.saveItemSafe(localRecord, peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
+    this.abgp.logger.trace(`save record ${localRecord.signatureType === SignatureType.MULTISIG ? 'MULTISIG' : 'INTERMEDIATE'} with hash ${remoteRecord.hash} and public key ${peerNode.publicKey})`);
+    await this.saveItem(localRecord, peerNode, peerNodeRoot, remoteRecord.timestamp, remoteRecord.timestampIndex);
     this.abgp.emit(EventTypes.STATE_UPDATE);
-  }
-
-  private async saveItemSafe(item: RecordModel, peerNode?: NodeModel, peerRoot?: string, peerTimestamp?: number, peerTimestampIndex?: number) {
-    await this.semaphore.callFunction(this.saveItem.bind(this), item, peerNode, peerRoot, peerTimestamp, peerTimestampIndex);
   }
 
   private async saveItem(item: RecordModel, peerNode?: NodeModel, peerRoot?: string, peerTimestamp?: number, peerTimestampIndex?: number) {
     const prevItem = await this.abgp.storage.Record.get(item.hash);
     const lastState = await this.abgp.getState();
+
+    if (lastState.timestamp > item.timestamp) {
+      this.abgp.logger.trace(`WARNING! downgrade timestamp ${lastState.timestamp} vs ${item.timestamp}`);
+    }
 
     if (
       item.signatureType === SignatureType.MULTISIG &&

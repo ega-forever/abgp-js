@@ -16,3 +16,13 @@ export const isEqualSet = (as: Set<string>, bs: Set<string>) => {
   }
   return true;
 };
+
+export const isSetIncludesAllKeys = (as: Set<string>, bs: Set<string>) => {
+  for (const key of as.keys()) {
+    if (!bs.has(key)) {
+      return false;
+    }
+  }
+
+  return true;
+};

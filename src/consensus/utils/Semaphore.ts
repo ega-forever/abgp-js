@@ -11,7 +11,11 @@ export default class Semaphore {
     this.maxConcurrentRequests = maxConcurrentRequests;
   }
 
-  callFunction(fnToCall, ...args) {
+  public getLeftRequests() {
+    return this.currentRequests.length;
+  }
+
+  public callFunction(fnToCall, ...args) {
     return new Promise((resolve, reject) => {
       this.currentRequests.push({
         resolve,
@@ -23,7 +27,7 @@ export default class Semaphore {
     });
   }
 
-  tryNext() {
+  private tryNext() {
     if (!this.currentRequests.length) {
 
     } else if (this.runningRequests < this.maxConcurrentRequests) {

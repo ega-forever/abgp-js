@@ -5,6 +5,7 @@ import NodeModel from '../models/NodeModel';
 import PacketModel from '../models/PacketModel';
 import MessageApi from './MessageApi';
 import RecordModel from '../models/RecordModel';
+import Benchmark from '../utils/BenchmarkDecorator';
 
 export default class NodeApi {
   private readonly abgp: ABGP;
@@ -60,14 +61,18 @@ export default class NodeApi {
       return null;
     }
 
+    this.abgp.logger.trace(`sending data request to node [${peerNode.publicKey}] compare timestamp ${packet.lastUpdateTimestamp} vs ${peerNodeState.timestamp}`);
+
     return this.messageApi.packet(MessageTypes.DATA_REQ, {
       lastUpdateTimestamp: peerNodeState.timestamp,
       lastUpdateTimestampIndex: peerNodeState.timestampIndex
     });
   }
 
+  @Benchmark
   public async dataRequest(packet: PacketModel) {
     const publicKeys = [...this.abgp.publicKeys.keys()].sort();
+    this.abgp.logger.trace(`requesting records for node [${packet.publicKey}] with timestamp ${packet.lastUpdateTimestamp}`);
     const records = await this.abgp.storage.Record.getAfterTimestamp(packet.data.lastUpdateTimestamp, packet.data.lastUpdateTimestampIndex, this.abgp.batchReplicationSize);
     const data = records.map((v) => v.toPlainObject(publicKeys));
     return this.messageApi.packet(MessageTypes.DATA_REP, {
@@ -75,6 +80,7 @@ export default class NodeApi {
     });
   }
 
+  @Benchmark
   public async dataResponse(packet: PacketModel) {
     const peerNode = this.abgp.nodes.get(packet.publicKey);
     const data: any[] = packet.data.data

@@ -41,7 +41,7 @@ export default class ABGP extends NodeModel {
 
   public readonly logger: ILoggerInterface;
 
-  private readonly requestProcessorService: RequestProcessorService;
+  public readonly requestProcessorService: RequestProcessorService;
 
   constructor(options: ISettingsInterface) {
     super(options.privateKey, options.address, options.storage);

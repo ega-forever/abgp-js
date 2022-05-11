@@ -40,13 +40,19 @@ export default class GossipController {
       await Promise.all(
         nodes.map(async (node) => {
           const packet = await this.messageApi.packet(messageTypes.ACK);
+          this.abgp.logger.trace(`sending ack signal to peer (${node.publicKey})`);
           return this.messageApi.message(packet, node.publicKey);
         })
       );
 
-      this.abgp.logger.trace('sent ack signal to peers');
+      this.abgp.logger.trace(`sent ack signal to peers (${nodes.length})`);
       const interval = Math.random() * (this.abgp.gossipInterval.max - this.abgp.gossipInterval.min) + this.abgp.gossipInterval.min;
       await new Promise((res) => setTimeout(res, interval));
+
+      while (this.abgp.requestProcessorService.isDataResponseSemaphoreProcess()) {
+        this.abgp.logger.trace(`awaiting for append queue to draw (left ${this.abgp.requestProcessorService.leftDataResponseSemaphoreProcessQueue()})`);
+        await new Promise((res) => setTimeout(res, interval));
+      }
     }
   }
 }
