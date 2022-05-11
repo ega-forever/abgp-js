@@ -50,9 +50,4 @@ export default class NodeModel extends EventEmitter {
       publicKey: this.publicKey
     });
   }
-
-  // eslint-disable-next-line no-unused-vars
-  public write(address: string, packet: Buffer): void {
-    throw new Error('should be implemented!');
-  }
 }

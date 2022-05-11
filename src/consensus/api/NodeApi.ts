@@ -4,7 +4,6 @@ import ABGP from '../main';
 import NodeModel from '../models/NodeModel';
 import PacketModel from '../models/PacketModel';
 import MessageApi from './MessageApi';
-import RecordModel from '../models/RecordModel';
 import Benchmark from '../utils/BenchmarkDecorator';
 
 export default class NodeApi {
@@ -26,8 +25,6 @@ export default class NodeApi {
 
     const node = new NodeModel(null, multiaddr, this.abgp.storage);
     this.abgp.publicKeys.add(node.publicKey);
-
-    node.write = this.abgp.write.bind(this.abgp);
     node.once('end', () => this.leave(node.publicKey));
 
     this.abgp.nodes.set(publicKey, node);
@@ -49,26 +46,6 @@ export default class NodeApi {
     return packet;
   }
 
-  public async validateState(packet: PacketModel) {
-    const peerNode = this.abgp.nodes.get(packet.publicKey);
-    const peerNodeState = await peerNode.getState();
-
-    if (
-      peerNodeState.root === packet.root &&
-      peerNodeState.timestamp === packet.lastUpdateTimestamp &&
-      peerNodeState.timestampIndex === packet.lastUpdateTimestampIndex) {
-      this.abgp.emit(EventTypes.STATE_SYNCED, packet.publicKey);
-      return null;
-    }
-
-    this.abgp.logger.trace(`sending data request to node [${peerNode.publicKey}] compare timestamp ${packet.lastUpdateTimestamp} vs ${peerNodeState.timestamp}`);
-
-    return this.messageApi.packet(MessageTypes.DATA_REQ, {
-      lastUpdateTimestamp: peerNodeState.timestamp,
-      lastUpdateTimestampIndex: peerNodeState.timestampIndex
-    });
-  }
-
   @Benchmark
   public async dataRequest(packet: PacketModel) {
     const publicKeys = [...this.abgp.publicKeys.keys()].sort();
@@ -78,21 +55,5 @@ export default class NodeApi {
     return this.messageApi.packet(MessageTypes.DATA_REP, {
       data
     });
-  }
-
-  @Benchmark
-  public async dataResponse(packet: PacketModel) {
-    const peerNode = this.abgp.nodes.get(packet.publicKey);
-    const data: any[] = packet.data.data
-      .sort((a, b) =>
-        ((a.timestamp > b.timestamp ||
-          (a.timestamp === b.timestamp && a.timestampIndex > b.timestampIndex)
-        ) ? 1 : -1));
-
-    const sortedPublicKeys = [...this.abgp.publicKeys.keys()].sort();
-
-    for (const item of data) {
-      await this.abgp.appendApi.remoteAppend(RecordModel.fromPlainObject(item, sortedPublicKeys), peerNode, packet.root);
-    }
   }
 }

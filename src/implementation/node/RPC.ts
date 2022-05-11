@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import { URL } from 'url';
 import ABGP from '../../consensus/main';
+import PacketModel from '../../consensus/models/PacketModel';
 
 class RPCABGP extends ABGP {
   private app = express();
@@ -11,11 +12,12 @@ class RPCABGP extends ABGP {
   public initialize() {
     this.app.use(bodyParser.json());
 
-    this.app.post('/', (req, res) => {
+    this.app.post('/', async (req, res) => {
       const packet = Buffer.from(req.body.data, 'hex');
+      const decoded = this.messageApi.decodePacket(packet);
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      this.emitPacket(packet);
-      res.send({ ok: 1 });
+      const reply = await this.requestProcessorService.process(decoded);
+      res.send(Buffer.from(JSON.stringify(reply)).toString('hex'));
     });
 
     const url = new URL(this.address);
@@ -32,14 +34,14 @@ class RPCABGP extends ABGP {
    * @param {Object} packet The packet to write to the connection.
    * @api private
    */
-  public async write(address: string, packet: Buffer): Promise<void> {
-    await axios.post(address, {
-      data: packet.toString('hex')
+  public async call(address: string, packet: PacketModel): Promise<PacketModel> {
+    const reply = await axios.post(address, {
+      data: Buffer.from(JSON.stringify(packet)).toString('hex')
     }, {
       timeout: this.gossipInterval.max
-    }).catch((e) => {
-      this.logger.trace(`received error from ${address}: ${e}`);
     });
+
+    return this.messageApi.decodePacket(Buffer.from(reply.data, 'hex'));
   }
 
   public async disconnect(): Promise<void> {

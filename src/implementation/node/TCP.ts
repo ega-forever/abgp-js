@@ -1,24 +1,29 @@
+import { URL } from 'url';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import msg from 'axon';
+import { Client, Server } from 'jayson/promise';
 import ABGP from '../../consensus/main';
+import PacketModel from '../../consensus/models/PacketModel';
 
 class TCPABGP extends ABGP {
-  private sockets: Map<string, any> = new Map<string, any>();
+  private server: Server;
+
+  private clients: Map<string, Client> = new Map<string, Client>();
 
   public initialize() {
     this.logger.info(`initializing reply socket on port  ${this.address}`);
 
-    this.sockets.set(this.address, msg.socket('sub-emitter'));
-
-    this.sockets.get(this.address).bind(this.address);
-    this.sockets.get(this.address).on('message', (data: Buffer) => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      this.emitPacket(data);
+    this.server = new Server({
+      rpc: async (args) => {
+        const decoded = this.messageApi.decodePacket(Buffer.from(args[0], 'hex'));
+        const reply = await this.requestProcessorService.process(decoded);
+        return Buffer.from(JSON.stringify(reply)).toString('hex');
+      }
     });
 
-    this.sockets.get(this.address).on('error', () => {
-      this.logger.error(`failed to initialize on port: ${this.address}`);
-    });
+    const url = new URL(this.address);
+
+    this.server.tcp().listen(parseInt(url.port, 10), url.hostname);
+    this.logger.info(`server started on port: ${this.address}`);
   }
 
   /**
@@ -28,21 +33,31 @@ class TCPABGP extends ABGP {
    * @param {Object} packet The packet to write to the connection.
    * @api private
    */
-  public async write(address: string, packet: Buffer): Promise<void> {
-    if (!this.sockets.has(address)) {
-      this.sockets.set(address, msg.socket('pub-emitter'));
+  public async call(address: string, packet: PacketModel): Promise<PacketModel> {
+    if (!this.clients.has(address)) {
+      const url = new URL(address);
 
-      this.sockets.get(address).connect(address);
+      const client = Client.tcp({
+        port: parseInt(url.port, 10),
+        host: url.hostname
+      });
+
+      this.clients.set(address, client);
     }
 
-    this.sockets.get(address).emit('message', packet);
+    const response = await this.clients.get(address).request('rpc', [Buffer.from(JSON.stringify(packet)).toString('hex')]);
+
+    if (response.error) {
+      throw new Error(response.error);
+    }
+
+    return this.messageApi.decodePacket(Buffer.from(response.result, 'hex'));
   }
 
   public async disconnect(): Promise<void> {
     await super.disconnect();
-    for (const socket of this.sockets.values()) {
-      socket.close();
-    }
+    // @ts-ignore
+    this.server.close();
   }
 
   public async connect(): Promise<void> {

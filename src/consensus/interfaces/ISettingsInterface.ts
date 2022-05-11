@@ -18,7 +18,8 @@ export interface ISettingsInterface {
   logger: {
     error: () => void,
     info: () => void,
-    trace: () => void
+    trace: () => void,
+    warn: () => void
   };
   storage: IStorageInterface
 }

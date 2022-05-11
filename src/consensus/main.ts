@@ -53,6 +53,8 @@ export default class ABGP extends NodeModel {
       // eslint-disable-next-line no-console
       error: console.log,
       // eslint-disable-next-line no-console
+      warn: console.log,
+      // eslint-disable-next-line no-console
       info: console.log,
       // eslint-disable-next-line no-console
       trace: console.log
@@ -95,12 +97,8 @@ export default class ABGP extends NodeModel {
     await this.gossipCtrl.stopBeat();
   }
 
-  public async emitPacket(packet: Buffer) {
-    let parsedPacket = this.messageApi.decodePacket(packet);
-    parsedPacket = await this.reqMiddleware(parsedPacket);
-    const reply = await this.requestProcessorService.process(parsedPacket);
-    if (reply) {
-      await this.messageApi.message(reply, parsedPacket.publicKey);
-    }
+  // eslint-disable-next-line no-unused-vars
+  public async call(address: string, packet: PacketModel): Promise<PacketModel> {
+    throw new Error('should be implemented!');
   }
 }

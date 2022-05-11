@@ -8,10 +8,12 @@ export default class MessageApi {
     this.abgp = abgp;
   }
 
-  public async message(packet: PacketModel, peerPublicKey: string) {
-    const middlewaredPacket = await this.abgp.resMiddleware(packet, peerPublicKey);
+  public async message(packet: PacketModel, peerPublicKey: string): Promise<PacketModel> {
+    const middlewaredReqPacket = await this.abgp.reqMiddleware(packet);
     const node = this.abgp.nodes.get(peerPublicKey);
-    await node.write(node.address, Buffer.from(JSON.stringify(middlewaredPacket)));
+    const reply = await this.abgp.call(node.address, middlewaredReqPacket);
+    const middlewaredResPacket = await this.abgp.resMiddleware(reply, peerPublicKey);
+    return middlewaredResPacket;
   }
 
   public async packet(type: number, data: any = null): Promise<PacketModel> {

@@ -2,8 +2,8 @@
 import { expect } from 'chai';
 import MessageTypes from '../../consensus/constants/MessageTypes';
 import ABGP from '../../consensus/main';
-import PacketModel from '../../consensus/models/PacketModel';
 import SignatureType from '../../consensus/constants/SignatureType';
+import RecordModel from '../../consensus/models/RecordModel';
 
 export const generateRandomRecords = async (node: ABGP, amount?: number) => {
   if (!amount) {
@@ -55,21 +55,38 @@ export const syncNodesBetweenEachOther = async (nodes: ABGP[], totalGeneratedRec
         const node1: ABGP = nodes[i];
         const node2: ABGP = nodes[s];
 
-        const node1PacketAck = await node1.messageApi.packet(MessageTypes.ACK);
-
-        // @ts-ignore
-        const node2ValidateState: PacketModel = await node2.requestProcessorService.process(node1PacketAck);
-        if (!node2ValidateState) {
+        if (!node1.nodes.has(node2.publicKey)) {
           continue;
         }
 
-        // @ts-ignore
-        const node1DataRequest: PacketModel = await node1.requestProcessorService.process(node2ValidateState);
-        if (!node1DataRequest) {
+        const node1PeerStateNode2 = await node1.nodes.get(node2.publicKey).getState();
+
+        const node1PacketDataReq = await node1.messageApi.packet(MessageTypes.DATA_REQ, {
+          lastUpdateTimestamp: node1PeerStateNode2.timestamp,
+          lastUpdateTimestampIndex: node1PeerStateNode2.timestampIndex
+        });
+
+        const node2DataForNode1 = await node2.requestProcessorService.process(node1PacketDataReq);
+
+        if (!node2DataForNode1.data) {
           continue;
         }
-        // @ts-ignore
-        await node2.requestProcessorService.process(node1DataRequest);
+
+        const sortedPublicKeys = [...node1.publicKeys.keys()].sort();
+
+        const data: any[] = node2DataForNode1.data.data
+          .sort((a, b) =>
+            ((a.timestamp > b.timestamp ||
+              (a.timestamp === b.timestamp && a.timestampIndex > b.timestampIndex)
+            ) ? 1 : -1));
+
+        for (const item of data) {
+          await node1.appendApi.remoteAppend(
+            RecordModel.fromPlainObject(item, sortedPublicKeys),
+            node1.nodes.get(node2.publicKey),
+            node2DataForNode1.root
+          );
+        }
       }
     }
   }
