@@ -15,14 +15,18 @@ import NodeModel from '../models/NodeModel';
 import RecordModel from '../models/RecordModel';
 import { isEqualSet, isSetIncludesAllKeys } from '../utils/utils';
 import Benchmark from '../utils/BenchmarkDecorator';
+import Semaphore from '../utils/Semaphore';
 
 const ec = new EC('secp256k1');
 
 export default class AppendApi {
   private readonly abgp: ABGP;
 
+  private readonly semaphore: Semaphore;
+
   constructor(abgp: ABGP) {
     this.abgp = abgp;
+    this.semaphore = new Semaphore(1);
   }
 
   private static hashData(data: string) {
@@ -32,6 +36,10 @@ export default class AppendApi {
   }
 
   public async append(key: string, value: string, version: number = 1) {
+    return this.semaphore.callFunction(this.appendUnSafe.bind(this), key, value, version);
+  }
+
+  private async appendUnSafe(key: string, value: string, version: number = 1) {
     const hash = AppendApi.hashData(`${key}:${value}:${version}`);
 
     if (await this.abgp.storage.Record.has(hash)) {
@@ -63,8 +71,11 @@ export default class AppendApi {
     return hash;
   }
 
-  @Benchmark
   public async remoteAppend(remoteRecord: RecordModel, peerNode: NodeModel, peerNodeRoot: string) {
+    return this.semaphore.callFunction(this.remoteAppendUnsafe.bind(this), remoteRecord, peerNode, peerNodeRoot);
+  }
+
+  public async remoteAppendUnsafe(remoteRecord: RecordModel, peerNode: NodeModel, peerNodeRoot: string) {
     const hash = AppendApi.hashData(`${remoteRecord.key}:${remoteRecord.value}:${remoteRecord.version}`);
 
     if (hash !== remoteRecord.hash) {
