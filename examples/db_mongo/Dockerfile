@@ -4,29 +4,22 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 COPY ./src src
-
-#todo remove
-COPY ./abgp abgp
-
 COPY tsconfig.json .
 
-RUN npm install && npm run build
+COPY ./examples/db_mongo examples/db_mongo
+
+RUN npm install && npm run tsc:build
+RUN cd examples/db_mongo && npm install
+
+RUN rm -rf examples/db_mongo/node_modules/abgp-js && \
+    mkdir -p examples/db_mongo/node_modules/abgp-js && \
+    cp -r dist examples/db_mongo/node_modules/abgp-js/dist && \
+    cp package.json examples/db_mongo/node_modules/abgp-js && \
+    cp package-lock.json examples/db_mongo/node_modules/abgp-js && \
+    cd examples/db_mongo/node_modules/abgp-js && npm install --production
+
+RUN cd examples/db_mongo && npm run build
 ###
-
-FROM node:16.14.0 AS installer
-
-WORKDIR /usr/src/app
-
-COPY --from=builder /usr/src/app/dist build
-
-#todo remove
-COPY --from=builder /usr/src/app/abgp abgp
-
-COPY --from=builder /usr/src/app/package*.json ./
-COPY --from=builder /usr/src/app/tsconfig.json .
-
-RUN npm install --production
-
 # ---
 
 # Running code under slim image (production part mostly)
@@ -36,12 +29,7 @@ FROM node:16.14.0-slim
 WORKDIR /app
 
 ## We just need the build and package to execute the command
-COPY --from=installer /usr/src/app/build build
-
-#todo remove
-COPY --from=installer /usr/src/app/abgp abgp
-
-COPY --from=installer /usr/src/app/node_modules node_modules
-
+COPY --from=builder /usr/src/app/examples/db_mongo/dist build
+COPY --from=builder /usr/src/app/examples/db_mongo/node_modules node_modules
 ENTRYPOINT ["node"]
 CMD ["build/index.js"]

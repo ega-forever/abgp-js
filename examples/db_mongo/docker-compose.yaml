@@ -13,7 +13,8 @@ services:
 
   node1:
     build:
-      context: .
+      context: ../../
+      dockerfile: examples/db_mongo/Dockerfile
     environment:
       LOG_LEVEL: 10
       DB_URI: "mongodb://mongo:27017/node1"
@@ -41,7 +42,8 @@ services:
 
   node2:
     build:
-      context: .
+      context: ../../
+      dockerfile: examples/db_mongo/Dockerfile
     environment:
       LOG_LEVEL: 10
       DB_URI: "mongodb://mongo:27017/node2"
@@ -69,7 +71,8 @@ services:
 
   node3:
     build:
-      context: .
+      context: ../../
+      dockerfile: examples/db_mongo/Dockerfile
     environment:
       LOG_LEVEL: 10
       DB_URI: "mongodb://mongo:27017/node3"
@@ -97,7 +100,8 @@ services:
 
   node4:
     build:
-      context: .
+      context: ../../
+      dockerfile: examples/db_mongo/Dockerfile
     environment:
       LOG_LEVEL: 10
       DB_URI: "mongodb://mongo:27017/node4"
@@ -125,7 +129,8 @@ services:
 
   node5:
     build:
-      context: .
+      context: ../../
+      dockerfile: examples/db_mongo/Dockerfile
     environment:
       LOG_LEVEL: 10
       DB_URI: "mongodb://mongo:27017/node5"
@@ -153,7 +158,8 @@ services:
 
   node6:
     build:
-      context: .
+      context: ../../
+      dockerfile: examples/db_mongo/Dockerfile
     environment:
       LOG_LEVEL: 10
       DB_URI: "mongodb://mongo:27017/node6"
@@ -181,7 +187,8 @@ services:
 
   node7:
     build:
-      context: .
+      context: ../../
+      dockerfile: examples/db_mongo/Dockerfile
     environment:
       LOG_LEVEL: 10
       DB_URI: "mongodb://mongo:27017/node7"
@@ -209,7 +216,8 @@ services:
 
   node8:
     build:
-      context: .
+      context: ../../
+      dockerfile: examples/db_mongo/Dockerfile
     environment:
       LOG_LEVEL: 10
       DB_URI: "mongodb://mongo:27017/node8"
@@ -237,7 +245,8 @@ services:
 
   node9:
     build:
-      context: .
+      context: ../../
+      dockerfile: examples/db_mongo/Dockerfile
     environment:
       LOG_LEVEL: 10
       DB_URI: "mongodb://mongo:27017/node9"

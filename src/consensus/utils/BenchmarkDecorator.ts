@@ -1,3 +1,4 @@
+// @dev use it for dev purpose (measure function execution time)
 const Benchmark: MethodDecorator = (
   target: Object,
   prop: PropertyKey,

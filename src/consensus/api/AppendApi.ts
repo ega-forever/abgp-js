@@ -14,7 +14,6 @@ import EventTypes from '../constants/EventTypes';
 import NodeModel from '../models/NodeModel';
 import RecordModel from '../models/RecordModel';
 import { isEqualSet, isSetIncludesAllKeys } from '../utils/utils';
-import Benchmark from '../utils/BenchmarkDecorator';
 import Semaphore from '../utils/Semaphore';
 
 const ec = new EC('secp256k1');

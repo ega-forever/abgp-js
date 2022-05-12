@@ -4,7 +4,6 @@ import ABGP from '../main';
 import NodeModel from '../models/NodeModel';
 import PacketModel from '../models/PacketModel';
 import MessageApi from './MessageApi';
-import Benchmark from '../utils/BenchmarkDecorator';
 
 export default class NodeApi {
   private readonly abgp: ABGP;
@@ -46,7 +45,6 @@ export default class NodeApi {
     return packet;
   }
 
-  @Benchmark
   public async dataRequest(packet: PacketModel) {
     const publicKeys = [...this.abgp.publicKeys.keys()].sort();
     this.abgp.logger.trace(`requesting records for node [${packet.publicKey}] with timestamp ${packet.lastUpdateTimestamp}`);

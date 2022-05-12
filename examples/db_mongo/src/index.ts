@@ -3,11 +3,9 @@ import * as bodyParser from 'body-parser';
 import cors from 'express-cors';
 import config from './config';
 import * as bunyan from 'bunyan';
-//import TCPABGP from 'abgp-js/dist/implementation/node/TCP';
-import TCPABGP from '../abgp/dist/implementation/node/TCP';
+import TCPABGP from 'abgp-js/dist/implementation/node/TCP';
 import eventTypes from 'abgp-js/dist/consensus/constants/EventTypes';
 import StorageMongo from './StorageMongo';
-import PlainStorage from '../abgp/dist/implementation/storage/PlainStorage';
 
 const init = async () => {
   const app = express();
@@ -32,7 +30,6 @@ const init = async () => {
     logger,
     privateKey: config.node.privateKey,
     storage: storageMongo
-    //storage: new PlainStorage()
   });
 
 

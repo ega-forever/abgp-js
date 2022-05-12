@@ -6,13 +6,13 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc",
-    "generate_key": "node utils/generate_keypair.js"
+    "generate_key": "node utils/generate_keypair.js",
+    "generate_records": "node utils/generate_records.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "abgp-js": "^1.3.0",
-    "axon": "^2.0.3",
+    "abgp-js": "file:../../",
     "body-parser": "^1.20.0",
     "bunyan": "^1.8.15",
     "dotenv": "^16.0.0",

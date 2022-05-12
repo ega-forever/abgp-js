@@ -10,3 +10,4 @@ webpack_report.html
 examples
 temp
 .eslintrc.js
+.dockerignore

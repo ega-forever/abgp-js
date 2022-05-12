@@ -31,42 +31,49 @@ $ npm run build
 
 ### Algorithm
 The algorithm represents an authenticated gossip protocol version of the original algorithm.
-This means, that each network peer (i.e. node) should be aware of the rest peers in network. 
-For peer validation the ECC signatures (SECP256K1 in current implementation) are used. As a result, each peer has its own private/public keypair.
-All peers should know about all public keys. For instance, in cluster of nodes [A, B, C], the node A should have public keys of [A (self public key), B, C].
+This means, that each network node (i.e. node) should be aware of the rest nodes in network. 
+For node validation the ECC signatures (SECP256K1 in current implementation) are used. As a result, each node has its own private/public keypair.
+All nodes should know about all public keys. For instance, in cluster of nodes [A, B, C], the node A should have public keys of [A (self public key), B, C].
 
-The algorithm have 2 data structures: the db (i.e. database) and peers state: 
+The algorithm have 2 data structures: the db (i.e. database) and nodes state: 
 1) The db keeps all current data. The data represents as key-value-version pair + signatures and involved public keys
-2) The state of other linked peers represents the  (merkle root and last updated timestamp)
+2) The state of other linked nodes represents the  (merkle root and last updated timestamp)
 
-The communication between peers happens in one direction. For instance in cluster of nodes [A, B, C], if node A sends ACK message to node B, 
-then node B will not send the reply immediately, so don't expect atomic sync between 2 peers. 
+The communication between nodes happens in bi-direction way. For instance in cluster of nodes [A, B, C], if node A sends DATA_REQ message to node B, 
+then node B will send the reply back immediately (DATA_RES message). 
 
 There are 3 types of messages:
-1) ACK - each node sends periodically this packet, which contains merkle root and last updated timestamp. So, if node A sends ACK message to node B,
-then node B check its state + its local state of node A. If node A has more recent state, then node B send to node A STATE_REQ message.
-4) DATA_REQ - this message contains last seen state of peer, with which sync happens (comparing local state against remove).
-5) DATA_REP - contains an array of requested log entries. These log entries then are applied to local state
-
+1) DATA_REQ - each node sends periodically this packet, which contains root, last updated timestamp and 
+last updated timestamp index of sender node + last updated timestamp and timestamp index of receiver node 
+(which is cached locally on sender node, like "last seen record from receiver node"). 
+The receiver node validates last timestamp + last timestamp index, and send back delta of changes 
+(which happened after this timestamp and timestamp index). If there is no delta - then empty array returns.
+2) DATA_REP - contains an array of requested record entries. These record entries then are applied to local state
+3) ERR - returns if there is an error happened on receiver node during request process (for instance on DATA_REQ)
 
 ### Append process
 There are 2 types of append: 
-1) local - when user append data (key-value-version pair) to local state
-2) remote - when peer append locally remote changes (obtained from another peer)
+1) local - when user append data (key-value-version pair) to local node
+2) remote - when node append locally remote changes (obtained from another node)
 
-During the local append, a new log item is generated. The log item includes key-value-version pair, signature, hash and stateHash.
-The signature is obtained by signing hash of item with private key: ``signature = privateKey * SHA256(key, value, version)``. 
-Then a hash for state is formed as: SHA256(key, value, version, signature). The stateHash is calculated as: SHA256(key, value, version, signature, number_of_signatures).
-When quorum has signed the log and multisig produced, the stateHash should be equal to SHA256(key, value, version, signature, quorum_amount).
+During the local append, a new record item is generated. The record item includes 
+key-value-version pair, signature, hash and stateHash. The signature is obtained by signing hash of item 
+with private key: ``signature = privateKey * SHA256(key, value, version)``. 
+Then a hash for state is formed as: SHA256(key, value, version, signature). 
+The stateHash is null for local append and will be generated once enough nodes (i.e. quorum) sign 
+the record and multisig will be produced
 
 During the remote append, local node append changes, received from another node. There are several possible scenarios:
-1) in case there is a new log (haven't seen earlier by the node), then node validate this log, add its own signature and add to the database. If there is enough signatures (quorum, or 2f+1 by default), then node will build multisig.
-2) in case node already has this log, then node compare signatures, add unique signatures to log, or create the multisig based on them (in case quorum has been reached).
+1) in case there is a new record (haven't seen earlier by the node), then node validate this record, add its own signature and add to the database. If there is enough signatures (quorum, or 2f+1 by default), then node will build multisig.
+2) in case node already has this record, then node compare signatures, add unique signatures to record, or create the multisig based on them (in case quorum has been reached).
+
+Once node generates multisig for the record (or receive multisig from remote node) - it appends its hash to the root.
+The formula looks like: ```current_root = (previous_root + record_hash) mod n ```, where n - is a secp256k1 param.
 
 ### signature types
 There are 2 types for signatures:
 1) intermediate - the single signature, calculated as: ``signature = privateKey * SHA256(key, value, version)``
-2) multisig - the aggregated signature, built up from M-of-N peers. In current implementation it requires quorum (2f+1 by default). 
+2) multisig - the aggregated signature, built up from M-of-N nodes. In current implementation it requires quorum (2f+1 by default). 
 The multisig is generated as: ```multisig = partialSig1 + partialSig2...```. 
 
 ### Signature validation
@@ -82,7 +89,7 @@ In case the signature is not valid - then the following state item will be ignor
 ## Limitations and assumptions
 1) no key deletion. However, you can set null value for key
 2) although algorithm doesn't require all nodes to be connected to each other, it's strongly recommend 
-that each node will have at least f+1 linked connections with rest peers.
+that each node will have at least f+1 linked connections with rest nodes.
 
 # API
 
@@ -98,8 +105,8 @@ Arguments:
  (example: `"tcp://127.0.0.1:2003/03fec1b3d32dbb0641877f65b4e77ba8466f37ab948c0b4780e4ed191be411d694"`)
 * `gossipInterval: {min: number, max: number}`: min and max gossip interval between each new sync round
 * `majorityAmount: number`: quorum size. If not set - then will be calculated by formula (2f + 1)
-* `sendSignalToRandomPeer: boolean`: should send message only to single random peer (during new sync round) or broadcast to everyone
-* `batchReplicationSize: number`: how many logs send per each round (default 10)
+* `sendSignalToRandomPeer: boolean`: should send message only to single random node (during new sync round) or broadcast to everyone
+* `batchReplicationSize: number`: how many records send per each round (default 10)
 * `reqMiddleware: function`: request middleware (will be triggered on every new packet received)
 * `resMiddleware: function`: response middleware (will be triggered on every new packet sent)
 * `logger` (ILoggerInterface): logger instance. If omitted, then console.log will be used
@@ -108,13 +115,13 @@ Arguments:
 
 ### instance.join(multiaddr: string): NodeModel
 
-Add new peer node by uri.
+Add new node node by uri.
 
 ### await instance.appendApi.append(key: string, value: string, version?: number = 1): Promise<string>
 
 Append new item to local state. Returns hash.
 
-### instance.messageApi.packet(type: number, data: any = null): PacketModel
+### await instance.messageApi.packet(type: number, data: any = null): Promise<PacketModel>
 
 Create new packet, where ``type`` is packet type, and ``data`` some custom data
 
@@ -122,16 +129,16 @@ Create new packet, where ``type`` is packet type, and ``data`` some custom data
 
 Decode packet from buffer
 
-### await instance.messageApi.message(packet: PacketModel, peerPublicKey: string): Promise<void>
+### await instance.messageApi.message(packet: PacketModel, nodePublicKey: string): Promise<PacketModel>
 
-Send message to peer
+Send message to node
 
 ## Events
 
 A ABGP instance emits the following events (available at ``/components/shared/EventTypes.ts``):
 
-* `JOIN`: once we add new peer
-* `LEAVE`: once we remove peer
+* `JOIN`: once we add new node
+* `LEAVE`: once we remove node
 * `STATE_UPDATE`: emits on each state update
 * `STATE_SYNCED`: emits when comparing local and remote state and both states are equal
 
@@ -142,9 +149,9 @@ In order to communicate between nodes, you have to implement the interface by yo
  
 * The ```async initialize()``` function, which fires on ABGP start. This method is useful, when you want to open the connection, for instance, tcp one, or connect to certain message broker like rabbitMQ.
 
-* The ```async write(address: string, packet: Buffer)``` function, which fires each time instance wants to broadcast message to other peer (address param).
+* The ```async call(address: string, packet: PacketModel): Promise<PacketModel>``` function, which fires each time instance wants to broadcast message to other node (address param).
 
-Also, keep in mind, that instance doesn't handle the disconnected / dead peers, which means that instance will try to make requests to all presented members in cluster, 
+Also, keep in mind, that instance doesn't handle the disconnected / dead nodes, which means that instance will try to make requests to all presented members in cluster, 
 even if they are not available. So, you need to handle it on your own.
 
 # Custom storage layer
@@ -158,13 +165,20 @@ Please check tests for usage examples
 # Implemented protocols out of the box
 
 
-| Node.js | 
+| Protocol | 
 | --- | 
 | [TCP](src/implementation/node/TCP.ts) | 
 | [HTTP](src/implementation/node/RPC.ts) | 
 
 
 However, you still can implement your own protocol.
+
+# Implemented examples
+
+
+| Implementation | 
+| --- | 
+| [MongoDB](examples/db_mongo) | 
 
 # License
 
