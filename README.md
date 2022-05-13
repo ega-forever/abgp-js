@@ -4,6 +4,8 @@
 
 ABGP Consensus Algorithm implementation in Node.js.
 
+Checkout [website](https://ega-forever.github.io/abgp-js/) for live version (JS with web workers).
+
 consensus features
 * authenticated Gossip protocol (each node have its own private/public keypair)
 * replication confirmed by multisignature (using ECC)
