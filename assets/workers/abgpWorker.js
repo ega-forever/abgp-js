@@ -2,13 +2,101 @@ const window = self;
 const path = window.location.pathname.split(/(\/*.{0,}\/workers\/)/gm, 2).find(el => el.length);
 importScripts(`${path}bundle.js`);
 
+
+class PlainStorageRecord {
+
+  constructor() {
+    this.db = new Map();
+  }
+
+  async get(hash) {
+    const item = this.db.get(hash);
+
+    if (!item) {
+      return null;
+    }
+
+    return item.cloneObject();
+  }
+
+  async save(record) {
+    this.db.set(record.hash, record.cloneObject());
+  }
+
+  async has(hash) {
+    return this.db.has(hash);
+  }
+
+  async getByTimestamp(timestamp) {
+    return [...this.db.values()]
+      .filter((v) => v.timestamp === timestamp)
+      .map((item) => item.cloneObject());
+  }
+
+  async getAfterTimestamp(timestamp, timestampIndex, limit) {
+    return [...this.db.values()]
+      .filter((v) =>
+        v.timestamp > timestamp ||
+        (v.timestamp === timestamp && v.timestampIndex > timestampIndex))
+      .sort((a, b) =>
+        ((a.timestamp > b.timestamp ||
+          (a.timestamp === b.timestamp && a.timestampIndex > b.timestampIndex)
+        ) ? 1 : -1))
+      .slice(0, limit)
+      .map((item) => item.cloneObject());
+  }
+
+  async del(hash) {
+    this.db.delete(hash);
+  }
+}
+
+class PlainStorageState {
+
+  constructor() {
+    this.db = new Map();
+  }
+
+  async get(publicKey) {
+    const state = this.db.get(publicKey);
+
+    if (!state) {
+      return {
+        timestamp: 0,
+        timestampIndex: -1,
+        root: '0',
+        publicKey
+      };
+    }
+
+    return state;
+  }
+
+  async save(state) {
+    this.db.set(state.publicKey, state);
+  }
+}
+
+class PlainStorage {
+  constructor() {
+    this.Record = new PlainStorageRecord();
+    this.State = new PlainStorageState();
+  }
+}
+
+const requests = new Map();
+
 class BrowserABGP extends ABGP.default {
 
   initialize() {
   }
 
-  async write(address, packet) {
-    self.postMessage({type: 'packet', args: [address, packet], id: Date.now()});
+  async call(address, packet) {
+    const id = `${address} - ${Date.now()}`;
+    self.postMessage({type: 'packet', args: [address, JSON.stringify(packet)], id});
+    return new Promise(res => {
+      requests.set(id, res);
+    });
   }
 
   connect() {
@@ -29,11 +117,11 @@ const init = (index, keys, settings) => {
     logger: {
       info: (text) => console.log(`worker#${index} ${text}`),
       error: (text) => console.log(`worker#${index} ${text}`),
-      // trace: (text) => console.log(`worker#${index} ${text}`)
-      trace: (text) => {
-      }
+      warn: (text) => console.log(`worker#${index} ${text}`),
+      trace: (text) => {}
     },
-    privateKey: keys[index].privateKey
+    privateKey: keys[index].privateKey,
+    storage: new PlainStorage()
   });
 
   for (let i = 0; i < keys.length; i++)
@@ -42,11 +130,12 @@ const init = (index, keys, settings) => {
 
   window.abgp.connect();
 
-  window.abgp.on('STATE_UPDATE', () => {
-    window.abgp.logger.info(`state: ${window.abgp.stateRoot}`);
+  window.abgp.on('STATE_UPDATE', async () => {
+    const state = await window.abgp.getState();
+    window.abgp.logger.info(`state: ${state.root}`);
     self.postMessage({
       type: 'info',
-      args: [{stateRoot: window.abgp.stateRoot, lastUpdateTimestamp: window.abgp.lastUpdateTimestamp}]
+      args: [{stateRoot: state.root, lastUpdateTimestamp: state.timestamp}]
     });
   });
 
@@ -63,16 +152,27 @@ self.addEventListener('message', async function (e) {
   }
 
   if (e.data.type === 'packet') {
-    const packet = new TextDecoder('utf-8').decode(new Uint8Array(e.data.args[0]));
-    window.abgp.emitPacket(packet);
+
+    const packet = JSON.parse(e.data.args[0]);
+
+    if (requests.has(e.data.id)) {
+      requests.get(e.data.id)(packet);
+      requests.delete(e.data.id);
+    } else {
+      const reply = await window.abgp.requestProcessorService.process(packet);
+      const node = window.abgp.nodes.get(packet.publicKey);
+      self.postMessage({type: 'packet', args: [node.address, JSON.stringify(reply)], id: e.data.id});
+    }
+
+
   }
 
   if (e.data.type === 'add_record') {
-    return window.abgp.append(...e.data.args);
+    return window.abgp.appendApi.append(...e.data.args);
   }
 
   if (e.data.type === 'get_records') {
-    const records = [...window.abgp.db.values()].map((v)=>({
+    const records = [...window.abgp.storage.Record.db.values()].map((v) => ({
       key: v.key,
       value: v.value,
       signaturesMap: Object.fromEntries(v.signaturesMap),
