@@ -16,7 +16,7 @@ services:
       context: ../../
       dockerfile: examples/db_mongo/Dockerfile
     environment:
-      LOG_LEVEL: 10
+      LOG_LEVEL: 30
       DB_URI: "mongodb://mongo:27017/node1"
       NODE_GOSSIP_INTERVAL_MIN: 100
       NODE_GOSSIP_INTERVAL_MAX: 300
@@ -45,7 +45,7 @@ services:
       context: ../../
       dockerfile: examples/db_mongo/Dockerfile
     environment:
-      LOG_LEVEL: 10
+      LOG_LEVEL: 30
       DB_URI: "mongodb://mongo:27017/node2"
       NODE_GOSSIP_INTERVAL_MIN: 100
       NODE_GOSSIP_INTERVAL_MAX: 300
@@ -74,7 +74,7 @@ services:
       context: ../../
       dockerfile: examples/db_mongo/Dockerfile
     environment:
-      LOG_LEVEL: 10
+      LOG_LEVEL: 30
       DB_URI: "mongodb://mongo:27017/node3"
       NODE_GOSSIP_INTERVAL_MIN: 100
       NODE_GOSSIP_INTERVAL_MAX: 300
@@ -103,7 +103,7 @@ services:
       context: ../../
       dockerfile: examples/db_mongo/Dockerfile
     environment:
-      LOG_LEVEL: 10
+      LOG_LEVEL: 30
       DB_URI: "mongodb://mongo:27017/node4"
       NODE_GOSSIP_INTERVAL_MIN: 100
       NODE_GOSSIP_INTERVAL_MAX: 300
@@ -132,7 +132,7 @@ services:
       context: ../../
       dockerfile: examples/db_mongo/Dockerfile
     environment:
-      LOG_LEVEL: 10
+      LOG_LEVEL: 30
       DB_URI: "mongodb://mongo:27017/node5"
       NODE_GOSSIP_INTERVAL_MIN: 100
       NODE_GOSSIP_INTERVAL_MAX: 300
@@ -161,7 +161,7 @@ services:
       context: ../../
       dockerfile: examples/db_mongo/Dockerfile
     environment:
-      LOG_LEVEL: 10
+      LOG_LEVEL: 30
       DB_URI: "mongodb://mongo:27017/node6"
       NODE_GOSSIP_INTERVAL_MIN: 100
       NODE_GOSSIP_INTERVAL_MAX: 300
@@ -190,7 +190,7 @@ services:
       context: ../../
       dockerfile: examples/db_mongo/Dockerfile
     environment:
-      LOG_LEVEL: 10
+      LOG_LEVEL: 30
       DB_URI: "mongodb://mongo:27017/node7"
       NODE_GOSSIP_INTERVAL_MIN: 100
       NODE_GOSSIP_INTERVAL_MAX: 300
@@ -219,7 +219,7 @@ services:
       context: ../../
       dockerfile: examples/db_mongo/Dockerfile
     environment:
-      LOG_LEVEL: 10
+      LOG_LEVEL: 30
       DB_URI: "mongodb://mongo:27017/node8"
       NODE_GOSSIP_INTERVAL_MIN: 100
       NODE_GOSSIP_INTERVAL_MAX: 300
@@ -248,7 +248,7 @@ services:
       context: ../../
       dockerfile: examples/db_mongo/Dockerfile
     environment:
-      LOG_LEVEL: 10
+      LOG_LEVEL: 30
       DB_URI: "mongodb://mongo:27017/node9"
       NODE_GOSSIP_INTERVAL_MIN: 100
       NODE_GOSSIP_INTERVAL_MAX: 300

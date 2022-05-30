@@ -3,7 +3,7 @@
         "experimentalDecorators": true,
         "rootDir": "./src",
         "module": "commonjs",
-        "target": "es2018",
+        "target": "es2020",
         "noImplicitAny": false,
         "sourceMap": true,
         "outDir": "./dist",
