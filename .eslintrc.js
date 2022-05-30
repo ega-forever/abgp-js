@@ -49,6 +49,7 @@ module.exports = {
     'operator-linebreak': 0,
     'no-nested-ternary': 0,
     'no-plusplus': 0,
-    '@typescript-eslint/no-floating-promises': ['error']
+    '@typescript-eslint/no-floating-promises': ['error'],
+    'no-use-before-define': 0
   }
 };

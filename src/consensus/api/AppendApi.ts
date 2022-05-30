@@ -8,7 +8,7 @@ import {
   buildSharedSignature,
   partialSignatureVerify,
   verify
-} from '../utils/cryptoUtils';
+} from '../crypto';
 import SignatureType from '../constants/SignatureType';
 import EventTypes from '../constants/EventTypes';
 import NodeModel from '../models/NodeModel';

@@ -1,9 +1,9 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect } from 'chai';
 import { fork } from 'child_process';
-import crypto from 'crypto';
 import * as path from 'path';
 import { awaitNodesSynced, generateRandomRecordsWorker } from '../../utils/helpers';
+import { generatePrivateKey, getPublicKey } from '../../../consensus/crypto';
 
 const runInstance = (index: number, keys: any, settings: any, implementationType: any, connectionLinkMap: any) => {
   const implementationTypes = {
@@ -43,17 +43,12 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 0, impleme
     };
 
     for (let i = 0; i < nodesCount; i++) {
-      const node = crypto.createECDH('secp256k1');
-      node.generateKeys();
-
-      if (node.getPrivateKey().toString('hex').length !== 64) {
-        i--;
-        continue;
-      }
+      const privateKey = generatePrivateKey();
+      const publicKey = getPublicKey(privateKey);
 
       ctx.keys.push({
-        privateKey: node.getPrivateKey('hex'),
-        publicKey: node.getPublicKey('hex', 'compressed')
+        privateKey,
+        publicKey
       });
     }
 

@@ -4,7 +4,6 @@ import Promise from 'bluebird';
 import bunyan from 'bunyan';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect } from 'chai';
-import crypto from 'crypto';
 import ABGP from '../../consensus/main';
 import {
   areNotUniqueHashes,
@@ -14,6 +13,7 @@ import {
   syncNodesBetweenEachOther
 } from '../utils/helpers';
 import PlainStorage from '../../implementation/storage/PlainStorage';
+import { generatePrivateKey, getPublicKey } from '../../consensus/crypto';
 
 export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
   beforeEach(async () => {
@@ -22,11 +22,11 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
     ctx.nodes = [];
 
     for (let i = 0; i < nodesCount; i++) {
-      const node = crypto.createECDH('secp256k1');
-      node.generateKeys();
+      const privateKey = generatePrivateKey();
+      const publicKey = getPublicKey(privateKey);
       ctx.keys.push({
-        privateKey: node.getPrivateKey().toString('hex'),
-        publicKey: node.getPublicKey('hex', 'compressed')
+        privateKey,
+        publicKey
       });
     }
 
@@ -125,14 +125,13 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
     }
 
     for (const node of nodesFail) {
-      const c = crypto.createECDH('secp256k1');
-      c.generateKeys();
+      const privateKey = generatePrivateKey();
+      const publicKey = getPublicKey(privateKey);
+      // @ts-ignore
+      node.privateKey = privateKey;
 
       // @ts-ignore
-      node.privateKey = c.getPrivateKey().toString('hex');
-
-      // @ts-ignore
-      node.publicKey = c.getPublicKey('hex', 'compressed');
+      node.publicKey = publicKey;
 
       await generateRandomRecords(node);
     }
@@ -170,11 +169,8 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
     }
 
     for (const node of nodesFail) {
-      const c = crypto.createECDH('secp256k1');
-      c.generateKeys();
-
       // @ts-ignore
-      node.privateKey = c.getPrivateKey().toString('hex');
+      node.privateKey = generatePrivateKey();
 
       const generated = await generateRandomRecords(node);
       totalRecordsGeneratedAmount += generated.amount;

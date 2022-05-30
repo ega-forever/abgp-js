@@ -1,12 +1,11 @@
+import crypto from 'crypto';
 import Point from './Point';
 import curveParams from './secp256k1';
-import { invert, mod, powMod } from './math';
-import crypto from 'crypto';
+import { powMod } from './math';
 
 export const G = new Point(curveParams.Gx, curveParams.Gy);
 
-export const generatePrivateKey = (): bigint => {
-
+export const generatePrivateKey = (): string => {
   const privateKey = BigInt(`0x${crypto.randomBytes(64).toString('hex')}`) % curveParams.P;
   const publicKey = G.multiplyCTJ(privateKey);
   const publicKeyRestored = pubKeyToPoint(pointToPublicKey(publicKey));
@@ -15,14 +14,14 @@ export const generatePrivateKey = (): bigint => {
     return generatePrivateKey();
   }
 
-  return privateKey;
-}
+  return privateKey.toString(16);
+};
 
-export const getPublicKey = (privKey: bigint): string => {
+export const getPublicKey = (privKeyHex: string): string => {
+  const privKey = BigInt(`0x${privKeyHex}`);
   const publicKey = G.multiplyCTJ(privKey);
   // eslint-disable-next-line no-use-before-define
   return pointToPublicKey(publicKey);
-
 };
 
 export const pubKeyToPoint = (pubKeyHex: string) => {
@@ -67,11 +66,6 @@ export const buildPartialSignature = (
   privateKeyK: string,
   dataHash: string
 ): string => {
-  /*new BN(privateKeyK, 16)
-      .mul(new BN(dataHash, 16))
-      .mod(ec.n)
-      .toString(16);*/
-
   const hash = BigInt(`0x${dataHash}`);
   const privateKey = BigInt(`0x${privateKeyK}`);
   const signature = (BigInt(privateKey) * hash) % curveParams.n;
@@ -94,24 +88,22 @@ export const partialSignatureVerify = (
 };
 
 /* s = s1 + s2 + ...sn */
-export const buildSharedSignature = (partialSignatures: string[]): string => { //todo
-  /*  let signature = new BN(0);
+export const buildSharedSignature = (partialSignatures: string[]): string => {
+  let signature = 0n;
 
-    for (const sig of partialSignatures) {
-      signature = signature.add(new BN(sig, 16));
-    }
+  for (const sig of partialSignatures) {
+    signature = (signature + BigInt(`0x${sig}`)) % curveParams.n;
+  }
 
-    return signature.toString(16);*/
-  return '';
+  return signature.toString(16);
 };
 
 /* sG = X * e */
 export const verify = (
   signature: string,
   sharedPublicKeyX: string
-): boolean => { //todo
-  /*  const sg = ec.g.mul(signature);
-    const check = pubKeyToPoint(Buffer.from(sharedPublicKeyX, 'hex'));
-    return pointToPublicKey(sg).toString('hex') === pointToPublicKey(check).toString('hex');*/
-  return true;
+): boolean => {
+  const sg = G.multiplyCTJ(BigInt(`0x${signature}`));
+  const check = pubKeyToPoint(sharedPublicKeyX);
+  return sg.x === check.x;
 };
