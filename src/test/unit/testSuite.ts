@@ -43,7 +43,7 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
         logger: bunyan.createLogger({ name: 'abgp.logger', level: 60 }),
         privateKey: ctx.keys[index].privateKey,
         storage: new PlainStorage(),
-        crypto,
+        crypto: new Crypto(),
         batchReplicationSize: 10
       });
 
@@ -80,7 +80,7 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
     expect(checkAllHashesAreSimilar).to.eq(false);
   });
 
-/*  it('should sync after drop (f, in N = 2f + 1)', async () => {
+  it('should sync after drop (f, in N = 2f + 1)', async () => {
     const majority = Math.ceil(ctx.nodes.length / 2) + 1;
     const nodesMajority: ABGP[] = ctx.nodes.slice(0, majority);
     const nodesMinor: ABGP[] = ctx.nodes.slice(majority);
@@ -195,7 +195,7 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
 
     const rootReduces = await getUniqueRoots(ctx.nodes);
     expect(rootReduces.length).to.eq(1);
-  });*/
+  });
 
   afterEach(async () => {
     await Promise.delay(1000);

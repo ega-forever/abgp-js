@@ -4,7 +4,6 @@ import curveParams from './secp256k1';
 import { addMod, powMod } from './math';
 import JacobianPoint from './JacobianPoint';
 import ICryptoInterface, { ICryptoMathInterface } from '../../../consensus/interfaces/ICryptoInterface';
-import Benchmark from '../../../consensus/utils/BenchmarkDecorator';
 
 class CryptoMath implements ICryptoMathInterface {
   addMod(hash1: string, hash2: string): string {
@@ -41,7 +40,6 @@ export default class Crypto implements ICryptoInterface {
   }
 
   /* X = X1 * a1 + X2 * a2 + ..Xn * an */
-  @Benchmark
   public async buildSharedPublicKeyX(publicKeys: string[], hash: string): Promise<string> {
     let X = null;
     for (const publicKey of publicKeys) {
