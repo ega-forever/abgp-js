@@ -9,8 +9,6 @@ export default class Point {
 
   public readonly y: bigint;
 
-  private precomputes;
-
   constructor(x: bigint, y: bigint) {
     this.x = x;
     this.y = y;
@@ -41,32 +39,13 @@ export default class Point {
   }
 
   multiply(n: bigint) {
-    const dbls = this.getPrecomputes();
     let p = Point.ZERO;
-    let f = Point.ZERO; // fake point
-    for (let i = 0; i < 256; i++) {
-      if (n & 1n) {
-        p = p.add(dbls[i]);
-      } else {
-        f = f.add(dbls[i]);
-      }
-      // eslint-disable-next-line no-param-reassign
-      n >>= 1n;
+    let d: Point = this;
+    while (n > 0n) {
+      if (n & 1n) p = p.add(d);
+      d = d.double();
+      n = n / 2n;
     }
     return p;
-  }
-
-  getPrecomputes() {
-    if (this.precomputes) {
-      return this.precomputes;
-    }
-    this.precomputes = [];
-    let dbl: Point = this;
-    for (let i = 0; i < 256; i++) {
-      this.precomputes.push(dbl);
-      dbl = dbl.double(); // [G, 2G, 4G, 8G..., 256G], optimized
-    }
-
-    return this.precomputes;
   }
 }

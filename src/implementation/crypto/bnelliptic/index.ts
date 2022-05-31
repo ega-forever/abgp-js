@@ -1,12 +1,23 @@
 import * as crypto from 'crypto';
 import { ec as EC } from 'elliptic';
 import BN from 'bn.js';
-import ICryptoInterface from '../../../consensus/interfaces/ICryptoInterface';
-import Benchmark from '../../../consensus/utils/BenchmarkDecorator';
+import ICryptoInterface, { ICryptoMathInterface } from '../../../consensus/interfaces/ICryptoInterface';
 
 const ec = new EC('secp256k1');
 
+class CryptoMath implements ICryptoMathInterface {
+  addMod(hash1: string, hash2: string): string {
+    return new BN(hash1, 16).add(new BN(hash2, 16)).mod(ec.n).toString(16);
+  };
+}
+
 export default class Bnelliptic implements ICryptoInterface {
+  public math: ICryptoMathInterface;
+
+  public constructor() {
+    this.math = new CryptoMath();
+  }
+
   public async generatePrivateKey(): Promise<string> {
     const node = crypto.createECDH('secp256k1');
     node.generateKeys();

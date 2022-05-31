@@ -5,6 +5,12 @@ export const mod = (a: bigint, b: bigint = curveParams.P): bigint => {
   return result >= 0 ? result : b + result;
 };
 
+export const addMod = (hash1: string, hash2: string): string => {
+  const a = BigInt(`0x${hash1}`);
+  const b = BigInt(`0x${hash2}`);
+  return mod(a + b).toString(16);
+};
+
 // Inverses number over modulo
 export const invert = (number: bigint, modulo: bigint = curveParams.P): bigint => {
   if (number === 0n || modulo <= 0n) {

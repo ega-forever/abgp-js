@@ -1,5 +1,9 @@
 /* eslint-disable no-unused-vars */
 
+export interface ICryptoMathInterface {
+  addMod(hash1: string, hash2: string): string;
+}
+
 export default interface ICryptoInterface {
   generatePrivateKey(): Promise<string>;
 
@@ -14,4 +18,6 @@ export default interface ICryptoInterface {
   buildSharedSignature(partialSignatures: string[]): Promise<string>;
 
   verify(signature: string, sharedPublicKeyX: string): Promise<boolean>;
+
+  math: ICryptoMathInterface;
 }

@@ -1,6 +1,4 @@
 import crypto from 'crypto';
-import BN from 'bn.js';
-import { ec as EC } from 'elliptic';
 import ABGP from '../main';
 import SignatureType from '../constants/SignatureType';
 import EventTypes from '../constants/EventTypes';
@@ -8,8 +6,6 @@ import NodeModel from '../models/NodeModel';
 import RecordModel from '../models/RecordModel';
 import { isEqualSet, isSetIncludesAllKeys } from '../utils/utils';
 import Semaphore from '../utils/Semaphore';
-
-const ec = new EC('secp256k1');
 
 export default class AppendApi {
   private readonly abgp: ABGP;
@@ -84,26 +80,46 @@ export default class AppendApi {
       return null;
     }
 
+    let localRecord: RecordModel = await this.abgp.storage.Record.get(hash);
+
     if (remoteRecord.signatureType === SignatureType.INTERMEDIATE) {
       for (const publicKey of remoteRecord.signaturesMap.keys()) {
         const signature = remoteRecord.signaturesMap.get(publicKey);
-        const isValid = await this.abgp.crypto.partialSignatureVerify(signature, publicKey, hash);
+
+        let isValid = false;
+
+        if (localRecord && localRecord.publicKeys.has(publicKey)) {
+          isValid = localRecord.signaturesMap.get(publicKey) === signature;
+        } else if (localRecord && localRecord.signatureType === SignatureType.MULTISIG) {
+          isValid = true;
+        } else {
+          isValid = await this.abgp.crypto.partialSignatureVerify(signature, publicKey, hash);
+        }
+
         if (!isValid) {
           this.abgp.logger.trace(`wrong INTERMEDIATE signature for record ${remoteRecord.hash} and public key ${peerNode.publicKey}`);
           return null;
         }
       }
     } else {
-      const calcMultiPublicKey = await this.abgp.crypto.buildSharedPublicKeyX(Array.from(remoteRecord.publicKeys), hash);
       const multiPublicKey = [...remoteRecord.signaturesMap.keys()][0];
 
-      if (calcMultiPublicKey !== multiPublicKey) {
-        this.abgp.logger.trace(`wrong MULTISIG publickey for record ${remoteRecord.hash} and public key ${peerNode.publicKey}`);
-        return null;
+      let isValid = false;
+
+      if (localRecord && localRecord.signatureType === SignatureType.MULTISIG && [...localRecord.signaturesMap.keys()][0] === multiPublicKey) {
+        isValid = remoteRecord.signaturesMap.get(multiPublicKey) === localRecord.signaturesMap.get(multiPublicKey);
+      } else {
+        const calcMultiPublicKey = await this.abgp.crypto.buildSharedPublicKeyX(Array.from(remoteRecord.publicKeys), hash);
+
+        if (calcMultiPublicKey !== multiPublicKey) {
+          this.abgp.logger.trace(`wrong MULTISIG publickey for record ${remoteRecord.hash} and public key ${peerNode.publicKey}`);
+          return null;
+        }
+
+        const multisig = remoteRecord.signaturesMap.get(multiPublicKey);
+        isValid = await this.abgp.crypto.verify(multisig, multiPublicKey);
       }
 
-      const multisig = remoteRecord.signaturesMap.get(multiPublicKey);
-      const isValid = await this.abgp.crypto.verify(multisig, multiPublicKey);
       if (!isValid) {
         this.abgp.logger.trace(`wrong MULTISIG signature for record ${remoteRecord.hash} and public key ${peerNode.publicKey}`);
         return null;
@@ -112,8 +128,6 @@ export default class AppendApi {
 
     const timestamp = Date.now();
     const timestampIndex = (await this.abgp.storage.Record.getByTimestamp(timestamp)).length;
-
-    let localRecord: RecordModel = await this.abgp.storage.Record.get(hash);
 
     if (
       (localRecord && localRecord.signatureType === SignatureType.MULTISIG && remoteRecord.signatureType === SignatureType.INTERMEDIATE) ||
@@ -232,7 +246,7 @@ export default class AppendApi {
       ((prevItem && prevItem.signatureType === SignatureType.INTERMEDIATE) || !prevItem)
     ) {
       // eslint-disable-next-line no-param-reassign
-      item.stateHash = new BN(lastState.root, 16).add(new BN(item.hash, 16)).mod(ec.n).toString(16);
+      item.stateHash = this.abgp.crypto.math.addMod(lastState.root, item.hash);
       await this.abgp.saveState(item.timestamp, item.timestampIndex, item.stateHash);
     } else {
       await this.abgp.saveState(item.timestamp, item.timestampIndex, lastState.root);

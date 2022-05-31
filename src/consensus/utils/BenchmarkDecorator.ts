@@ -12,13 +12,7 @@ const Benchmark: MethodDecorator = (
     const action: Function = method.apply.bind(method, this, arguments);
     const start = Date.now();
     const result: any = action();
-
-    if (this.abgp) {
-      this.abgp.logger.trace(`Benchmark for method [${prop as string}]: ${Date.now() - start}`);
-    } else {
-      console.log(`Benchmark for method [${prop as string}]: ${Date.now() - start}`);
-    }
-
+    console.log(`Benchmark for method [${prop as string}]: ${Date.now() - start}`);
     return result;
   };
 };

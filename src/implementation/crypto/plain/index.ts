@@ -1,21 +1,30 @@
 import crypto from 'crypto';
 import Point from './Point';
 import curveParams from './secp256k1';
-import { powMod } from './math';
+import { addMod, powMod } from './math';
 import JacobianPoint from './JacobianPoint';
-import ICryptoInterface from '../../../consensus/interfaces/ICryptoInterface';
+import ICryptoInterface, { ICryptoMathInterface } from '../../../consensus/interfaces/ICryptoInterface';
 import Benchmark from '../../../consensus/utils/BenchmarkDecorator';
+
+class CryptoMath implements ICryptoMathInterface {
+  addMod(hash1: string, hash2: string): string {
+    return addMod(hash1, hash2);
+  };
+}
 
 export default class Crypto implements ICryptoInterface {
   private readonly G: JacobianPoint;
 
+  public math: ICryptoMathInterface;
+
   public constructor() {
     this.G = JacobianPoint.fromAffine(new Point(curveParams.Gx, curveParams.Gy));
+    this.math = new CryptoMath();
   }
 
   public async generatePrivateKey(): Promise<string> {
     const privateKey = BigInt(`0x${crypto.randomBytes(64).toString('hex')}`) % curveParams.P;
-    const publicKey = this.G.multiply(privateKey);
+    const publicKey = this.G.multiply(privateKey).toAffine();
     const publicKeyRestored = this.pubKeyToPoint(this.pointToPublicKey(publicKey));
 
     if (publicKey.x !== publicKeyRestored.x || publicKey.y !== publicKeyRestored.y) {
@@ -27,18 +36,19 @@ export default class Crypto implements ICryptoInterface {
 
   public async getPublicKey(privateKeyHex: string): Promise<string> {
     const privKey = BigInt(`0x${privateKeyHex}`);
-    const publicKey = this.G.multiply(privKey);
+    const publicKey = this.G.multiply(privKey).toAffine();
     return this.pointToPublicKey(publicKey);
   }
 
   /* X = X1 * a1 + X2 * a2 + ..Xn * an */
+  @Benchmark
   public async buildSharedPublicKeyX(publicKeys: string[], hash: string): Promise<string> {
     let X = null;
     for (const publicKey of publicKeys) {
       const XI = JacobianPoint.fromAffine(this.pubKeyToPoint(publicKey));
       X = X === null ? XI : X.add(XI);
     }
-    X = X.multiply(BigInt(`0x${hash}`));
+    X = X.multiply(BigInt(`0x${hash}`)).toAffine();
     return this.pointToPublicKey(X);
   }
 
@@ -69,14 +79,14 @@ export default class Crypto implements ICryptoInterface {
     const publicKey = JacobianPoint.fromAffine(this.pubKeyToPoint(publicKeyHex));
     const m = BigInt(`0x${hash}`);
 
-    const spg = this.G.multiply(signature);
-    const check = publicKey.multiply(m);
+    const spg = this.G.multiply(signature).toAffine();
+    const check = publicKey.multiply(m).toAffine();
     return spg.x === check.x && spg.y === check.y;
   }
 
   /* sG = X * e */
   public async verify(signature: string, sharedPublicKeyX: string): Promise<boolean> {
-    const sg = this.G.multiply(BigInt(`0x${signature}`));
+    const sg = this.G.multiply(BigInt(`0x${signature}`)).toAffine();
     const check = this.pubKeyToPoint(sharedPublicKeyX);
     return sg.x === check.x;
   }
@@ -96,7 +106,7 @@ export default class Crypto implements ICryptoInterface {
     return new Point(x, y);
   };
 
-  private pointToPublicKey(P: Point): string {
+  private pointToPublicKey(P: Point | JacobianPoint): string {
     // eslint-disable-next-line no-bitwise
     const prefix = P.y & 1n ? '03' : '02'; // is odd
     return `${prefix}${P.x.toString(16)}`;
