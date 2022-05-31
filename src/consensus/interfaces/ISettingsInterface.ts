@@ -1,5 +1,6 @@
 import PacketModel from '../models/PacketModel';
 import { IStorageInterface } from './IStorageInterface';
+import ICryptoInterface from './ICryptoInterface';
 
 /* eslint-disable no-unused-vars */
 export interface ISettingsInterface {
@@ -21,5 +22,6 @@ export interface ISettingsInterface {
     trace: () => void,
     warn: () => void
   };
-  storage: IStorageInterface
+  storage: IStorageInterface,
+  crypto: ICryptoInterface
 }

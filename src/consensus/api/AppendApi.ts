@@ -2,13 +2,6 @@ import crypto from 'crypto';
 import BN from 'bn.js';
 import { ec as EC } from 'elliptic';
 import ABGP from '../main';
-import {
-  buildPartialSignature,
-  buildSharedPublicKeyX,
-  buildSharedSignature,
-  partialSignatureVerify,
-  verify
-} from '../crypto';
 import SignatureType from '../constants/SignatureType';
 import EventTypes from '../constants/EventTypes';
 import NodeModel from '../models/NodeModel';
@@ -48,7 +41,7 @@ export default class AppendApi {
     const timestamp = Date.now();
     const timestampIndex = (await this.abgp.storage.Record.getByTimestamp(timestamp)).length;
 
-    const signature = buildPartialSignature(
+    const signature = await this.abgp.crypto.buildPartialSignature(
       this.abgp.privateKey,
       hash
     );
@@ -94,14 +87,14 @@ export default class AppendApi {
     if (remoteRecord.signatureType === SignatureType.INTERMEDIATE) {
       for (const publicKey of remoteRecord.signaturesMap.keys()) {
         const signature = remoteRecord.signaturesMap.get(publicKey);
-        const isValid = partialSignatureVerify(signature, publicKey, hash);
+        const isValid = await this.abgp.crypto.partialSignatureVerify(signature, publicKey, hash);
         if (!isValid) {
           this.abgp.logger.trace(`wrong INTERMEDIATE signature for record ${remoteRecord.hash} and public key ${peerNode.publicKey}`);
           return null;
         }
       }
     } else {
-      const calcMultiPublicKey = buildSharedPublicKeyX(Array.from(remoteRecord.publicKeys), hash);
+      const calcMultiPublicKey = await this.abgp.crypto.buildSharedPublicKeyX(Array.from(remoteRecord.publicKeys), hash);
       const multiPublicKey = [...remoteRecord.signaturesMap.keys()][0];
 
       if (calcMultiPublicKey !== multiPublicKey) {
@@ -110,7 +103,7 @@ export default class AppendApi {
       }
 
       const multisig = remoteRecord.signaturesMap.get(multiPublicKey);
-      const isValid = verify(multisig, multiPublicKey);
+      const isValid = await this.abgp.crypto.verify(multisig, multiPublicKey);
       if (!isValid) {
         this.abgp.logger.trace(`wrong MULTISIG signature for record ${remoteRecord.hash} and public key ${peerNode.publicKey}`);
         return null;
@@ -192,7 +185,7 @@ export default class AppendApi {
       localRecord.timestampIndex = timestampIndex;
       localRecord.signatureType = SignatureType.INTERMEDIATE;
 
-      const signature = buildPartialSignature(
+      const signature = await this.abgp.crypto.buildPartialSignature(
         this.abgp.privateKey,
         hash
       );
@@ -213,9 +206,9 @@ export default class AppendApi {
     if (localRecord.signaturesMap.size >= this.abgp.majority()) {
       const publicKeysForMusig = [...localRecord.signaturesMap.keys()].sort().slice(0, this.abgp.majority());
       const signaturesForMusig = publicKeysForMusig.map((publicKey) => localRecord.signaturesMap.get(publicKey));
-      const multiPublicKey = buildSharedPublicKeyX(publicKeysForMusig, hash);
+      const multiPublicKey = await this.abgp.crypto.buildSharedPublicKeyX(publicKeysForMusig, hash);
 
-      const multiSignature = buildSharedSignature(signaturesForMusig);
+      const multiSignature = await this.abgp.crypto.buildSharedSignature(signaturesForMusig);
       localRecord.signaturesMap = new Map<string, string>([[multiPublicKey, multiSignature]]);
       localRecord.signatureType = SignatureType.MULTISIG;
       localRecord.publicKeys = new Set<string>(publicKeysForMusig);

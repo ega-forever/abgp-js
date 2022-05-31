@@ -10,6 +10,8 @@ export default class JacobianPoint {
 
   public z: bigint;
 
+  private precomputes;
+
   constructor(x: bigint, y: bigint, z: bigint) {
     this.x = x;
     this.y = y;
@@ -66,23 +68,48 @@ export default class JacobianPoint {
     const Y3 = mod(r * (V - X3) - S1 * HHH);
     const Z3 = mod(Z1 * Z2 * H);
     return new JacobianPoint(X3, Y3, Z3);
+  }
 
-    /*    const Z1Z1 = Z1 ** 2n;
-        const Z2Z2 = Z2 ** 2n;
-        const U1 = X1 * Z2Z2;
-        const U2 = X2 * Z1Z1;
-        const S1 = Y1 * Z2 * Z2Z2;
-        const S2 = Y2 * Z1 * Z1Z1;
-        const H = U2 - U1;
-        const HH = H ** 2n;
-        const HHH = H * HH;
-        const r = S2 - S1;
-        const V = U1 * HH;
-        const X3 = mod(r ** 2n - HHH - 2n * V);
-        const Y3 = mod(r * (V - X3) - S1 * HHH);
-        const Z3 = mod(Z1 * Z2 * H);
+  getPrecomputes() {
+    if (this.precomputes) {
+      return this.precomputes;
+    }
+    this.precomputes = [];
 
-        return new JacobianPoint(X3, Y3, Z3); */
+    let dbl = new JacobianPoint(this.x, this.y, this.z);
+    for (let i = 0; i < 256; i++) {
+      this.precomputes.push(dbl);
+      dbl = dbl.double(); // [G, 2G, 4G, 8G..., 256G], optimized
+    }
+
+    return this.precomputes;
+  }
+
+  multiply(n: bigint) {
+    const precomputes = this.getPrecomputes();
+    let p = JacobianPoint.ZERO;
+    let f = JacobianPoint.ZERO; // fake point
+    for (let i = 0; i < 256; i++) {
+      if (n & 1n) {
+        p = p.add(precomputes[i]);
+      } else {
+        f = f.add(precomputes[i]);
+      }
+      // eslint-disable-next-line no-param-reassign
+      n >>= 1n;
+    }
+    return p.toAffine();
+  }
+
+  multiplyUnsafe(n: bigint) {
+    let p = JacobianPoint.ZERO;
+    let d: JacobianPoint = this;
+    while (n > 0n) {
+      if (n & 1n) p = p.add(d);
+      d = d.double();
+      n >>= 1n;
+    }
+    return p;
   }
 
   toAffine(invZ?: bigint): Point {

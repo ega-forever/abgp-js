@@ -13,7 +13,9 @@ import {
   syncNodesBetweenEachOther
 } from '../utils/helpers';
 import PlainStorage from '../../implementation/storage/PlainStorage';
-import { generatePrivateKey, getPublicKey } from '../../consensus/crypto';
+import Crypto from '../../implementation/crypto/plain';
+
+const crypto = new Crypto();
 
 export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
   beforeEach(async () => {
@@ -22,8 +24,8 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
     ctx.nodes = [];
 
     for (let i = 0; i < nodesCount; i++) {
-      const privateKey = generatePrivateKey();
-      const publicKey = getPublicKey(privateKey);
+      const privateKey = await crypto.generatePrivateKey();
+      const publicKey = await crypto.getPublicKey(privateKey);
       ctx.keys.push({
         privateKey,
         publicKey
@@ -41,6 +43,7 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
         logger: bunyan.createLogger({ name: 'abgp.logger', level: 60 }),
         privateKey: ctx.keys[index].privateKey,
         storage: new PlainStorage(),
+        crypto,
         batchReplicationSize: 10
       });
 
@@ -125,8 +128,8 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
     }
 
     for (const node of nodesFail) {
-      const privateKey = generatePrivateKey();
-      const publicKey = getPublicKey(privateKey);
+      const privateKey = await crypto.generatePrivateKey();
+      const publicKey = await crypto.getPublicKey(privateKey);
       // @ts-ignore
       node.privateKey = privateKey;
 
@@ -170,7 +173,7 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
 
     for (const node of nodesFail) {
       // @ts-ignore
-      node.privateKey = generatePrivateKey();
+      node.privateKey = await crypto.generatePrivateKey();
 
       const generated = await generateRandomRecords(node);
       totalRecordsGeneratedAmount += generated.amount;

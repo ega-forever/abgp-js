@@ -22,7 +22,7 @@ export default class NodeApi {
       return;
     }
 
-    const node = new NodeModel(null, multiaddr, this.abgp.storage);
+    const node = new NodeModel(null, multiaddr, this.abgp.storage, this.abgp.crypto);
     this.abgp.publicKeys.add(node.publicKey);
     node.once('end', () => this.leave(node.publicKey));
 

@@ -3,6 +3,7 @@ import * as bunyan from 'bunyan';
 import eventTypes from '../../../consensus/constants/EventTypes';
 import TCPABGP from '../../../implementation/node/TCP';
 import PlainStorage from '../../../implementation/storage/PlainStorage';
+import Crypto from '../../../implementation/crypto/plain';
 
 let instance: TCPABGP = null;
 
@@ -24,7 +25,8 @@ const init = (params: any) => {
     logger,
     privateKey: params.keys[params.index].privateKey,
     publicKeys: allPublicKeys,
-    storage: new PlainStorage()
+    storage: new PlainStorage(),
+    crypto: new Crypto()
   });
 
   for (const index of indexNodesLinks) {

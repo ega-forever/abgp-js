@@ -3,8 +3,9 @@ import { expect } from 'chai';
 import { fork } from 'child_process';
 import * as path from 'path';
 import { awaitNodesSynced, generateRandomRecordsWorker } from '../../utils/helpers';
-import { generatePrivateKey, getPublicKey } from '../../../consensus/crypto';
+import Crypto from '../../../implementation/crypto/plain';
 
+const crypto = new Crypto();
 const runInstance = (index: number, keys: any, settings: any, implementationType: any, connectionLinkMap: any) => {
   const implementationTypes = {
     RPC: 'ABGPRPCWorker.ts',
@@ -43,8 +44,8 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 0, impleme
     };
 
     for (let i = 0; i < nodesCount; i++) {
-      const privateKey = generatePrivateKey();
-      const publicKey = getPublicKey(privateKey);
+      const privateKey = await crypto.generatePrivateKey();
+      const publicKey = await crypto.getPublicKey(privateKey);
 
       ctx.keys.push({
         privateKey,

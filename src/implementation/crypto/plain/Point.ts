@@ -1,6 +1,5 @@
 import { mod, invert } from './math';
 import curveParams from './secp256k1';
-import JacobianPoint from './JacobianPoint';
 
 /* eslint-disable no-bitwise */
 export default class Point {
@@ -41,7 +40,7 @@ export default class Point {
     return new Point(X3, Y3);
   }
 
-  multiplyCT(n: bigint) {
+  multiply(n: bigint) {
     const dbls = this.getPrecomputes();
     let p = Point.ZERO;
     let f = Point.ZERO; // fake point
@@ -69,36 +68,5 @@ export default class Point {
     }
 
     return this.precomputes;
-  }
-
-  getPrecomputesJ() {
-    if (this.precomputes) {
-      return this.precomputes;
-    }
-    this.precomputes = [];
-
-    let dbl = JacobianPoint.fromAffine(this);
-    for (let i = 0; i < 256; i++) {
-      this.precomputes.push(dbl);
-      dbl = dbl.double(); // [G, 2G, 4G, 8G..., 256G], optimized
-    }
-
-    return this.precomputes;
-  }
-
-  multiplyCTJ(n: bigint) {
-    const precomputes = this.getPrecomputesJ();
-    let p = JacobianPoint.ZERO;
-    let f = JacobianPoint.ZERO; // fake point
-    for (let i = 0; i < 256; i++) {
-      if (n & 1n) {
-        p = p.add(precomputes[i]);
-      } else {
-        f = f.add(precomputes[i]);
-      }
-      // eslint-disable-next-line no-param-reassign
-      n >>= 1n;
-    }
-    return p.toAffine();
   }
 }

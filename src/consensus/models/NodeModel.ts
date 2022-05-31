@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import { IStorageInterface } from '../interfaces/IStorageInterface';
 import StateModel from './StateModel';
+import ICryptoInterface from '../interfaces/ICryptoInterface';
 
 export default class NodeModel extends EventEmitter {
   get address(): string {
@@ -15,16 +16,20 @@ export default class NodeModel extends EventEmitter {
 
   public readonly storage: IStorageInterface;
 
+  public readonly crypto: ICryptoInterface;
+
   public constructor(
     privateKey: string,
     multiaddr: string,
-    storage: IStorageInterface
+    storage: IStorageInterface,
+    crypto: ICryptoInterface
   ) {
     super();
     this.privateKey = privateKey;
     this.publicKey = multiaddr.match(/\w+$/).toString();
     this.nodeAddress = multiaddr.split(/\w+$/)[0].replace(/\/$/, '');
     this.storage = storage;
+    this.crypto = crypto;
   }
 
   public async getState(): Promise<StateModel> {

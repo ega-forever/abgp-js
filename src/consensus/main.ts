@@ -44,7 +44,7 @@ export default class ABGP extends NodeModel {
   public readonly requestProcessorService: RequestProcessorService;
 
   constructor(options: ISettingsInterface) {
-    super(options.privateKey, options.address, options.storage);
+    super(options.privateKey, options.address, options.storage, options.crypto);
 
     this.gossipInterval = options.gossipInterval;
     this.sendSignalToRandomPeer = options.sendSignalToRandomPeer;
