@@ -4,6 +4,7 @@ import curveParams from './secp256k1';
 import { powMod } from './math';
 import JacobianPoint from './JacobianPoint';
 import ICryptoInterface from '../../../consensus/interfaces/ICryptoInterface';
+import Benchmark from '../../../consensus/utils/BenchmarkDecorator';
 
 export default class Crypto implements ICryptoInterface {
   private readonly G: JacobianPoint;
@@ -34,10 +35,10 @@ export default class Crypto implements ICryptoInterface {
   public async buildSharedPublicKeyX(publicKeys: string[], hash: string): Promise<string> {
     let X = null;
     for (const publicKey of publicKeys) {
-      const XI = this.pubKeyToPoint(publicKey).multiply(BigInt(`0x${hash}`));
+      const XI = JacobianPoint.fromAffine(this.pubKeyToPoint(publicKey));
       X = X === null ? XI : X.add(XI);
     }
-
+    X = X.multiply(BigInt(`0x${hash}`));
     return this.pointToPublicKey(X);
   }
 
@@ -65,7 +66,7 @@ export default class Crypto implements ICryptoInterface {
   /* let s1 * G = k1 * a1 * e * G = k1 * a1 * G * e = X1 * a1 * e */
   public async partialSignatureVerify(partialSignature: string, publicKeyHex: string, hash: string): Promise<boolean> {
     const signature = BigInt(`0x${partialSignature}`);
-    const publicKey = this.pubKeyToPoint(publicKeyHex);
+    const publicKey = JacobianPoint.fromAffine(this.pubKeyToPoint(publicKeyHex));
     const m = BigInt(`0x${hash}`);
 
     const spg = this.G.multiply(signature);
