@@ -13,19 +13,23 @@ import {
   syncNodesBetweenEachOther
 } from '../utils/helpers';
 import PlainStorage from '../../implementation/storage/PlainStorage';
-import Crypto from '../../implementation/crypto/plain';
+import ICryptoInterface from '../../consensus/interfaces/ICryptoInterface';
 
-const crypto = new Crypto();
+interface ICTX {
+  keys: Array<{privateKey: string, publicKey: string}>,
+  nodes: ABGP[],
+  crypto: ICryptoInterface
+}
 
-export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
+export default function testSuite(ctx: ICTX, nodesCount, Crypto: any) {
   beforeEach(async () => {
+    ctx.crypto = new Crypto();
     ctx.keys = [];
-
     ctx.nodes = [];
 
     for (let i = 0; i < nodesCount; i++) {
-      const privateKey = await crypto.generatePrivateKey();
-      const publicKey = await crypto.getPublicKey(privateKey);
+      const privateKey = await ctx.crypto.generatePrivateKey();
+      const publicKey = await ctx.crypto.getPublicKey(privateKey);
       ctx.keys.push({
         privateKey,
         publicKey
@@ -128,8 +132,8 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
     }
 
     for (const node of nodesFail) {
-      const privateKey = await crypto.generatePrivateKey();
-      const publicKey = await crypto.getPublicKey(privateKey);
+      const privateKey = await ctx.crypto.generatePrivateKey();
+      const publicKey = await ctx.crypto.getPublicKey(privateKey);
       // @ts-ignore
       node.privateKey = privateKey;
 
@@ -173,7 +177,7 @@ export default function testSuite(ctx: any = {}, nodesCount: number = 3) {
 
     for (const node of nodesFail) {
       // @ts-ignore
-      node.privateKey = await crypto.generatePrivateKey();
+      node.privateKey = await ctx.crypto.generatePrivateKey();
 
       const generated = await generateRandomRecords(node);
       totalRecordsGeneratedAmount += generated.amount;

@@ -10,6 +10,8 @@ export default class JacobianPoint {
 
   public z: bigint;
 
+  private precomputes;
+
   constructor(x: bigint, y: bigint, z: bigint) {
     this.x = x;
     this.y = y;
@@ -66,6 +68,34 @@ export default class JacobianPoint {
     const Y3 = mod(r * (V - X3) - S1 * HHH);
     const Z3 = mod(Z1 * Z2 * H);
     return new JacobianPoint(X3, Y3, Z3);
+  }
+
+  getPrecomputes() {
+    if (this.precomputes) {
+      return this.precomputes;
+    }
+    this.precomputes = [];
+
+    let dbl = new JacobianPoint(this.x, this.y, this.z);
+    for (let i = 0; i < 256; i++) {
+      this.precomputes.push(dbl);
+      dbl = dbl.double(); // [G, 2G, 4G, 8G..., 256G], optimized
+    }
+
+    return this.precomputes;
+  }
+
+  multiplyPrecomputes(n: bigint) {
+    const precomputes = this.getPrecomputes();
+    let p = JacobianPoint.ZERO;
+    for (let i = 0; i < 256; i++) {
+      if (n & 1n) {
+        p = p.add(precomputes[i]);
+      }
+      // eslint-disable-next-line no-param-reassign
+      n = n / 2n;
+    }
+    return p;
   }
 
   multiply(n: bigint) {

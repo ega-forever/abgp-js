@@ -15,8 +15,8 @@ export const generateRandomRecords = async (node: ABGP, amount?: number) => {
 
   for (let i = 0; i < amount; i++) {
     const record = {
-      key: Math.random().toString(16).substr(2) + i,
-      value: Math.random().toString(16).substr(2) + i,
+      key: Math.random().toString(16).substring(2) + i,
+      value: Math.random().toString(16).substring(2) + i,
       version: 1
     };
     const hash = await node.appendApi.append(record.key, record.key, record.version);

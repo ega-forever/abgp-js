@@ -23,7 +23,7 @@ export default class Crypto implements ICryptoInterface {
 
   public async generatePrivateKey(): Promise<string> {
     const privateKey = BigInt(`0x${crypto.randomBytes(64).toString('hex')}`) % curveParams.P;
-    const publicKey = this.G.multiply(privateKey).toAffine();
+    const publicKey = this.G.multiplyPrecomputes(privateKey).toAffine();
     const publicKeyRestored = this.pubKeyToPoint(this.pointToPublicKey(publicKey));
 
     if (publicKey.x !== publicKeyRestored.x || publicKey.y !== publicKeyRestored.y) {
@@ -35,7 +35,7 @@ export default class Crypto implements ICryptoInterface {
 
   public async getPublicKey(privateKeyHex: string): Promise<string> {
     const privKey = BigInt(`0x${privateKeyHex}`);
-    const publicKey = this.G.multiply(privKey).toAffine();
+    const publicKey = this.G.multiplyPrecomputes(privKey).toAffine();
     return this.pointToPublicKey(publicKey);
   }
 
@@ -77,14 +77,14 @@ export default class Crypto implements ICryptoInterface {
     const publicKey = JacobianPoint.fromAffine(this.pubKeyToPoint(publicKeyHex));
     const m = BigInt(`0x${hash}`);
 
-    const spg = this.G.multiply(signature).toAffine();
+    const spg = this.G.multiplyPrecomputes(signature).toAffine();
     const check = publicKey.multiply(m).toAffine();
     return spg.x === check.x && spg.y === check.y;
   }
 
   /* sG = X * e */
   public async verify(signature: string, sharedPublicKeyX: string): Promise<boolean> {
-    const sg = this.G.multiply(BigInt(`0x${signature}`)).toAffine();
+    const sg = this.G.multiplyPrecomputes(BigInt(`0x${signature}`)).toAffine();
     const check = this.pubKeyToPoint(sharedPublicKeyX);
     return sg.x === check.x;
   }
