@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import * as crypto from 'crypto';
 import { ec as EC } from 'elliptic';
 import BN from 'bn.js';
@@ -66,6 +67,12 @@ export default class Bnelliptic implements ICryptoInterface {
     const sg = ec.g.mul(signature);
     const check = this.pubKeyToPoint(Buffer.from(sharedPublicKeyX, 'hex'));
     return this.pointToPublicKey(sg).toString('hex') === this.pointToPublicKey(check).toString('hex');
+  }
+
+  public hash(message: string): string {
+    return crypto.createHash('sha256')
+      .update(message)
+      .digest('hex');
   }
 
   private pubKeyToPoint(pubKey) {

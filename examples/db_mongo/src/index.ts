@@ -5,6 +5,7 @@ import config from './config';
 import * as bunyan from 'bunyan';
 import TCPABGP from 'abgp-js/dist/implementation/node/TCP';
 import eventTypes from 'abgp-js/dist/consensus/constants/EventTypes';
+import Crypto from 'abgp-js/dist/implementation/crypto/bnelliptic';
 import StorageMongo from './StorageMongo';
 
 const init = async () => {
@@ -29,7 +30,8 @@ const init = async () => {
     sendSignalToRandomPeer: config.node.sendSignalToRandomPeer,
     logger,
     privateKey: config.node.privateKey,
-    storage: storageMongo
+    storage: storageMongo,
+    crypto: new Crypto()
   });
 
 

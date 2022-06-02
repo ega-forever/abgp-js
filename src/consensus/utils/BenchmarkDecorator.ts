@@ -12,6 +12,7 @@ const Benchmark: MethodDecorator = (
     const action: Function = method.apply.bind(method, this, arguments);
     const start = Date.now();
     const result: any = action();
+    // eslint-disable-next-line
     console.log(`Benchmark for method [${prop as string}]: ${Date.now() - start}`);
     return result;
   };

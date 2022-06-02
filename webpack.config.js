@@ -1,6 +1,5 @@
 const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const webpack = require('webpack');
 
 module.exports = {
   mode: 'production',
@@ -18,17 +17,13 @@ module.exports = {
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       reportFilename: path.join(__dirname, 'webpack_report.html')
-    }),
-    new webpack.ProvidePlugin({
-      Buffer: ['buffer', 'Buffer']
     })
   ],
   resolve: {
     extensions: ['.ts', '.js'],
     fallback: {
       crypto: require.resolve('crypto-browserify'),
-      stream: require.resolve('stream-browserify'),
-      url: require.resolve('url')
+      stream: require.resolve('stream-browserify')
     }
   },
   output: {

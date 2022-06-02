@@ -14,7 +14,7 @@ class RPCABGP extends ABGP {
 
     this.app.post('/', async (req, res) => {
       const packet = Buffer.from(req.body.data, 'hex');
-      const decoded = this.messageApi.decodePacket(packet);
+      const decoded = this.messageApi.decodePacket(packet.toString());
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       const reply = await this.requestProcessorService.process(decoded);
       res.send(Buffer.from(JSON.stringify(reply)).toString('hex'));
@@ -41,7 +41,7 @@ class RPCABGP extends ABGP {
       timeout: this.gossipInterval.max
     });
 
-    return this.messageApi.decodePacket(Buffer.from(reply.data, 'hex'));
+    return this.messageApi.decodePacket(Buffer.from(reply.data, 'hex').toString());
   }
 
   public async disconnect(): Promise<void> {

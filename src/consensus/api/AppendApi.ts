@@ -1,4 +1,3 @@
-import crypto from 'crypto';
 import ABGP from '../main';
 import SignatureType from '../constants/SignatureType';
 import EventTypes from '../constants/EventTypes';
@@ -17,18 +16,12 @@ export default class AppendApi {
     this.semaphore = new Semaphore(1);
   }
 
-  private static hashData(data: string) {
-    return crypto.createHash('sha256')
-      .update(data)
-      .digest('hex');
-  }
-
   public async append(key: string, value: string, version: number = 1) {
     return this.semaphore.callFunction(this.appendUnSafe.bind(this), key, value, version);
   }
 
   private async appendUnSafe(key: string, value: string, version: number = 1) {
-    const hash = AppendApi.hashData(`${key}:${value}:${version}`);
+    const hash = this.abgp.crypto.hash(`${key}:${value}:${version}`);
 
     if (await this.abgp.storage.Record.has(hash)) {
       return;
@@ -64,7 +57,7 @@ export default class AppendApi {
   }
 
   public async remoteAppendUnsafe(remoteRecord: RecordModel, peerNode: NodeModel, peerNodeRoot: string) {
-    const hash = AppendApi.hashData(`${remoteRecord.key}:${remoteRecord.value}:${remoteRecord.version}`);
+    const hash = this.abgp.crypto.hash(`${remoteRecord.key}:${remoteRecord.value}:${remoteRecord.version}`);
 
     if (hash !== remoteRecord.hash) {
       this.abgp.logger.trace(`different hashes for record ${hash} vs ${remoteRecord.hash} on public key ${peerNode.publicKey}`);

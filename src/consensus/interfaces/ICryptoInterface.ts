@@ -4,7 +4,7 @@ export interface ICryptoMathInterface {
   addMod(hash1: string, hash2: string): string;
 }
 
-export default interface ICryptoInterface {
+interface ICryptoInterface {
   generatePrivateKey(): Promise<string>;
 
   getPublicKey(privateKeyHex: string): Promise<string>;
@@ -19,5 +19,9 @@ export default interface ICryptoInterface {
 
   verify(signature: string, sharedPublicKeyX: string): Promise<boolean>;
 
+  hash(message: string): string;
+
   math: ICryptoMathInterface;
 }
+
+export default ICryptoInterface;

@@ -14,7 +14,7 @@ class TCPABGP extends ABGP {
 
     this.server = new Server({
       rpc: async (args) => {
-        const decoded = this.messageApi.decodePacket(Buffer.from(args[0], 'hex'));
+        const decoded = this.messageApi.decodePacket(Buffer.from(args[0], 'hex').toString());
         const reply = await this.requestProcessorService.process(decoded);
         return Buffer.from(JSON.stringify(reply)).toString('hex');
       }
@@ -51,7 +51,7 @@ class TCPABGP extends ABGP {
       throw new Error(response.error);
     }
 
-    return this.messageApi.decodePacket(Buffer.from(response.result, 'hex'));
+    return this.messageApi.decodePacket(Buffer.from(response.result, 'hex').toString());
   }
 
   public async disconnect(): Promise<void> {

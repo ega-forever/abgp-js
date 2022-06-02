@@ -89,6 +89,12 @@ export default class Crypto implements ICryptoInterface {
     return sg.x === check.x;
   }
 
+  public hash(message: string): string {
+    return crypto.createHash('sha256')
+      .update(message)
+      .digest('hex');
+  }
+
   private pubKeyToPoint(pubKeyHex: string): Point {
     const yShouldBeOdd = pubKeyHex.substring(0, 2) === '03';
     const x = BigInt(`0x${pubKeyHex.substring(2)}`);

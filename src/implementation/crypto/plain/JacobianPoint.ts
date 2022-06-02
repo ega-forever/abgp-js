@@ -93,7 +93,7 @@ export default class JacobianPoint {
         p = p.add(precomputes[i]);
       }
       // eslint-disable-next-line no-param-reassign
-      n = n / 2n;
+      n /= 2n;
     }
     return p;
   }
@@ -104,7 +104,8 @@ export default class JacobianPoint {
     while (n > 0n) {
       if (n & 1n) p = p.add(d);
       d = d.double();
-      n = n / 2n;
+      // eslint-disable-next-line no-param-reassign
+      n /= 2n;
     }
     return p;
   }

@@ -28,7 +28,7 @@ export default class MessageApi {
     );
   }
 
-  public decodePacket(message: Buffer): PacketModel {
-    return JSON.parse(message.toString());
+  public decodePacket(message: string): PacketModel {
+    return JSON.parse(message);
   }
 }

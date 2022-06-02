@@ -44,7 +44,8 @@ export default class Point {
     while (n > 0n) {
       if (n & 1n) p = p.add(d);
       d = d.double();
-      n = n / 2n;
+      // eslint-disable-next-line no-param-reassign
+      n /= 2n;
     }
     return p;
   }

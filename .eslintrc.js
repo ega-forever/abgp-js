@@ -50,6 +50,7 @@ module.exports = {
     'no-nested-ternary': 0,
     'no-plusplus': 0,
     '@typescript-eslint/no-floating-promises': ['error'],
-    'no-use-before-define': 0
+    'no-use-before-define': 0,
+    'no-bitwise': 0
   }
 };
