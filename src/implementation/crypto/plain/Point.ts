@@ -1,7 +1,10 @@
 import { mod, invert } from './math';
 import curveParams from './secp256k1';
 
-/* eslint-disable no-bitwise */
+/**
+ * algorithm is based on the following article: https://paulmillr.com/posts/noble-secp256k1-fast-ecc/
+ */
+
 export default class Point {
   static ZERO = new Point(0n, 0n); // Point at infinity aka identity point aka zero
 
@@ -38,6 +41,7 @@ export default class Point {
     return new Point(X3, Y3);
   }
 
+  // Double-and-add multiplication. https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication#Double-and-add
   multiply(n: bigint) {
     let p = Point.ZERO;
     let d: Point = this;

@@ -1,6 +1,9 @@
 import Point from './Point';
 import { invert, mod } from './math';
 
+/**
+ * algorithm is based on the following article: https://paulmillr.com/posts/noble-secp256k1-fast-ecc/
+ */
 export default class JacobianPoint {
   static ZERO = new JacobianPoint(0n, 1n, 0n);
 
@@ -98,6 +101,7 @@ export default class JacobianPoint {
     return p;
   }
 
+  // Double-and-add multiplication. https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication#Double-and-add
   multiply(n: bigint) {
     let p = JacobianPoint.ZERO;
     let d: JacobianPoint = this;

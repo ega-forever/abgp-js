@@ -1,3 +1,4 @@
+// https://en.bitcoin.it/wiki/Secp256k1
 const params = {
   a: 0n,
   b: BigInt(7),
