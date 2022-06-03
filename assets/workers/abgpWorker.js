@@ -1,7 +1,9 @@
 const window = self;
 const path = window.location.pathname.split(/(\/*.{0,}\/workers\/)/gm, 2).find(el => el.length);
 importScripts(`${path}bundle.js`);
-
+importScripts(`${path}bundle_cryptoplain.js`);
+//importScripts(`${path}bundle_cryptobnelliptic.js`);
+importScripts(`${path}bundle_storageplain.js`);
 
 class PlainStorageRecord {
 
@@ -121,7 +123,9 @@ const init = (index, keys, settings) => {
       trace: (text) => {}
     },
     privateKey: keys[index].privateKey,
-    storage: new PlainStorage()
+    storage: new StoragePlain.default(),
+    crypto: new CryptoPlain.default()
+    //crypto: new CryptoBNElliptic.default()
   });
 
   for (let i = 0; i < keys.length; i++)
@@ -152,7 +156,6 @@ self.addEventListener('message', async function (e) {
   }
 
   if (e.data.type === 'packet') {
-
     const packet = JSON.parse(e.data.args[0]);
 
     if (requests.has(e.data.id)) {
@@ -163,12 +166,10 @@ self.addEventListener('message', async function (e) {
       const node = window.abgp.nodes.get(packet.publicKey);
       self.postMessage({type: 'packet', args: [node.address, JSON.stringify(reply)], id: e.data.id});
     }
-
-
   }
 
   if (e.data.type === 'add_record') {
-    return window.abgp.appendApi.append(...e.data.args);
+    await window.abgp.appendApi.append(...e.data.args);
   }
 
   if (e.data.type === 'get_records') {
