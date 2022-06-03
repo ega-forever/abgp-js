@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import {randomBytes, createHash} from 'crypto';
 import Point from './Point';
 import curveParams from './secp256k1';
 import { addMod, powMod } from './math';
@@ -22,7 +22,7 @@ export default class Crypto implements ICryptoInterface {
   }
 
   public async generatePrivateKey(): Promise<string> {
-    const privateKey = BigInt(`0x${crypto.randomBytes(64).toString('hex')}`) % curveParams.P;
+    const privateKey = BigInt(`0x${randomBytes(64).toString('hex')}`) % curveParams.P;
     const publicKey = this.G.multiplyPrecomputes(privateKey).toAffine();
     const publicKeyRestored = this.pubKeyToPoint(this.pointToPublicKey(publicKey));
 
@@ -90,7 +90,7 @@ export default class Crypto implements ICryptoInterface {
   }
 
   public hash(message: string): string {
-    return crypto.createHash('sha256')
+    return createHash('sha256')
       .update(message)
       .digest('hex');
   }

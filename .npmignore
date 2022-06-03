@@ -6,7 +6,7 @@ tslint.json
 dist/test
 _config.yml
 webpack.config.js
-webpack_report.html
+webpack_report*
 examples
 temp
 test
