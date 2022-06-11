@@ -4,6 +4,8 @@
 
 ABGP Consensus Algorithm implementation in Node.js.
 
+[Concept description](https://arxiv.org/ftp/arxiv/papers/2206/2206.03811.pdf) (PDF)
+
 Checkout [website](https://ega-forever.github.io/abgp-js/) for live version (JS with web workers).
 
 consensus features
