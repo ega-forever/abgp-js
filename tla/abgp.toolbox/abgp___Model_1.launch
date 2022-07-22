@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.lamport.tla.toolbox.tool.tlc.modelCheck">
+    <stringAttribute key="configurationName" value="Model_1"/>
+    <intAttribute key="distributedFPSetCount" value="0"/>
+    <stringAttribute key="distributedNetworkInterface" value="192.168.11.1"/>
+    <intAttribute key="distributedNodesCount" value="1"/>
+    <stringAttribute key="distributedTLC" value="off"/>
+    <intAttribute key="maxHeapSize" value="25"/>
+    <stringAttribute key="modelBehaviorInit" value=""/>
+    <stringAttribute key="modelBehaviorNext" value=""/>
+    <stringAttribute key="modelBehaviorSpec" value="Spec"/>
+    <intAttribute key="modelBehaviorSpecType" value="1"/>
+    <stringAttribute key="modelBehaviorVars" value="states, index, mutex, stack, inNodes, KV, pc, KVs"/>
+    <stringAttribute key="modelComments" value=""/>
+    <booleanAttribute key="modelCorrectnessCheckDeadlock" value="true"/>
+    <listAttribute key="modelCorrectnessInvariants">
+        <listEntry value="1(\E p \in 1..5: (Cardinality(inNodes[p]) &gt; 0)) \/ &#13;&#10;&#13;&#10;&#13;&#10;&#13;&#10;(\A p \in 1..5: (states[p] = 8 /\ pc[p] = &quot;Done&quot;))"/>
+    </listAttribute>
+    <listAttribute key="modelCorrectnessProperties">
+        <listEntry value="0Termination"/>
+    </listAttribute>
+    <listAttribute key="modelParameterConstants">
+        <listEntry value="root;;1;0;0"/>
+        <listEntry value="Edges;;{ {1,2}, {2,3}, {3,5}, {4,5} };0;0"/>
+        <listEntry value="defaultInitValue;;defaultInitValue;1;0"/>
+        <listEntry value="Quorum;;3;0;0"/>
+        <listEntry value="Fail;;2;0;0"/>
+        <listEntry value="Nodes;;{1,2,3,4,5};0;0"/>
+        <listEntry value="KVPerNode;;{4, 7, 5, 3, 8};0;0"/>
+    </listAttribute>
+    <intAttribute key="modelVersion" value="20191005"/>
+    <intAttribute key="numberOfWorkers" value="4"/>
+    <stringAttribute key="result.mail.address" value=""/>
+    <stringAttribute key="specName" value="abgp"/>
+    <stringAttribute key="tlcResourcesProfile" value="local custom"/>
+</launchConfiguration>
