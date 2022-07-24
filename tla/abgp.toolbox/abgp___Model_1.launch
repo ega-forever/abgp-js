@@ -5,29 +5,34 @@
     <stringAttribute key="distributedNetworkInterface" value="192.168.11.1"/>
     <intAttribute key="distributedNodesCount" value="1"/>
     <stringAttribute key="distributedTLC" value="off"/>
+    <intAttribute key="fpIndex" value="101"/>
     <intAttribute key="maxHeapSize" value="25"/>
     <stringAttribute key="modelBehaviorInit" value=""/>
     <stringAttribute key="modelBehaviorNext" value=""/>
     <stringAttribute key="modelBehaviorSpec" value="Spec"/>
     <intAttribute key="modelBehaviorSpecType" value="1"/>
-    <stringAttribute key="modelBehaviorVars" value="states, index, mutex, stack, inNodes, KV, pc, KVs"/>
+    <stringAttribute key="modelBehaviorVars" value="states, mutex, maxValue, iterNodes1, iterNodes2, stateSynced, pc"/>
     <stringAttribute key="modelComments" value=""/>
     <booleanAttribute key="modelCorrectnessCheckDeadlock" value="true"/>
     <listAttribute key="modelCorrectnessInvariants">
-        <listEntry value="1(\E p \in 1..5: (Cardinality(inNodes[p]) &gt; 0)) \/ &#13;&#10;&#13;&#10;&#13;&#10;&#13;&#10;(\A p \in 1..5: (states[p] = 8 /\ pc[p] = &quot;Done&quot;))"/>
+        <listEntry value="0(\E p \in 1..5: (Cardinality(inNodes[p]) &gt; 0)) \/ &#13;&#10;&#13;&#10;&#13;&#10;&#13;&#10;(\A p \in 1..5: (states[p] = 8 /\ pc[p] = &quot;Done&quot;))"/>
     </listAttribute>
     <listAttribute key="modelCorrectnessProperties">
         <listEntry value="0Termination"/>
     </listAttribute>
+    <intAttribute key="modelEditorOpenTabs" value="8"/>
+    <stringAttribute key="modelExpressionEval" value=""/>
+    <stringAttribute key="modelParameterActionConstraint" value=""/>
     <listAttribute key="modelParameterConstants">
-        <listEntry value="root;;1;0;0"/>
         <listEntry value="Edges;;{ {1,2}, {2,3}, {3,5}, {4,5} };0;0"/>
-        <listEntry value="defaultInitValue;;defaultInitValue;1;0"/>
         <listEntry value="Quorum;;3;0;0"/>
         <listEntry value="Fail;;2;0;0"/>
         <listEntry value="Nodes;;{1,2,3,4,5};0;0"/>
-        <listEntry value="KVPerNode;;{4, 7, 5, 3, 8};0;0"/>
     </listAttribute>
+    <stringAttribute key="modelParameterContraint" value=""/>
+    <listAttribute key="modelParameterDefinitions"/>
+    <stringAttribute key="modelParameterModelValues" value="{}"/>
+    <stringAttribute key="modelParameterNewDefinitions" value=""/>
     <intAttribute key="modelVersion" value="20191005"/>
     <intAttribute key="numberOfWorkers" value="4"/>
     <stringAttribute key="result.mail.address" value=""/>

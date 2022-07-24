@@ -1,44 +1,26 @@
 ---- MODULE MC ----
 EXTENDS abgp, TLC
 
-\* CONSTANT definitions @modelParameterConstants:0root
-const_1658508582598644000 == 
-1
-----
-
-\* CONSTANT definitions @modelParameterConstants:1Edges
-const_1658508582598645000 == 
+\* CONSTANT definitions @modelParameterConstants:0Edges
+const_1658687578769787000 == 
 { {1,2}, {2,3}, {3,5}, {4,5} }
 ----
 
-\* CONSTANT definitions @modelParameterConstants:3Quorum
-const_1658508582598646000 == 
+\* CONSTANT definitions @modelParameterConstants:1Quorum
+const_1658687578769788000 == 
 3
 ----
 
-\* CONSTANT definitions @modelParameterConstants:4Fail
-const_1658508582598647000 == 
+\* CONSTANT definitions @modelParameterConstants:2Fail
+const_1658687578769789000 == 
 2
 ----
 
-\* CONSTANT definitions @modelParameterConstants:5Nodes
-const_1658508582598648000 == 
+\* CONSTANT definitions @modelParameterConstants:3Nodes
+const_1658687578769790000 == 
 {1,2,3,4,5}
 ----
 
-\* CONSTANT definitions @modelParameterConstants:6KVPerNode
-const_1658508582598649000 == 
-{4, 7, 5, 3, 8}
-----
-
-\* INVARIANT definition @modelCorrectnessInvariants:0
-inv_1658508582599650000 ==
-(\E p \in 1..5: (Cardinality(inNodes[p]) > 0)) \/ 
-
-
-
-(\A p \in 1..5: (states[p] = 8 /\ pc[p] = "Done"))
-----
 =============================================================================
 \* Modification History
-\* Created Fri Jul 22 19:49:42 MSK 2022 by zyeve
+\* Created Sun Jul 24 21:32:58 MSK 2022 by zyeve
