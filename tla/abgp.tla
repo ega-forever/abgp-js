@@ -45,9 +45,8 @@ ASSUME Quorum > Fail
       \* since nodes exchange with state, we can access state directly here (through "states" variable)      
   
            step1: while (stateSynced = FALSE) {
-            step2: while (iterNodes1 <= Cardinality(Nodes)) {                   
-             step3:  while (iterNodes2 <= Cardinality(Nodes)) {              
-             
+            step2: while (iterNodes1 <= Cardinality(Nodes)) {                     
+             step3: while (iterNodes2 <= Cardinality(Nodes)) {                           
              
                     \* since each node will process its requests without concurrency, then mutex is used here to simulate this behavior
                     lock: await mutex[iterNodes1] = 0;
@@ -59,21 +58,24 @@ ASSUME Quorum > Fail
                     
                     
                         if (Cardinality(states[iterNodes1].signatures) < Quorum){
-                            signatures:  states[iterNodes1].signatures := states[iterNodes1].signatures \o states[iterNodes2].signatures;    
+                            signatures1:  states[iterNodes1].signatures := states[iterNodes1].signatures \union states[iterNodes2].signatures;    
                         }
                     
                     
+                    } else if (states[iterNodes1].value = states[iterNodes2].value){
+                            signatures2:  states[iterNodes1].signatures := states[iterNodes2].signatures \union {iterNodes1};
                     };
                     
                     unlock: mutex[iterNodes1] := 0;
                     
                     \* todo compare state synced by maxed value. 
-                    \* error in merging sigs - in case higher value has been applied, signatures should be rewritten 
-                    stateSynced := (\A e \in 1..Len(states): states[e].value =< states[iterNodes1].value) /\ 
+                    \* validate: stateSynced := (\A e \in 1..Len(states): states[e].value =< states[iterNodes1].value) /\ 
+                    validate: stateSynced := (\A e \in 1..Len(states): states[e].value = 5) /\ 
                      (\A e \in 1..Len(states): Cardinality(states[e].signatures) >= Quorum);
-                    iterNodes1 := iterNodes1 + 1;
                     iterNodes2 := iterNodes2 + 1;                
-                }
+                };
+                iterNodes1 := iterNodes1 + 1;
+                iterNodes2 := 1
             }    
            }
   
@@ -82,7 +84,7 @@ ASSUME Quorum > Fail
   
 }
 *********)
-\* BEGIN TRANSLATION (chksum(pcal) = "4f01dabe" /\ chksum(tla) = "b221e135")
+\* BEGIN TRANSLATION (chksum(pcal) = "c4f20b4e" /\ chksum(tla) = "ae49712c")
 VARIABLES states, mutex, pc, stateSynced, iterNodes1, iterNodes2
 
 vars == << states, mutex, pc, stateSynced, iterNodes1, iterNodes2 >>
@@ -115,41 +117,56 @@ step2(self) == /\ pc[self] = "step2"
 step3(self) == /\ pc[self] = "step3"
                /\ IF iterNodes2[self] <= Cardinality(Nodes)
                      THEN /\ pc' = [pc EXCEPT ![self] = "lock"]
-                     ELSE /\ pc' = [pc EXCEPT ![self] = "step2"]
-               /\ UNCHANGED << states, mutex, stateSynced, iterNodes1, 
-                               iterNodes2 >>
+                          /\ UNCHANGED << iterNodes1, iterNodes2 >>
+                     ELSE /\ iterNodes1' = [iterNodes1 EXCEPT ![self] = iterNodes1[self] + 1]
+                          /\ iterNodes2' = [iterNodes2 EXCEPT ![self] = 1]
+                          /\ pc' = [pc EXCEPT ![self] = "step2"]
+               /\ UNCHANGED << states, mutex, stateSynced >>
 
 lock(self) == /\ pc[self] = "lock"
               /\ mutex[iterNodes1[self]] = 0
               /\ mutex' = [mutex EXCEPT ![iterNodes1[self]] = 1]
               /\ IF states[iterNodes1[self]].value < states[iterNodes2[self]].value
                     THEN /\ pc' = [pc EXCEPT ![self] = "cas"]
-                    ELSE /\ pc' = [pc EXCEPT ![self] = "unlock"]
+                    ELSE /\ IF states[iterNodes1[self]].value = states[iterNodes2[self]].value
+                               THEN /\ pc' = [pc EXCEPT ![self] = "signatures2"]
+                               ELSE /\ pc' = [pc EXCEPT ![self] = "unlock"]
               /\ UNCHANGED << states, stateSynced, iterNodes1, iterNodes2 >>
 
 cas(self) == /\ pc[self] = "cas"
              /\ states' = [states EXCEPT ![iterNodes1[self]].value = states[iterNodes2[self]].value]
              /\ IF Cardinality(states'[iterNodes1[self]].signatures) < Quorum
-                   THEN /\ pc' = [pc EXCEPT ![self] = "signatures"]
+                   THEN /\ pc' = [pc EXCEPT ![self] = "signatures1"]
                    ELSE /\ pc' = [pc EXCEPT ![self] = "unlock"]
              /\ UNCHANGED << mutex, stateSynced, iterNodes1, iterNodes2 >>
 
-signatures(self) == /\ pc[self] = "signatures"
-                    /\ states' = [states EXCEPT ![iterNodes1[self]].signatures = states[iterNodes1[self]].signatures \o states[iterNodes2[self]].signatures]
-                    /\ pc' = [pc EXCEPT ![self] = "unlock"]
-                    /\ UNCHANGED << mutex, stateSynced, iterNodes1, iterNodes2 >>
+signatures1(self) == /\ pc[self] = "signatures1"
+                     /\ states' = [states EXCEPT ![iterNodes1[self]].signatures = states[iterNodes1[self]].signatures \union states[iterNodes2[self]].signatures]
+                     /\ pc' = [pc EXCEPT ![self] = "unlock"]
+                     /\ UNCHANGED << mutex, stateSynced, iterNodes1, 
+                                     iterNodes2 >>
+
+signatures2(self) == /\ pc[self] = "signatures2"
+                     /\ states' = [states EXCEPT ![iterNodes1[self]].signatures = states[iterNodes2[self]].signatures \union {iterNodes1[self]}]
+                     /\ pc' = [pc EXCEPT ![self] = "unlock"]
+                     /\ UNCHANGED << mutex, stateSynced, iterNodes1, 
+                                     iterNodes2 >>
 
 unlock(self) == /\ pc[self] = "unlock"
                 /\ mutex' = [mutex EXCEPT ![iterNodes1[self]] = 0]
-                /\ stateSynced' = [stateSynced EXCEPT ![self] =               (\A e \in 1..Len(states): states[e].value =< states[iterNodes1[self]].value) /\
-                                                                (\A e \in 1..Len(states): Cardinality(states[e].signatures) >= Quorum)]
-                /\ iterNodes1' = [iterNodes1 EXCEPT ![self] = iterNodes1[self] + 1]
-                /\ iterNodes2' = [iterNodes2 EXCEPT ![self] = iterNodes2[self] + 1]
-                /\ pc' = [pc EXCEPT ![self] = "step3"]
-                /\ UNCHANGED states
+                /\ pc' = [pc EXCEPT ![self] = "validate"]
+                /\ UNCHANGED << states, stateSynced, iterNodes1, iterNodes2 >>
+
+validate(self) == /\ pc[self] = "validate"
+                  /\ stateSynced' = [stateSynced EXCEPT ![self] =                         (\A e \in 1..Len(states): states[e].value = 5) /\
+                                                                  (\A e \in 1..Len(states): Cardinality(states[e].signatures) >= Quorum)]
+                  /\ iterNodes2' = [iterNodes2 EXCEPT ![self] = iterNodes2[self] + 1]
+                  /\ pc' = [pc EXCEPT ![self] = "step3"]
+                  /\ UNCHANGED << states, mutex, iterNodes1 >>
 
 node(self) == step1(self) \/ step2(self) \/ step3(self) \/ lock(self)
-                 \/ cas(self) \/ signatures(self) \/ unlock(self)
+                 \/ cas(self) \/ signatures1(self) \/ signatures2(self)
+                 \/ unlock(self) \/ validate(self)
 
 (* Allow infinite stuttering to prevent deadlock on termination. *)
 Terminating == /\ \A self \in ProcSet: pc[self] = "Done"
@@ -167,6 +184,6 @@ Termination == <>(\A self \in ProcSet: pc[self] = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Mon Jul 25 10:03:53 MSK 2022 by zyeve
+\* Last modified Mon Jul 25 22:09:16 MSK 2022 by zyeve
 \* Last modified Fri Jul 22 19:47:27 MSK 2022 by zyeve
 \* Created Thu Jul 14 21:32:05 MSK 2022 by zyeve
