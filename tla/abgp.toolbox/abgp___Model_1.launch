@@ -5,26 +5,24 @@
     <stringAttribute key="distributedNetworkInterface" value="192.168.11.1"/>
     <intAttribute key="distributedNodesCount" value="1"/>
     <stringAttribute key="distributedTLC" value="off"/>
-    <intAttribute key="fpIndex" value="101"/>
+    <intAttribute key="fpIndex" value="11"/>
     <intAttribute key="maxHeapSize" value="25"/>
     <stringAttribute key="modelBehaviorInit" value=""/>
     <stringAttribute key="modelBehaviorNext" value=""/>
     <stringAttribute key="modelBehaviorSpec" value="Spec"/>
     <intAttribute key="modelBehaviorSpecType" value="1"/>
-    <stringAttribute key="modelBehaviorVars" value="states, mutex, maxValue, iterNodes1, iterNodes2, stateSynced, pc"/>
+    <stringAttribute key="modelBehaviorVars" value="states, mutex, iterNodes1, iterNodes2, stateSynced, pc"/>
     <stringAttribute key="modelComments" value=""/>
     <booleanAttribute key="modelCorrectnessCheckDeadlock" value="true"/>
-    <listAttribute key="modelCorrectnessInvariants">
-        <listEntry value="0(\E p \in 1..5: (Cardinality(inNodes[p]) &gt; 0)) \/ &#13;&#10;&#13;&#10;&#13;&#10;&#13;&#10;(\A p \in 1..5: (states[p] = 8 /\ pc[p] = &quot;Done&quot;))"/>
-    </listAttribute>
+    <listAttribute key="modelCorrectnessInvariants"/>
     <listAttribute key="modelCorrectnessProperties">
-        <listEntry value="0Termination"/>
+        <listEntry value="1Termination"/>
     </listAttribute>
     <intAttribute key="modelEditorOpenTabs" value="8"/>
     <stringAttribute key="modelExpressionEval" value=""/>
     <stringAttribute key="modelParameterActionConstraint" value=""/>
     <listAttribute key="modelParameterConstants">
-        <listEntry value="Edges;;{ {1,2}, {2,3}, {3,5}, {4,5} };0;0"/>
+        <listEntry value="Edges;;{ {1,2}, {1,3}, {1,5}, {2,3}, {2,5}, {3,5}, {4,5}, {4,2}, {4,3} };0;0"/>
         <listEntry value="Quorum;;3;0;0"/>
         <listEntry value="Fail;;2;0;0"/>
         <listEntry value="Nodes;;{1,2,3,4,5};0;0"/>
@@ -38,4 +36,5 @@
     <stringAttribute key="result.mail.address" value=""/>
     <stringAttribute key="specName" value="abgp"/>
     <stringAttribute key="tlcResourcesProfile" value="local custom"/>
+    <listAttribute key="traceExploreExpressions"/>
 </launchConfiguration>

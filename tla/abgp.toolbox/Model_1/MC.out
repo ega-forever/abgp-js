@@ -2,7 +2,7 @@
 TLC2 Version 2.16 of 31 December 2020 (rev: cdddf55)
 @!@!@ENDMSG 2262 @!@!@
 @!@!@STARTMSG 2187:0 @!@!@
-Running breadth-first search Model-Checking with fp 101 and seed 7096655354024150471 with 4 workers on 8 cores with 1815MB heap and 4082MB offheap memory [pid: 49436] (Windows 10 10.0 amd64, AdoptOpenJDK 14.0.1 x86_64, OffHeapDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 11 and seed -6572915345198777404 with 4 workers on 8 cores with 1815MB heap and 4082MB offheap memory [pid: 40232] (Windows 10 10.0 amd64, AdoptOpenJDK 14.0.1 x86_64, OffHeapDiskFPSet, DiskStateQueue).
 @!@!@ENDMSG 2187 @!@!@
 @!@!@STARTMSG 2220:0 @!@!@
 Starting SANY...
@@ -25,165 +25,1677 @@ Semantic processing of module MC
 SANY finished.
 @!@!@ENDMSG 2219 @!@!@
 @!@!@STARTMSG 2185:0 @!@!@
-Starting... (2022-07-24 21:32:59)
+Starting... (2022-07-25 09:45:04)
 @!@!@ENDMSG 2185 @!@!@
+@!@!@STARTMSG 2212:0 @!@!@
+Implied-temporal checking--satisfiability problem has 1 branches.
+@!@!@ENDMSG 2212 @!@!@
 @!@!@STARTMSG 2189:0 @!@!@
 Computing initial states...
 @!@!@ENDMSG 2189 @!@!@
 @!@!@STARTMSG 2190:0 @!@!@
-Finished computing initial states: 1 distinct state generated at 2022-07-24 21:33:00.
+Finished computing initial states: 1 distinct state generated at 2022-07-25 09:45:05.
 @!@!@ENDMSG 2190 @!@!@
-@!@!@STARTMSG 2193:0 @!@!@
-Model checking completed. No error has been found.
-  Estimates of the probability that TLC did not check all reachable states
-  because two distinct states had the same fingerprint:
-  calculated (optimistic):  val = 5.0E-9
-  based on the actual fingerprints:  val = 3.5E-10
-@!@!@ENDMSG 2193 @!@!@
+@!@!@STARTMSG 2192:0 @!@!@
+Checking temporal properties for the current state space with 45841 total distinct states at (2022-07-25 09:45:08)
+@!@!@ENDMSG 2192 @!@!@
+@!@!@STARTMSG 2267:0 @!@!@
+Finished checking temporal properties in 00s at 2022-07-25 09:45:09
+@!@!@ENDMSG 2267 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(21) at 2022-07-25 09:45:09: 174 850 states generated (174 850 s/min), 45 841 distinct states found (45 841 ds/min), 9 270 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2192:0 @!@!@
+Checking temporal properties for the current state space with 1218854 total distinct states at (2022-07-25 09:46:09)
+@!@!@ENDMSG 2192 @!@!@
+@!@!@STARTMSG 2267:0 @!@!@
+Finished checking temporal properties in 49s at 2022-07-25 09:46:58
+@!@!@ENDMSG 2267 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(46) at 2022-07-25 09:46:58: 5 404 594 states generated (5 229 744 s/min), 1 218 856 distinct states found (1 173 015 ds/min), 84 877 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(59) at 2022-07-25 09:47:58: 10 426 246 states generated (5 021 652 s/min), 2 252 705 distinct states found (1 033 849 ds/min), 65 477 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(96) at 2022-07-25 09:48:36: 13 556 701 states generated, 2 844 120 distinct states found, 0 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2192:0 @!@!@
+Checking temporal properties for the complete state space with 2844120 total distinct states at (2022-07-25 09:48:36)
+@!@!@ENDMSG 2192 @!@!@
+@!@!@STARTMSG 2116:1 @!@!@
+Temporal properties were violated.
+
+@!@!@ENDMSG 2116 @!@!@
+@!@!@STARTMSG 2264:1 @!@!@
+The following behavior constitutes a counter-example:
+
+@!@!@ENDMSG 2264 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+1: <Initial predicate>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 1>>
+/\ iterNodes2 = <<1, 1, 1, 1, 1>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step1", "step1", "step1", "step1", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+2: <step1 line 100, col 16 to line 105, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 1>>
+/\ iterNodes2 = <<1, 1, 1, 1, 1>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step1", "step2", "step1", "step1", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+3: <step1 line 100, col 16 to line 105, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 1>>
+/\ iterNodes2 = <<1, 1, 1, 1, 1>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "step1", "step1", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+4: <step1 line 100, col 16 to line 105, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 1>>
+/\ iterNodes2 = <<1, 1, 1, 1, 1>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "step1", "step1", "step2">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+5: <step1 line 100, col 16 to line 105, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 1>>
+/\ iterNodes2 = <<1, 1, 1, 1, 1>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "step1", "step2", "step2">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+6: <step1 line 100, col 16 to line 105, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 1>>
+/\ iterNodes2 = <<1, 1, 1, 1, 1>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "step2", "step2", "step2">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+7: <step2 line 107, col 16 to line 112, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 1>>
+/\ iterNodes2 = <<1, 1, 1, 1, 1>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "step2", "step2", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+8: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 1>>
+/\ iterNodes2 = <<1, 1, 1, 1, 1>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "step2", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+9: <step2 line 107, col 16 to line 112, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 1>>
+/\ iterNodes2 = <<1, 1, 1, 1, 1>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "step2", "step2", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+10: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 1>>
+/\ iterNodes2 = <<1, 1, 1, 1, 1>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step2", "step2", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+11: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 1>>
+/\ iterNodes2 = <<1, 1, 1, 1, 1>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step2", "step2", "step2", "unlock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+12: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 2>>
+/\ iterNodes2 = <<1, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step2", "step2", "step2", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+13: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 2>>
+/\ iterNodes2 = <<1, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step2", "step2", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+14: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 0, 0, 0, 0>>
+/\ iterNodes1 = <<1, 1, 1, 1, 2>>
+/\ iterNodes2 = <<1, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"unlock", "step2", "step2", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+15: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<2, 1, 1, 1, 2>>
+/\ iterNodes2 = <<2, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "step2", "step2", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+16: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<2, 1, 1, 1, 2>>
+/\ iterNodes2 = <<2, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step2", "step2", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+17: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 1, 0, 0, 0>>
+/\ iterNodes1 = <<2, 1, 1, 1, 2>>
+/\ iterNodes2 = <<2, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"unlock", "step2", "step2", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+18: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<3, 1, 1, 1, 2>>
+/\ iterNodes2 = <<3, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "step2", "step2", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+19: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<3, 1, 1, 1, 2>>
+/\ iterNodes2 = <<3, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step2", "step2", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+20: <step2 line 107, col 16 to line 112, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<3, 1, 1, 1, 2>>
+/\ iterNodes2 = <<3, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step3", "step2", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+21: <step2 line 107, col 16 to line 112, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<3, 1, 1, 1, 2>>
+/\ iterNodes2 = <<3, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step3", "step3", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+22: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<3, 1, 1, 1, 2>>
+/\ iterNodes2 = <<3, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step3", "lock", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+23: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 0, 0, 0, 0>>
+/\ iterNodes1 = <<3, 1, 1, 1, 2>>
+/\ iterNodes2 = <<3, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step3", "unlock", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+24: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 0, 1, 0, 0>>
+/\ iterNodes1 = <<3, 1, 1, 1, 2>>
+/\ iterNodes2 = <<3, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"unlock", "step3", "unlock", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+25: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 0, 0, 0, 0>>
+/\ iterNodes1 = <<4, 1, 1, 1, 2>>
+/\ iterNodes2 = <<4, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "step3", "unlock", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+26: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 0, 0, 0, 0>>
+/\ iterNodes1 = <<4, 1, 1, 1, 2>>
+/\ iterNodes2 = <<4, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step3", "unlock", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+27: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 0, 0, 0, 0>>
+/\ iterNodes1 = <<4, 1, 1, 1, 2>>
+/\ iterNodes2 = <<4, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "lock", "unlock", "step2", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+28: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 1, 0, 0, 0>>
+/\ iterNodes1 = <<4, 1, 1, 1, 2>>
+/\ iterNodes2 = <<4, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "lock", "unlock", "step2", "unlock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+29: <step2 line 107, col 16 to line 112, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 1, 0, 0, 0>>
+/\ iterNodes1 = <<4, 1, 1, 1, 2>>
+/\ iterNodes2 = <<4, 1, 1, 1, 2>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "lock", "unlock", "step3", "unlock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+30: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 0, 0, 0, 0>>
+/\ iterNodes1 = <<4, 1, 1, 1, 3>>
+/\ iterNodes2 = <<4, 1, 1, 1, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "lock", "unlock", "step3", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+31: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 0, 0, 0, 0>>
+/\ iterNodes1 = <<4, 1, 1, 1, 3>>
+/\ iterNodes2 = <<4, 1, 1, 1, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "lock", "unlock", "step3", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+32: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 0, 0, 0, 0>>
+/\ iterNodes1 = <<4, 1, 1, 1, 3>>
+/\ iterNodes2 = <<4, 1, 1, 1, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "lock", "unlock", "lock", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+33: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<4, 1, 2, 1, 3>>
+/\ iterNodes2 = <<4, 1, 2, 1, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "lock", "step3", "lock", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+34: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 0, 0, 0, 0>>
+/\ iterNodes1 = <<4, 1, 2, 1, 3>>
+/\ iterNodes2 = <<4, 1, 2, 1, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "unlock", "step3", "lock", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+35: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 0, 0, 0, 0>>
+/\ iterNodes1 = <<4, 1, 2, 1, 3>>
+/\ iterNodes2 = <<4, 1, 2, 1, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "unlock", "lock", "lock", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+36: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<4, 2, 2, 1, 3>>
+/\ iterNodes2 = <<4, 2, 2, 1, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step3", "lock", "lock", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+37: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<1, 0, 0, 0, 0>>
+/\ iterNodes1 = <<4, 2, 2, 1, 3>>
+/\ iterNodes2 = <<4, 2, 2, 1, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step3", "lock", "unlock", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+38: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<4, 2, 2, 2, 3>>
+/\ iterNodes2 = <<4, 2, 2, 2, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step3", "lock", "step3", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+39: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<4, 2, 2, 2, 3>>
+/\ iterNodes2 = <<4, 2, 2, 2, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "lock", "lock", "step3", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+40: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 1, 0, 0, 0>>
+/\ iterNodes1 = <<4, 2, 2, 2, 3>>
+/\ iterNodes2 = <<4, 2, 2, 2, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "unlock", "lock", "step3", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+41: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 1, 0, 1, 0>>
+/\ iterNodes1 = <<4, 2, 2, 2, 3>>
+/\ iterNodes2 = <<4, 2, 2, 2, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"unlock", "unlock", "lock", "step3", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+42: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 1, 1, 1, 0>>
+/\ iterNodes1 = <<4, 2, 2, 2, 3>>
+/\ iterNodes2 = <<4, 2, 2, 2, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"unlock", "unlock", "lock", "step3", "unlock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+43: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 1, 1, 0, 0>>
+/\ iterNodes1 = <<5, 2, 2, 2, 3>>
+/\ iterNodes2 = <<5, 2, 2, 2, 3>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "unlock", "lock", "step3", "unlock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+44: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 1, 0, 0, 0>>
+/\ iterNodes1 = <<5, 2, 2, 2, 4>>
+/\ iterNodes2 = <<5, 2, 2, 2, 4>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "unlock", "lock", "step3", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+45: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<5, 3, 2, 2, 4>>
+/\ iterNodes2 = <<5, 3, 2, 2, 4>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "step3", "lock", "step3", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+46: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<5, 3, 2, 2, 4>>
+/\ iterNodes2 = <<5, 3, 2, 2, 4>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "step3", "lock", "step3", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+47: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<5, 3, 2, 2, 4>>
+/\ iterNodes2 = <<5, 3, 2, 2, 4>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "lock", "lock", "step3", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+48: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 1, 0, 0>>
+/\ iterNodes1 = <<5, 3, 2, 2, 4>>
+/\ iterNodes2 = <<5, 3, 2, 2, 4>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "unlock", "lock", "step3", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+49: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 1, 0, 0>>
+/\ iterNodes1 = <<5, 3, 2, 2, 4>>
+/\ iterNodes2 = <<5, 3, 2, 2, 4>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"lock", "unlock", "lock", "step3", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+50: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 1, 0, 1>>
+/\ iterNodes1 = <<5, 3, 2, 2, 4>>
+/\ iterNodes2 = <<5, 3, 2, 2, 4>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"unlock", "unlock", "lock", "step3", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+51: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 1, 0, 1>>
+/\ iterNodes1 = <<5, 3, 2, 2, 4>>
+/\ iterNodes2 = <<5, 3, 2, 2, 4>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"unlock", "unlock", "lock", "lock", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+52: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 1, 1, 1>>
+/\ iterNodes1 = <<5, 3, 2, 2, 4>>
+/\ iterNodes2 = <<5, 3, 2, 2, 4>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"unlock", "unlock", "lock", "lock", "unlock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+53: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 1, 0, 1>>
+/\ iterNodes1 = <<5, 3, 2, 2, 5>>
+/\ iterNodes2 = <<5, 3, 2, 2, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"unlock", "unlock", "lock", "lock", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+54: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 1>>
+/\ iterNodes1 = <<5, 4, 2, 2, 5>>
+/\ iterNodes2 = <<5, 4, 2, 2, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"unlock", "step3", "lock", "lock", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+55: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 1, 0, 0, 1>>
+/\ iterNodes1 = <<5, 4, 2, 2, 5>>
+/\ iterNodes2 = <<5, 4, 2, 2, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"unlock", "step3", "lock", "unlock", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+56: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 1>>
+/\ iterNodes1 = <<5, 4, 2, 3, 5>>
+/\ iterNodes2 = <<5, 4, 2, 3, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"unlock", "step3", "lock", "step3", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+57: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 4, 2, 3, 5>>
+/\ iterNodes2 = <<6, 4, 2, 3, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "step3", "lock", "step3", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+58: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 4, 2, 3, 5>>
+/\ iterNodes2 = <<6, 4, 2, 3, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "lock", "lock", "step3", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+59: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 1, 0>>
+/\ iterNodes1 = <<6, 4, 2, 3, 5>>
+/\ iterNodes2 = <<6, 4, 2, 3, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "unlock", "lock", "step3", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+60: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 1, 0>>
+/\ iterNodes1 = <<6, 4, 2, 3, 5>>
+/\ iterNodes2 = <<6, 4, 2, 3, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "unlock", "lock", "lock", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+61: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 1, 1, 0>>
+/\ iterNodes1 = <<6, 4, 2, 3, 5>>
+/\ iterNodes2 = <<6, 4, 2, 3, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "unlock", "lock", "unlock", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+62: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 1, 1, 0>>
+/\ iterNodes1 = <<6, 4, 2, 3, 5>>
+/\ iterNodes2 = <<6, 4, 2, 3, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "unlock", "lock", "unlock", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+63: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 1, 1, 1, 0>>
+/\ iterNodes1 = <<6, 4, 2, 3, 5>>
+/\ iterNodes2 = <<6, 4, 2, 3, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step3", "unlock", "unlock", "unlock", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+64: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 1, 1, 1, 0>>
+/\ iterNodes1 = <<6, 4, 2, 3, 5>>
+/\ iterNodes2 = <<6, 4, 2, 3, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "unlock", "unlock", "unlock", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+65: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 1, 1, 0>>
+/\ iterNodes1 = <<6, 4, 3, 3, 5>>
+/\ iterNodes2 = <<6, 4, 3, 3, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "unlock", "step3", "unlock", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+66: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 1, 0>>
+/\ iterNodes1 = <<6, 4, 3, 4, 5>>
+/\ iterNodes2 = <<6, 4, 3, 4, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "unlock", "step3", "step3", "lock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+67: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 1, 1>>
+/\ iterNodes1 = <<6, 4, 3, 4, 5>>
+/\ iterNodes2 = <<6, 4, 3, 4, 5>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "unlock", "step3", "step3", "unlock">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+68: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 1, 0>>
+/\ iterNodes1 = <<6, 4, 3, 4, 6>>
+/\ iterNodes2 = <<6, 4, 3, 4, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "unlock", "step3", "step3", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+69: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 1, 0>>
+/\ iterNodes1 = <<6, 4, 3, 4, 6>>
+/\ iterNodes2 = <<6, 4, 3, 4, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "unlock", "step3", "lock", "step3">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+70: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 1, 0>>
+/\ iterNodes1 = <<6, 4, 3, 4, 6>>
+/\ iterNodes2 = <<6, 4, 3, 4, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "unlock", "step3", "lock", "step2">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+71: <step2 line 107, col 16 to line 112, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 1, 0>>
+/\ iterNodes1 = <<6, 4, 3, 4, 6>>
+/\ iterNodes2 = <<6, 4, 3, 4, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "unlock", "step3", "lock", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+72: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 5, 3, 4, 6>>
+/\ iterNodes2 = <<6, 5, 3, 4, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step3", "step3", "lock", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+73: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 5, 3, 4, 6>>
+/\ iterNodes2 = <<6, 5, 3, 4, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step3", "lock", "lock", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+74: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 1, 0>>
+/\ iterNodes1 = <<6, 5, 3, 4, 6>>
+/\ iterNodes2 = <<6, 5, 3, 4, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step3", "lock", "unlock", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+75: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 1, 0>>
+/\ iterNodes1 = <<6, 5, 3, 4, 6>>
+/\ iterNodes2 = <<6, 5, 3, 4, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "lock", "lock", "unlock", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+76: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 1, 1>>
+/\ iterNodes1 = <<6, 5, 3, 4, 6>>
+/\ iterNodes2 = <<6, 5, 3, 4, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "unlock", "lock", "unlock", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+77: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 1>>
+/\ iterNodes1 = <<6, 5, 3, 5, 6>>
+/\ iterNodes2 = <<6, 5, 3, 5, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "unlock", "lock", "step3", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+78: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 3, 5, 6>>
+/\ iterNodes2 = <<6, 6, 3, 5, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step3", "lock", "step3", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+79: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 1, 0, 0>>
+/\ iterNodes1 = <<6, 6, 3, 5, 6>>
+/\ iterNodes2 = <<6, 6, 3, 5, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step3", "unlock", "step3", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+80: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 1, 0, 0>>
+/\ iterNodes1 = <<6, 6, 3, 5, 6>>
+/\ iterNodes2 = <<6, 6, 3, 5, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step3", "unlock", "lock", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+81: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 4, 5, 6>>
+/\ iterNodes2 = <<6, 6, 4, 5, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step3", "step3", "lock", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+82: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 4, 5, 6>>
+/\ iterNodes2 = <<6, 6, 4, 5, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step3", "lock", "lock", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+83: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 4, 5, 6>>
+/\ iterNodes2 = <<6, 6, 4, 5, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "lock", "lock", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+84: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 1>>
+/\ iterNodes1 = <<6, 6, 4, 5, 6>>
+/\ iterNodes2 = <<6, 6, 4, 5, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "lock", "unlock", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+85: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 4, 6, 6>>
+/\ iterNodes2 = <<6, 6, 4, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "lock", "step3", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+86: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 1, 0>>
+/\ iterNodes1 = <<6, 6, 4, 6, 6>>
+/\ iterNodes2 = <<6, 6, 4, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "unlock", "step3", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+87: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 1, 0>>
+/\ iterNodes1 = <<6, 6, 4, 6, 6>>
+/\ iterNodes2 = <<6, 6, 4, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "unlock", "step2", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+88: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 5, 6, 6>>
+/\ iterNodes2 = <<6, 6, 5, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "step3", "step2", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+89: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 5, 6, 6>>
+/\ iterNodes2 = <<6, 6, 5, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "lock", "step2", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+90: <lock line 121, col 15 to line 127, col 76 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 1>>
+/\ iterNodes1 = <<6, 6, 5, 6, 6>>
+/\ iterNodes2 = <<6, 6, 5, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "unlock", "step2", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+91: <unlock line 141, col 17 to line 148, col 35 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 6, 6, 6>>
+/\ iterNodes2 = <<6, 6, 6, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "step3", "step2", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+92: <step3 line 114, col 16 to line 119, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 6, 6, 6>>
+/\ iterNodes2 = <<6, 6, 6, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step2", "step2", "step2", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+93: <step2 line 107, col 16 to line 112, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 6, 6, 6>>
+/\ iterNodes2 = <<6, 6, 6, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step1", "step2", "step2", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+94: <step2 line 107, col 16 to line 112, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 6, 6, 6>>
+/\ iterNodes2 = <<6, 6, 6, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step1", "step1", "step2", "step2", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+95: <step2 line 107, col 16 to line 112, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 6, 6, 6>>
+/\ iterNodes2 = <<6, 6, 6, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step1", "step1", "step1", "step2", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+96: <step2 line 107, col 16 to line 112, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 6, 6, 6>>
+/\ iterNodes2 = <<6, 6, 6, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step1", "step1", "step1", "step1", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+97: <step1 line 100, col 16 to line 105, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 6, 6, 6>>
+/\ iterNodes2 = <<6, 6, 6, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step1", "step1", "step1", "step1", "step2">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+98: <step2 line 107, col 16 to line 112, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 6, 6, 6>>
+/\ iterNodes2 = <<6, 6, 6, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step1", "step1", "step1", "step1", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+99: <step1 line 100, col 16 to line 105, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 6, 6, 6>>
+/\ iterNodes2 = <<6, 6, 6, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step1", "step1", "step1", "step2", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+100: <step1 line 100, col 16 to line 105, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 6, 6, 6>>
+/\ iterNodes2 = <<6, 6, 6, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step1", "step1", "step2", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+101: <step1 line 100, col 16 to line 105, col 44 of module abgp>
+/\ states = << [value |-> 1, signatures |-> {1}],
+   [value |-> 2, signatures |-> {2}],
+   [value |-> 3, signatures |-> {3}],
+   [value |-> 4, signatures |-> {4}],
+   [value |-> 5, signatures |-> {5}] >>
+/\ mutex = <<0, 0, 0, 0, 0>>
+/\ iterNodes1 = <<6, 6, 6, 6, 6>>
+/\ iterNodes2 = <<6, 6, 6, 6, 6>>
+/\ stateSynced = <<FALSE, FALSE, FALSE, FALSE, FALSE>>
+/\ pc = <<"step2", "step1", "step2", "step2", "step1">>
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2122:4 @!@!@
+92: Back to state: <step1 line 100, col 16 to line 105, col 44 of module abgp>
+
+@!@!@ENDMSG 2122 @!@!@
+@!@!@STARTMSG 2267:0 @!@!@
+Finished checking temporal properties in 49s at 2022-07-25 09:49:25
+@!@!@ENDMSG 2267 @!@!@
 @!@!@STARTMSG 2201:0 @!@!@
-The coverage statistics at 2022-07-24 21:33:07
+The coverage statistics at 2022-07-25 09:49:25
 @!@!@ENDMSG 2201 @!@!@
 @!@!@STARTMSG 2773:0 @!@!@
-<Init line 100, col 1 to line 100, col 4 of module abgp>: 1:1
+<Init line 91, col 1 to line 91, col 4 of module abgp>: 2:2
 @!@!@ENDMSG 2773 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 101, col 9 to line 108, col 46 of module abgp: 1
+  line 92, col 9 to line 98, col 46 of module abgp: 2
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<step1 line 110, col 1 to line 110, col 11 of module abgp>: 26520:146410
+<step1 line 100, col 1 to line 100, col 11 of module abgp>: 131771:1488489
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 110, col 19 to line 110, col 36 of module abgp: 951665
+  line 100, col 19 to line 100, col 36 of module abgp: 15709404
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 110, col 19 to line 110, col 26 of module abgp: 805255
+  |line 100, col 19 to line 100, col 26 of module abgp: 14220915
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 111, col 22 to line 111, col 46 of module abgp: 146410
+  line 101, col 22 to line 101, col 46 of module abgp: 1488489
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 112, col 27 to line 112, col 64 of module abgp: 73205
+  line 102, col 27 to line 102, col 64 of module abgp: 1488489
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 113, col 27 to line 113, col 63 of module abgp: 73205
+  line 103, col 30 to line 103, col 63 of module abgp: 0
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 114, col 19 to line 115, col 54 of module abgp: 146410
+  line 104, col 19 to line 105, col 44 of module abgp: 1488489
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<step2 line 117, col 1 to line 117, col 11 of module abgp>: 34943:146410
+<step2 line 107, col 1 to line 107, col 11 of module abgp>: 305812:1488527
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 117, col 19 to line 117, col 36 of module abgp: 951665
+  line 107, col 19 to line 107, col 36 of module abgp: 15709432
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 117, col 19 to line 117, col 26 of module abgp: 805255
+  |line 107, col 19 to line 107, col 26 of module abgp: 14220905
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 118, col 22 to line 118, col 59 of module abgp: 146410
+  line 108, col 22 to line 108, col 59 of module abgp: 1488527
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 119, col 27 to line 119, col 64 of module abgp: 73205
+  line 109, col 27 to line 109, col 64 of module abgp: 744256
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 120, col 27 to line 120, col 64 of module abgp: 73205
+  line 110, col 27 to line 110, col 64 of module abgp: 744271
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 121, col 19 to line 122, col 54 of module abgp: 146410
+  line 111, col 19 to line 112, col 44 of module abgp: 1488527
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<step3 line 124, col 1 to line 124, col 11 of module abgp>: 99587:439230
+<step3 line 114, col 1 to line 114, col 11 of module abgp>: 931920:4465414
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 124, col 19 to line 124, col 36 of module abgp: 1244485
+  line 114, col 19 to line 114, col 36 of module abgp: 18686308
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 124, col 19 to line 124, col 26 of module abgp: 805255
+  |line 114, col 19 to line 114, col 26 of module abgp: 14220894
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 125, col 22 to line 125, col 59 of module abgp: 439230
+  line 115, col 22 to line 115, col 59 of module abgp: 4465414
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 126, col 33 to line 126, col 95 of module abgp: 366025
+  line 116, col 27 to line 116, col 63 of module abgp: 3721174
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 127, col 41 to line 127, col 124 of module abgp: 0
+  line 117, col 27 to line 117, col 64 of module abgp: 744240
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 128, col 41 to line 128, col 44 of module abgp: 366025
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  line 129, col 41 to line 129, col 56 of module abgp: 366025
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  line 130, col 30 to line 130, col 152 of module abgp: 366025
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  |line 130, col 45 to line 130, col 152 of module abgp: 366025
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  ||line 130, col 46 to line 130, col 56 of module abgp: 366025
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  ||line 130, col 65 to line 130, col 151 of module abgp: 366025
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  ||line 130, col 75 to line 130, col 151 of module abgp: 366025
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  |||line 130, col 101 to line 130, col 151 of module abgp: 1390895
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  |||line 130, col 84 to line 130, col 98 of module abgp: 366025
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  line 131, col 30 to line 131, col 93 of module abgp: 366025
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  line 132, col 30 to line 132, col 93 of module abgp: 366025
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  line 133, col 30 to line 133, col 64 of module abgp: 366025
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  line 134, col 30 to line 134, col 64 of module abgp: 73205
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  line 135, col 30 to line 136, col 55 of module abgp: 73205
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  line 137, col 19 to line 137, col 49 of module abgp: 439230
+  line 118, col 19 to line 119, col 44 of module abgp: 4465414
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<Terminating line 142, col 1 to line 142, col 11 of module abgp>: 0:1
+<lock line 121, col 1 to line 121, col 10 of module abgp>: 866330:3057289
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 142, col 40 to line 142, col 56 of module abgp: 177160
+  line 121, col 18 to line 121, col 34 of module abgp: 17278153
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 142, col 40 to line 142, col 47 of module abgp: 177155
+  |line 121, col 18 to line 121, col 25 of module abgp: 14220864
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 142, col 31 to line 142, col 37 of module abgp: 161051
+  line 122, col 18 to line 122, col 44 of module abgp: 6778490
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 143, col 19 to line 143, col 32 of module abgp: 1
+  |line 122, col 18 to line 122, col 40 of module abgp: 3721201
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 123, col 18 to line 123, col 64 of module abgp: 3057289
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 124, col 21 to line 124, col 83 of module abgp: 3057289
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 125, col 29 to line 125, col 61 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 126, col 26 to line 126, col 64 of module abgp: 3057289
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 127, col 18 to line 127, col 76 of module abgp: 3057289
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<cas line 129, col 1 to line 129, col 9 of module abgp>: 0:0
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 129, col 17 to line 129, col 32 of module abgp: 14220839
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 130, col 17 to line 130, col 100 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 132, col 28 to line 132, col 67 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 133, col 28 to line 133, col 63 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 134, col 17 to line 134, col 74 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<signatures line 136, col 1 to line 136, col 16 of module abgp>: 0:0
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 136, col 24 to line 136, col 46 of module abgp: 14220839
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 137, col 24 to line 137, col 156 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 138, col 24 to line 138, col 59 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 139, col 24 to line 139, col 81 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<unlock line 141, col 1 to line 141, col 12 of module abgp>: 608286:3057284
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 141, col 20 to line 141, col 38 of module abgp: 17278123
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 141, col 20 to line 141, col 27 of module abgp: 14220839
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 142, col 20 to line 142, col 66 of module abgp: 3057284
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 143, col 20 to line 144, col 135 of module abgp: 3057284
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 143, col 35 to line 144, col 135 of module abgp: 3057284
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 143, col 36 to line 143, col 46 of module abgp: 3057284
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 143, col 55 to line 144, col 134 of module abgp: 3057284
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 143, col 79 to line 144, col 134 of module abgp: 3057284
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 143, col 80 to line 143, col 153 of module abgp: 3057284
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||||line 143, col 105 to line 143, col 153 of module abgp: 11617692
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||||line 143, col 89 to line 143, col 102 of module abgp: 3057284
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 144, col 66 to line 144, col 133 of module abgp: 611457
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 145, col 20 to line 145, col 83 of module abgp: 3057284
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 146, col 20 to line 146, col 83 of module abgp: 3057284
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 147, col 20 to line 147, col 54 of module abgp: 3057284
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 148, col 20 to line 148, col 35 of module abgp: 3057284
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<Terminating line 154, col 1 to line 154, col 11 of module abgp>: 0:0
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 154, col 19 to line 154, col 56 of module abgp: 2844122
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 155, col 19 to line 155, col 32 of module abgp: 0
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2202:0 @!@!@
 End of statistics.
 @!@!@ENDMSG 2202 @!@!@
 @!@!@STARTMSG 2200:0 @!@!@
-Progress(51) at 2022-07-24 21:33:07: 732 052 states generated (5 258 364 s/min), 161 051 distinct states found (1 156 837 ds/min), 0 states left on queue.
+Progress(96) at 2022-07-25 09:49:25: 13 556 701 states generated (3 109 632 s/min), 2 844 120 distinct states found (652 383 ds/min), 0 states left on queue.
 @!@!@ENDMSG 2200 @!@!@
 @!@!@STARTMSG 2199:0 @!@!@
-732052 states generated, 161051 distinct states found, 0 states left on queue.
+13556701 states generated, 2844120 distinct states found, 0 states left on queue.
 @!@!@ENDMSG 2199 @!@!@
-@!@!@STARTMSG 2194:0 @!@!@
-The depth of the complete state graph search is 51.
-@!@!@ENDMSG 2194 @!@!@
-@!@!@STARTMSG 2268:0 @!@!@
-The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 5 and the 95th percentile is 2).
-@!@!@ENDMSG 2268 @!@!@
 @!@!@STARTMSG 2186:0 @!@!@
-Finished in 8370ms at (2022-07-24 21:33:07)
+Finished in 261578ms at (2022-07-25 09:49:25)
 @!@!@ENDMSG 2186 @!@!@
