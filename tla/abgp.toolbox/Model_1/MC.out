@@ -2,14 +2,13 @@
 TLC2 Version 2.16 of 31 December 2020 (rev: cdddf55)
 @!@!@ENDMSG 2262 @!@!@
 @!@!@STARTMSG 2187:0 @!@!@
-Running breadth-first search Model-Checking with fp 5 and seed 3020933626079132834 with 6 workers on 8 cores with 1815MB heap and 4082MB offheap memory [pid: 3612] (Windows 10 10.0 amd64, AdoptOpenJDK 14.0.1 x86_64, OffHeapDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 46 and seed -2673548008413107901 with 6 workers on 8 cores with 1815MB heap and 4082MB offheap memory [pid: 18860] (Windows 10 10.0 amd64, AdoptOpenJDK 14.0.1 x86_64, OffHeapDiskFPSet, DiskStateQueue).
 @!@!@ENDMSG 2187 @!@!@
 @!@!@STARTMSG 2220:0 @!@!@
 Starting SANY...
 @!@!@ENDMSG 2220 @!@!@
 Parsing file C:\Users\zyeve\WebstormProjects\abgp-js\tla\abgp.toolbox\Model_1\MC.tla
 Parsing file C:\Users\zyeve\WebstormProjects\abgp-js\tla\abgp.toolbox\Model_1\abgp.tla
-Warning: symbols were renamed.
 Parsing file C:\Users\zyeve\Downloads\TLAToolbox-1.7.1-win32.win32.x86_64\toolbox\plugins\org.lamport.tlatools_1.0.0.202012311918\tla2sany\StandardModules\TLC.tla
 Parsing file C:\Users\zyeve\Downloads\TLAToolbox-1.7.1-win32.win32.x86_64\toolbox\plugins\org.lamport.tlatools_1.0.0.202012311918\tla2sany\StandardModules\Integers.tla
 Parsing file C:\Users\zyeve\Downloads\TLAToolbox-1.7.1-win32.win32.x86_64\toolbox\plugins\org.lamport.tlatools_1.0.0.202012311918\tla2sany\StandardModules\Sequences.tla
@@ -26,7 +25,7 @@ Semantic processing of module MC
 SANY finished.
 @!@!@ENDMSG 2219 @!@!@
 @!@!@STARTMSG 2185:0 @!@!@
-Starting... (2022-07-26 22:45:23)
+Starting... (2022-07-27 20:56:44)
 @!@!@ENDMSG 2185 @!@!@
 @!@!@STARTMSG 2212:0 @!@!@
 Implied-temporal checking--satisfiability problem has 1 branches.
@@ -35,252 +34,1154 @@ Implied-temporal checking--satisfiability problem has 1 branches.
 Computing initial states...
 @!@!@ENDMSG 2189 @!@!@
 @!@!@STARTMSG 2190:0 @!@!@
-Finished computing initial states: 1 distinct state generated at 2022-07-26 22:45:24.
+Finished computing initial states: 1 distinct state generated at 2022-07-27 20:56:45.
 @!@!@ENDMSG 2190 @!@!@
 @!@!@STARTMSG 2192:0 @!@!@
-Checking temporal properties for the current state space with 79256 total distinct states at (2022-07-26 22:45:27)
+Checking temporal properties for the current state space with 64799 total distinct states at (2022-07-27 20:56:48)
 @!@!@ENDMSG 2192 @!@!@
 @!@!@STARTMSG 2267:0 @!@!@
-Finished checking temporal properties in 01s at 2022-07-26 22:45:28
+Finished checking temporal properties in 00s at 2022-07-27 20:56:48
 @!@!@ENDMSG 2267 @!@!@
 @!@!@STARTMSG 2200:0 @!@!@
-Progress(14) at 2022-07-26 22:45:28: 197 396 states generated (197 396 s/min), 79 256 distinct states found (79 256 ds/min), 38 662 states left on queue.
-@!@!@ENDMSG 2200 @!@!@
-@!@!@STARTMSG 2200:0 @!@!@
-Progress(22) at 2022-07-26 22:46:28: 7 246 972 states generated (7 049 576 s/min), 2 179 218 distinct states found (2 099 962 ds/min), 479 765 states left on queue.
-@!@!@ENDMSG 2200 @!@!@
-@!@!@STARTMSG 2200:0 @!@!@
-Progress(26) at 2022-07-26 22:47:28: 13 618 051 states generated, 3 707 560 distinct states found, 0 states left on queue.
+Progress(12) at 2022-07-27 20:56:48: 142 046 states generated (142 046 s/min), 64 799 distinct states found (64 799 ds/min), 36 399 states left on queue.
 @!@!@ENDMSG 2200 @!@!@
 @!@!@STARTMSG 2192:0 @!@!@
-Checking temporal properties for the complete state space with 3707560 total distinct states at (2022-07-26 22:47:28)
+Checking temporal properties for the current state space with 1850785 total distinct states at (2022-07-27 20:57:48)
 @!@!@ENDMSG 2192 @!@!@
 @!@!@STARTMSG 2267:0 @!@!@
-Finished checking temporal properties in 02min 35s at 2022-07-26 22:50:03
+Finished checking temporal properties in 43s at 2022-07-27 20:58:32
 @!@!@ENDMSG 2267 @!@!@
-@!@!@STARTMSG 2193:0 @!@!@
-Model checking completed. No error has been found.
-  Estimates of the probability that TLC did not check all reachable states
-  because two distinct states had the same fingerprint:
-  calculated (optimistic):  val = 2.0E-6
-  based on the actual fingerprints:  val = 8.1E-7
-@!@!@ENDMSG 2193 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(17) at 2022-07-27 20:58:32: 4 979 359 states generated (4 837 313 s/min), 1 850 786 distinct states found (1 785 987 ds/min), 851 106 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(18) at 2022-07-27 20:59:32: 10 363 268 states generated (5 383 909 s/min), 3 717 369 distinct states found (1 866 583 ds/min), 1 630 513 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(19) at 2022-07-27 21:00:32: 15 566 672 states generated (5 203 404 s/min), 5 478 894 distinct states found (1 761 525 ds/min), 2 336 850 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
 @!@!@STARTMSG 2201:0 @!@!@
-The coverage statistics at 2022-07-26 22:50:07
+The coverage statistics at 2022-07-27 21:00:32
 @!@!@ENDMSG 2201 @!@!@
 @!@!@STARTMSG 2773:0 @!@!@
-<Init line 100, col 1 to line 100, col 4 of module abgp>: 1:1
+<Init line 98, col 1 to line 98, col 4 of module abgp>: 1:1
 @!@!@ENDMSG 2773 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 101, col 12 to line 101, col 87 of module abgp: 1
+  line 99, col 12 to line 99, col 87 of module abgp: 1
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 102, col 12 to line 102, col 54 of module abgp: 1
+  line 100, col 12 to line 100, col 54 of module abgp: 1
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 103, col 25 to line 103, col 68 of module abgp: 1
+  line 101, col 25 to line 101, col 68 of module abgp: 1
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 103, col 46 to line 103, col 68 of module abgp: 5
+  |line 101, col 46 to line 101, col 68 of module abgp: 5
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  ||line 103, col 63 to line 103, col 68 of module abgp: 19
+  ||line 101, col 63 to line 101, col 68 of module abgp: 19
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  ||line 103, col 55 to line 103, col 59 of module abgp: 5
+  ||line 101, col 55 to line 101, col 59 of module abgp: 5
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 103, col 38 to line 103, col 42 of module abgp: 1
+  |line 101, col 38 to line 101, col 42 of module abgp: 1
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 105, col 12 to line 105, col 51 of module abgp: 1
+  line 103, col 12 to line 103, col 51 of module abgp: 1
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 106, col 12 to line 106, col 43 of module abgp: 1
+  line 104, col 12 to line 104, col 52 of module abgp: 1
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 107, col 12 to line 107, col 46 of module abgp: 1
+  line 105, col 12 to line 105, col 54 of module abgp: 1
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 108, col 12 to line 108, col 52 of module abgp: 1
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  line 109, col 12 to line 109, col 50 of module abgp: 1
+  line 106, col 12 to line 106, col 50 of module abgp: 1
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<iteration line 111, col 1 to line 111, col 15 of module abgp>: 1420663:5308522
+<iteration line 108, col 1 to line 108, col 15 of module abgp>: 853784:2040806
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 111, col 23 to line 111, col 44 of module abgp: 23846342
+  line 108, col 23 to line 108, col 44 of module abgp: 17751468
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 111, col 23 to line 111, col 30 of module abgp: 18537820
+  |line 108, col 23 to line 108, col 30 of module abgp: 15710660
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 112, col 26 to line 112, col 50 of module abgp: 5308522
+  ||line 108, col 23 to line 108, col 24 of module abgp: 15710663
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 113, col 34 to line 113, col 155 of module abgp: 383571
+  ||line 108, col 26 to line 108, col 29 of module abgp: 15710665
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 113, col 51 to line 113, col 155 of module abgp: 383571
+  line 109, col 26 to line 109, col 50 of module abgp: 2040810
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  ||line 113, col 52 to line 113, col 64 of module abgp: 383571
+  |line 109, col 26 to line 109, col 42 of module abgp: 2040810
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  ||line 113, col 73 to line 113, col 154 of module abgp: 383571
+  ||line 109, col 26 to line 109, col 36 of module abgp: 2040810
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  ||line 113, col 83 to line 113, col 154 of module abgp: 383571
+  ||line 109, col 38 to line 109, col 41 of module abgp: 2040811
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |||line 113, col 104 to line 113, col 154 of module abgp: 512755
+  |line 109, col 46 to line 109, col 50 of module abgp: 2040811
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  ||||line 113, col 121 to line 113, col 154 of module abgp: 2197550
+  line 110, col 34 to line 110, col 155 of module abgp: 1691371
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  ||||line 113, col 113 to line 113, col 117 of module abgp: 512755
+  |line 110, col 51 to line 110, col 155 of module abgp: 1691372
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |||line 113, col 96 to line 113, col 100 of module abgp: 383571
+  ||line 110, col 52 to line 110, col 64 of module abgp: 1691372
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 114, col 34 to line 114, col 66 of module abgp: 383571
+  ||line 110, col 73 to line 110, col 154 of module abgp: 1691368
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 115, col 34 to line 115, col 67 of module abgp: 4924951
+  ||line 110, col 83 to line 110, col 154 of module abgp: 1691372
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 116, col 34 to line 116, col 56 of module abgp: 4924951
+  |||line 110, col 104 to line 110, col 154 of module abgp: 2052977
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 117, col 23 to line 118, col 48 of module abgp: 5308522
+  ||||line 110, col 121 to line 110, col 154 of module abgp: 9234712
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||||line 110, col 113 to line 110, col 117 of module abgp: 2052977
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 110, col 96 to line 110, col 100 of module abgp: 1691372
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 111, col 34 to line 111, col 198 of module abgp: 1691372
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 111, col 55 to line 111, col 198 of module abgp: 1691372
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 111, col 56 to line 111, col 72 of module abgp: 1691372
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 111, col 81 to line 111, col 197 of module abgp: 1691368
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 111, col 91 to line 111, col 197 of module abgp: 1691372
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2775:0 @!@!@
+  |||line 111, col 97 to line 111, col 197 of module abgp: 1691878:25320
+@!@!@ENDMSG 2775 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||||line 111, col 98 to line 111, col 117 of module abgp: 6971554
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2775:0 @!@!@
+  ||||line 111, col 126 to line 111, col 195 of module abgp: 1691878:8663432
+@!@!@ENDMSG 2775 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||||line 111, col 142 to line 111, col 193 of module abgp: 8459390
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||||line 111, col 134 to line 111, col 138 of module abgp: 1691878
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 112, col 34 to line 112, col 66 of module abgp: 1691878
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 113, col 34 to line 113, col 67 of module abgp: 349539
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 114, col 34 to line 114, col 81 of module abgp: 349440
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 115, col 23 to line 115, col 75 of module abgp: 2040808
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<cas line 120, col 1 to line 120, col 9 of module abgp>: 358518:1314522
+<cas line 117, col 1 to line 117, col 9 of module abgp>: 1826312:3563105
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 120, col 17 to line 120, col 32 of module abgp: 19852342
+  line 117, col 17 to line 117, col 32 of module abgp: 19280999
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 120, col 17 to line 120, col 24 of module abgp: 18537820
+  |line 117, col 17 to line 117, col 24 of module abgp: 15717890
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 121, col 20 to line 121, col 73 of module abgp: 1314522
+  line 118, col 20 to line 118, col 73 of module abgp: 3563112
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 122, col 28 to line 122, col 102 of module abgp: 975432
+  line 119, col 28 to line 119, col 102 of module abgp: 1366971
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 123, col 31 to line 123, col 76 of module abgp: 975432
+  |line 119, col 38 to line 119, col 102 of module abgp: 1366971
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 124, col 36 to line 124, col 79 of module abgp: 975432
+  line 120, col 28 to line 120, col 68 of module abgp: 1366971
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 125, col 39 to line 125, col 76 of module abgp: 0
+  line 121, col 31 to line 121, col 84 of module abgp: 2196145
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 126, col 31 to line 126, col 84 of module abgp: 339090
+  line 122, col 36 to line 122, col 79 of module abgp: 2196140
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 127, col 36 to line 127, col 79 of module abgp: 339090
+  line 123, col 39 to line 123, col 72 of module abgp: 0
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 128, col 39 to line 128, col 76 of module abgp: 0
+  line 124, col 28 to line 124, col 43 of module abgp: 2196140
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 129, col 28 to line 129, col 43 of module abgp: 339090
-@!@!@ENDMSG 2221 @!@!@
-@!@!@STARTMSG 2221:0 @!@!@
-  line 130, col 17 to line 131, col 45 of module abgp: 1314522
+  line 125, col 17 to line 126, col 49 of module abgp: 3563110
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<signatures1 line 133, col 1 to line 133, col 17 of module abgp>: 296677:1725783
+<signatures1 line 128, col 1 to line 128, col 17 of module abgp>: 643056:4181946
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 133, col 25 to line 133, col 48 of module abgp: 20263603
+  line 128, col 25 to line 128, col 48 of module abgp: 19899885
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 133, col 25 to line 133, col 32 of module abgp: 18537820
+  |line 128, col 25 to line 128, col 32 of module abgp: 15717935
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 134, col 25 to line 134, col 140 of module abgp: 1725783
+  line 129, col 25 to line 129, col 110 of module abgp: 4181950
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 135, col 25 to line 135, col 62 of module abgp: 1725783
+  line 130, col 25 to line 130, col 58 of module abgp: 4181952
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 136, col 25 to line 137, col 65 of module abgp: 1725783
+  line 131, col 25 to line 132, col 72 of module abgp: 4181950
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<signatures2 line 139, col 1 to line 139, col 17 of module abgp>: 314925:339090
+<signatures2 line 134, col 1 to line 134, col 17 of module abgp>: 722835:1169823
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 139, col 25 to line 139, col 48 of module abgp: 18876910
+  line 134, col 25 to line 134, col 48 of module abgp: 16887781
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 139, col 25 to line 139, col 32 of module abgp: 18537820
+  |line 134, col 25 to line 134, col 32 of module abgp: 15717959
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 140, col 25 to line 140, col 135 of module abgp: 339090
+  line 135, col 25 to line 135, col 127 of module abgp: 1169824
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 141, col 25 to line 141, col 62 of module abgp: 339090
+  line 136, col 25 to line 136, col 58 of module abgp: 1169824
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 142, col 25 to line 143, col 65 of module abgp: 339090
+  line 137, col 25 to line 138, col 72 of module abgp: 1169823
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<validate line 145, col 1 to line 145, col 14 of module abgp>: 1316776:4924952
+<test line 140, col 1 to line 140, col 10 of module abgp>: 839718:2990123
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 145, col 22 to line 145, col 42 of module abgp: 23462772
+  line 140, col 18 to line 140, col 34 of module abgp: 18708112
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 145, col 22 to line 145, col 29 of module abgp: 18537820
+  |line 140, col 18 to line 140, col 25 of module abgp: 15717993
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 146, col 22 to line 146, col 99 of module abgp: 4924952
+  ||line 140, col 18 to line 140, col 19 of module abgp: 15726115
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 147, col 22 to line 147, col 60 of module abgp: 4924952
+  ||line 140, col 21 to line 140, col 24 of module abgp: 15726120
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 148, col 22 to line 149, col 50 of module abgp: 4924952
+  line 141, col 18 to line 141, col 68 of module abgp: 2991621
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 141, col 28 to line 141, col 68 of module abgp: 2991621
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 142, col 18 to line 142, col 55 of module abgp: 2991621
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 142, col 24 to line 142, col 55 of module abgp: 2991621
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 142, col 25 to line 142, col 26 of module abgp: 2991623
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 142, col 35 to line 142, col 54 of module abgp: 2990126
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 143, col 18 to line 144, col 50 of module abgp: 2990126
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<Terminating line 155, col 1 to line 155, col 11 of module abgp>: 0:5201
+<validate line 146, col 1 to line 146, col 14 of module abgp>: 596127:1628639
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 155, col 40 to line 155, col 56 of module abgp: 5053108
+  line 146, col 22 to line 146, col 42 of module abgp: 17354812
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 155, col 40 to line 155, col 47 of module abgp: 5027103
+  |line 146, col 22 to line 146, col 29 of module abgp: 15726180
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 155, col 31 to line 155, col 37 of module abgp: 3707564
+  line 147, col 22 to line 147, col 121 of module abgp: 1628641
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 156, col 19 to line 156, col 32 of module abgp: 5201
+  |line 147, col 37 to line 147, col 121 of module abgp: 1628641
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 147, col 38 to line 147, col 48 of module abgp: 1628641
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 147, col 57 to line 147, col 120 of module abgp: 1628639
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 147, col 68 to line 147, col 119 of module abgp: 1628641
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 147, col 93 to line 147, col 119 of module abgp: 6052026
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 147, col 77 to line 147, col 90 of module abgp: 1628642
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 148, col 22 to line 148, col 60 of module abgp: 1628642
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 149, col 22 to line 150, col 54 of module abgp: 1628640
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<Terminating line 156, col 1 to line 156, col 11 of module abgp>: 0:0
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 156, col 40 to line 156, col 56 of module abgp: 3180199
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 156, col 31 to line 156, col 37 of module abgp: 3145243
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 157, col 19 to line 157, col 32 of module abgp: 0
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2202:0 @!@!@
 End of statistics.
 @!@!@ENDMSG 2202 @!@!@
+@!@!@STARTMSG 2192:0 @!@!@
+Checking temporal properties for the current state space with 7153349 total distinct states at (2022-07-27 21:01:32)
+@!@!@ENDMSG 2192 @!@!@
+@!@!@STARTMSG 2267:0 @!@!@
+Finished checking temporal properties in 02min 54s at 2022-07-27 21:04:27
+@!@!@ENDMSG 2267 @!@!@
 @!@!@STARTMSG 2200:0 @!@!@
-Progress(26) at 2022-07-26 22:50:07: 13 618 051 states generated (2 872 148 s/min), 3 707 560 distinct states found (781 951 ds/min), 0 states left on queue.
+Progress(20) at 2022-07-27 21:04:27: 20 588 130 states generated (5 021 458 s/min), 7 153 349 distinct states found (1 674 455 ds/min), 2 992 794 states left on queue.
 @!@!@ENDMSG 2200 @!@!@
-@!@!@STARTMSG 2199:0 @!@!@
-13618051 states generated, 3707560 distinct states found, 0 states left on queue.
-@!@!@ENDMSG 2199 @!@!@
-@!@!@STARTMSG 2194:0 @!@!@
-The depth of the complete state graph search is 26.
-@!@!@ENDMSG 2194 @!@!@
-@!@!@STARTMSG 2268:0 @!@!@
-The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 5 and the 95th percentile is 2).
-@!@!@ENDMSG 2268 @!@!@
-@!@!@STARTMSG 2186:0 @!@!@
-Finished in 284546ms at (2022-07-26 22:50:07)
-@!@!@ENDMSG 2186 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(20) at 2022-07-27 21:05:27: 25 699 825 states generated (5 111 695 s/min), 8 839 225 distinct states found (1 685 876 ds/min), 3 633 593 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(20) at 2022-07-27 21:06:27: 30 750 198 states generated (5 050 373 s/min), 10 491 247 distinct states found (1 652 022 ds/min), 4 256 062 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(21) at 2022-07-27 21:07:27: 35 638 920 states generated (4 888 722 s/min), 12 080 123 distinct states found (1 588 876 ds/min), 4 847 345 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2201:0 @!@!@
+The coverage statistics at 2022-07-27 21:07:27
+@!@!@ENDMSG 2201 @!@!@
+@!@!@STARTMSG 2773:0 @!@!@
+<Init line 98, col 1 to line 98, col 4 of module abgp>: 1:1
+@!@!@ENDMSG 2773 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 99, col 12 to line 99, col 87 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 100, col 12 to line 100, col 54 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 101, col 25 to line 101, col 68 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 101, col 46 to line 101, col 68 of module abgp: 5
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 101, col 63 to line 101, col 68 of module abgp: 19
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 101, col 55 to line 101, col 59 of module abgp: 5
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 101, col 38 to line 101, col 42 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 103, col 12 to line 103, col 51 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 104, col 12 to line 104, col 52 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 105, col 12 to line 105, col 54 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 106, col 12 to line 106, col 50 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<iteration line 108, col 1 to line 108, col 15 of module abgp>: 1926403:4867584
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 108, col 23 to line 108, col 44 of module abgp: 41031637
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 108, col 23 to line 108, col 30 of module abgp: 36164050
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 109, col 26 to line 109, col 50 of module abgp: 4867587
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 110, col 34 to line 110, col 155 of module abgp: 3711534
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 110, col 51 to line 110, col 155 of module abgp: 3711534
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 110, col 52 to line 110, col 64 of module abgp: 3711534
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 110, col 73 to line 110, col 154 of module abgp: 3711534
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 110, col 83 to line 110, col 154 of module abgp: 3711535
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 110, col 104 to line 110, col 154 of module abgp: 4329393
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||||line 110, col 121 to line 110, col 154 of module abgp: 19873149
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||||line 110, col 113 to line 110, col 117 of module abgp: 4329393
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 110, col 96 to line 110, col 100 of module abgp: 3711536
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 111, col 34 to line 111, col 198 of module abgp: 3711537
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 111, col 55 to line 111, col 198 of module abgp: 3711537
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 111, col 56 to line 111, col 72 of module abgp: 3711538
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 111, col 81 to line 111, col 197 of module abgp: 3711534
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 111, col 91 to line 111, col 197 of module abgp: 3711539
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2775:0 @!@!@
+  |||line 111, col 97 to line 111, col 197 of module abgp: 3711539:25320
+@!@!@ENDMSG 2775 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||||line 111, col 98 to line 111, col 117 of module abgp: 15893141
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2775:0 @!@!@
+  ||||line 111, col 126 to line 111, col 195 of module abgp: 3711539:19604680
+@!@!@ENDMSG 2775 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||||line 111, col 142 to line 111, col 193 of module abgp: 18557695
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||||line 111, col 134 to line 111, col 138 of module abgp: 3711539
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 112, col 34 to line 112, col 66 of module abgp: 3712741
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 113, col 34 to line 113, col 67 of module abgp: 1156467
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 114, col 34 to line 114, col 81 of module abgp: 1156053
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 115, col 23 to line 115, col 75 of module abgp: 4867587
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<cas line 117, col 1 to line 117, col 9 of module abgp>: 3904504:7866785
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 117, col 17 to line 117, col 32 of module abgp: 44039653
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 117, col 17 to line 117, col 24 of module abgp: 36172865
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 118, col 20 to line 118, col 73 of module abgp: 7866788
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 119, col 25 to line 120, col 68 of module abgp: 2473175
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 121, col 31 to line 121, col 84 of module abgp: 5393616
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 122, col 36 to line 122, col 79 of module abgp: 5393613
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 123, col 39 to line 123, col 72 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 124, col 28 to line 124, col 43 of module abgp: 5393613
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 125, col 17 to line 126, col 49 of module abgp: 7866788
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<signatures1 line 128, col 1 to line 128, col 17 of module abgp>: 1283914:8971504
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 128, col 25 to line 128, col 48 of module abgp: 45144405
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 128, col 25 to line 128, col 32 of module abgp: 36172903
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 129, col 25 to line 129, col 110 of module abgp: 8971507
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 130, col 25 to line 130, col 58 of module abgp: 8971507
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 131, col 25 to line 132, col 72 of module abgp: 8971505
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<signatures2 line 134, col 1 to line 134, col 17 of module abgp>: 1657043:3017359
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 134, col 25 to line 134, col 48 of module abgp: 39190285
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 134, col 25 to line 134, col 32 of module abgp: 36172930
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 134, col 25 to line 134, col 26 of module abgp: 36172931
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 134, col 28 to line 134, col 31 of module abgp: 36172935
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 135, col 25 to line 135, col 127 of module abgp: 3017361
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 136, col 25 to line 136, col 58 of module abgp: 3017361
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 137, col 25 to line 138, col 72 of module abgp: 3017360
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<test line 140, col 1 to line 140, col 10 of module abgp>: 1895371:6911792
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 140, col 18 to line 140, col 34 of module abgp: 43084748
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 140, col 18 to line 140, col 25 of module abgp: 36172955
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 141, col 18 to line 141, col 68 of module abgp: 6911793
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 142, col 18 to line 142, col 55 of module abgp: 6911794
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 143, col 18 to line 144, col 50 of module abgp: 6911793
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<validate line 146, col 1 to line 146, col 14 of module abgp>: 1415094:4011032
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 146, col 22 to line 146, col 42 of module abgp: 40184010
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 146, col 22 to line 146, col 29 of module abgp: 36172975
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 147, col 22 to line 147, col 121 of module abgp: 4011035
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 147, col 37 to line 147, col 121 of module abgp: 4011036
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 147, col 38 to line 147, col 48 of module abgp: 4011036
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 147, col 57 to line 147, col 120 of module abgp: 4011034
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 147, col 68 to line 147, col 119 of module abgp: 4012412
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 147, col 93 to line 147, col 119 of module abgp: 15941505
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 147, col 77 to line 147, col 90 of module abgp: 4012412
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 148, col 22 to line 148, col 60 of module abgp: 4012412
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 149, col 22 to line 150, col 54 of module abgp: 4011035
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<Terminating line 156, col 1 to line 156, col 11 of module abgp>: 0:0
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 156, col 40 to line 156, col 56 of module abgp: 7355282
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 156, col 40 to line 156, col 47 of module abgp: 7355282
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 156, col 31 to line 156, col 37 of module abgp: 7237120
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 157, col 19 to line 157, col 32 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2777:0 @!@!@
+End of statistics (please note that for performance reasons large models
+are best checked with coverage and cost statistics disabled).
+@!@!@ENDMSG 2777 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(21) at 2022-07-27 21:08:28: 40 292 374 states generated (4 653 454 s/min), 13 560 510 distinct states found (1 480 387 ds/min), 5 368 088 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(21) at 2022-07-27 21:09:28: 45 031 499 states generated (4 739 125 s/min), 15 094 354 distinct states found (1 533 844 ds/min), 5 932 446 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(21) at 2022-07-27 21:10:28: 49 660 924 states generated (4 629 425 s/min), 16 552 803 distinct states found (1 458 449 ds/min), 6 439 492 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(21) at 2022-07-27 21:11:28: 54 303 777 states generated (4 642 853 s/min), 18 021 722 distinct states found (1 468 919 ds/min), 6 955 215 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2201:0 @!@!@
+The coverage statistics at 2022-07-27 21:11:28
+@!@!@ENDMSG 2201 @!@!@
+@!@!@STARTMSG 2773:0 @!@!@
+<Init line 98, col 1 to line 98, col 4 of module abgp>: 1:1
+@!@!@ENDMSG 2773 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 99, col 12 to line 99, col 87 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 100, col 12 to line 100, col 54 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 101, col 25 to line 101, col 68 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 101, col 46 to line 101, col 68 of module abgp: 5
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 101, col 63 to line 101, col 68 of module abgp: 19
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 101, col 55 to line 101, col 59 of module abgp: 5
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 101, col 38 to line 101, col 42 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 103, col 12 to line 103, col 51 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 104, col 12 to line 104, col 52 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 105, col 12 to line 105, col 54 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 106, col 12 to line 106, col 50 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<iteration line 108, col 1 to line 108, col 15 of module abgp>: 2907458:7583512
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 108, col 23 to line 108, col 44 of module abgp: 62916149
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 108, col 23 to line 108, col 30 of module abgp: 55332635
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 109, col 26 to line 109, col 50 of module abgp: 7583514
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 110, col 34 to line 110, col 155 of module abgp: 5470818
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 110, col 51 to line 110, col 155 of module abgp: 5470820
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 110, col 52 to line 110, col 64 of module abgp: 5470820
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 110, col 73 to line 110, col 154 of module abgp: 5470817
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 110, col 83 to line 110, col 154 of module abgp: 5470822
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 110, col 104 to line 110, col 154 of module abgp: 6306752
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||||line 110, col 121 to line 110, col 154 of module abgp: 29118086
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||||line 110, col 113 to line 110, col 117 of module abgp: 6306752
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 110, col 96 to line 110, col 100 of module abgp: 5470824
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 111, col 34 to line 111, col 198 of module abgp: 5470823
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 111, col 55 to line 111, col 198 of module abgp: 5470825
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 111, col 56 to line 111, col 72 of module abgp: 5470825
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 111, col 81 to line 111, col 197 of module abgp: 5470817
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 111, col 91 to line 111, col 197 of module abgp: 5470826
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2775:0 @!@!@
+  |||line 111, col 97 to line 111, col 197 of module abgp: 5470826:25320
+@!@!@ENDMSG 2775 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||||line 111, col 98 to line 111, col 117 of module abgp: 23859752
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2775:0 @!@!@
+  ||||line 111, col 126 to line 111, col 195 of module abgp: 5470827:29330583
+@!@!@ENDMSG 2775 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||||line 111, col 142 to line 111, col 193 of module abgp: 27354135
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||||line 111, col 134 to line 111, col 138 of module abgp: 5470827
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 112, col 34 to line 112, col 66 of module abgp: 5473322
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 113, col 34 to line 113, col 67 of module abgp: 2113085
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 114, col 34 to line 114, col 81 of module abgp: 2112697
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 115, col 23 to line 115, col 75 of module abgp: 7583514
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<cas line 117, col 1 to line 117, col 9 of module abgp>: 5767853:11783826
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 117, col 17 to line 117, col 32 of module abgp: 67130561
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 117, col 17 to line 117, col 24 of module abgp: 55346735
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 118, col 20 to line 118, col 73 of module abgp: 11783827
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 119, col 25 to line 120, col 68 of module abgp: 3311857
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 121, col 31 to line 121, col 84 of module abgp: 8471970
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 122, col 36 to line 122, col 79 of module abgp: 8471969
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 123, col 39 to line 123, col 72 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 124, col 28 to line 124, col 43 of module abgp: 8471969
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 125, col 17 to line 126, col 49 of module abgp: 11783826
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<signatures1 line 128, col 1 to line 128, col 17 of module abgp>: 1818312:13226967
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 128, col 25 to line 128, col 48 of module abgp: 68573722
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 128, col 25 to line 128, col 32 of module abgp: 55346755
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 129, col 25 to line 129, col 110 of module abgp: 13226967
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 130, col 25 to line 130, col 58 of module abgp: 13226967
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 131, col 25 to line 132, col 72 of module abgp: 13226967
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<signatures2 line 134, col 1 to line 134, col 17 of module abgp>: 2513219:4850183
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 134, col 25 to line 134, col 48 of module abgp: 60196954
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 134, col 25 to line 134, col 32 of module abgp: 55346770
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 135, col 25 to line 135, col 127 of module abgp: 4850184
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 136, col 25 to line 136, col 58 of module abgp: 4850184
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 137, col 25 to line 138, col 72 of module abgp: 4850184
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<test line 140, col 1 to line 140, col 10 of module abgp>: 2852782:10558409
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 140, col 18 to line 140, col 34 of module abgp: 65905194
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 140, col 18 to line 140, col 25 of module abgp: 55346785
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 141, col 18 to line 141, col 68 of module abgp: 10558410
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 142, col 18 to line 142, col 55 of module abgp: 10558410
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 143, col 18 to line 144, col 50 of module abgp: 10558410
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<validate line 146, col 1 to line 146, col 14 of module abgp>: 2165951:6312057
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 146, col 22 to line 146, col 42 of module abgp: 61658857
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 146, col 22 to line 146, col 29 of module abgp: 55346800
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 147, col 22 to line 147, col 121 of module abgp: 6312057
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 147, col 37 to line 147, col 121 of module abgp: 6312057
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 147, col 38 to line 147, col 48 of module abgp: 6312058
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 147, col 57 to line 147, col 120 of module abgp: 6312057
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 147, col 68 to line 147, col 119 of module abgp: 6312058
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 147, col 93 to line 147, col 119 of module abgp: 25875469
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 147, col 77 to line 147, col 90 of module abgp: 6312058
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 148, col 22 to line 148, col 60 of module abgp: 6312058
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 149, col 22 to line 150, col 54 of module abgp: 6312057
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<Terminating line 156, col 1 to line 156, col 11 of module abgp>: 0:0
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 156, col 40 to line 156, col 56 of module abgp: 11304568
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 156, col 31 to line 156, col 37 of module abgp: 11072550
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 157, col 19 to line 157, col 32 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2777:0 @!@!@
+End of statistics (please note that for performance reasons large models
+are best checked with coverage and cost statistics disabled).
+@!@!@ENDMSG 2777 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(22) at 2022-07-27 21:12:28: 58 790 058 states generated (4 486 281 s/min), 19 448 777 distinct states found (1 427 055 ds/min), 7 462 222 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(22) at 2022-07-27 21:13:28: 63 403 467 states generated (4 613 409 s/min), 20 857 001 distinct states found (1 408 224 ds/min), 7 910 203 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(22) at 2022-07-27 21:14:28: 67 983 087 states generated (4 579 620 s/min), 22 294 402 distinct states found (1 437 401 ds/min), 8 404 099 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(22) at 2022-07-27 21:15:28: 72 442 574 states generated (4 459 487 s/min), 23 698 953 distinct states found (1 404 551 ds/min), 8 890 809 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2201:0 @!@!@
+The coverage statistics at 2022-07-27 21:15:28
+@!@!@ENDMSG 2201 @!@!@
+@!@!@STARTMSG 2773:0 @!@!@
+<Init line 98, col 1 to line 98, col 4 of module abgp>: 1:1
+@!@!@ENDMSG 2773 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 99, col 12 to line 99, col 87 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 100, col 12 to line 100, col 54 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 101, col 25 to line 101, col 68 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 101, col 46 to line 101, col 68 of module abgp: 5
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 101, col 63 to line 101, col 68 of module abgp: 19
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 101, col 55 to line 101, col 59 of module abgp: 5
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 101, col 38 to line 101, col 42 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 103, col 12 to line 103, col 51 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 104, col 12 to line 104, col 52 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 105, col 12 to line 105, col 54 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 106, col 12 to line 106, col 50 of module abgp: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<iteration line 108, col 1 to line 108, col 15 of module abgp>: 3853702:10316941
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 108, col 23 to line 108, col 44 of module abgp: 84357955
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 108, col 23 to line 108, col 30 of module abgp: 74041020
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 109, col 26 to line 109, col 50 of module abgp: 10316943
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 110, col 34 to line 110, col 155 of module abgp: 7176884
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 110, col 51 to line 110, col 155 of module abgp: 7176885
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 110, col 52 to line 110, col 64 of module abgp: 7176885
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 110, col 73 to line 110, col 154 of module abgp: 7176882
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 110, col 83 to line 110, col 154 of module abgp: 7176885
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 110, col 104 to line 110, col 154 of module abgp: 8167145
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||||line 110, col 121 to line 110, col 154 of module abgp: 37961695
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||||line 110, col 113 to line 110, col 117 of module abgp: 8167145
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 110, col 96 to line 110, col 100 of module abgp: 7176885
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 111, col 34 to line 111, col 198 of module abgp: 7176885
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 111, col 55 to line 111, col 198 of module abgp: 7176885
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 111, col 56 to line 111, col 72 of module abgp: 7176885
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 111, col 81 to line 111, col 197 of module abgp: 7176882
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 111, col 91 to line 111, col 197 of module abgp: 7176885
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2775:0 @!@!@
+  |||line 111, col 97 to line 111, col 197 of module abgp: 7176885:25320
+@!@!@ENDMSG 2775 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||||line 111, col 98 to line 111, col 117 of module abgp: 31695132
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2775:0 @!@!@
+  ||||line 111, col 126 to line 111, col 195 of module abgp: 7176886:38872022
+@!@!@ENDMSG 2775 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||||line 111, col 142 to line 111, col 193 of module abgp: 35884430
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||||line 111, col 134 to line 111, col 138 of module abgp: 7176886
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 112, col 34 to line 112, col 66 of module abgp: 7178870
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 113, col 34 to line 113, col 67 of module abgp: 3140762
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 114, col 34 to line 114, col 81 of module abgp: 3140059
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 115, col 23 to line 115, col 75 of module abgp: 10316941
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<cas line 117, col 1 to line 117, col 9 of module abgp>: 7500201:15606485
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 117, col 17 to line 117, col 32 of module abgp: 89665456
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 117, col 17 to line 117, col 24 of module abgp: 74058970
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 118, col 20 to line 118, col 73 of module abgp: 15606489
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 119, col 25 to line 120, col 68 of module abgp: 4010945
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 121, col 31 to line 121, col 84 of module abgp: 11595543
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 122, col 36 to line 122, col 79 of module abgp: 11595543
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 123, col 39 to line 123, col 72 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 124, col 28 to line 124, col 43 of module abgp: 11595543
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 125, col 17 to line 126, col 49 of module abgp: 15606489
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<signatures1 line 128, col 1 to line 128, col 17 of module abgp>: 2309135:16978154
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 128, col 25 to line 128, col 48 of module abgp: 91037144
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 128, col 25 to line 128, col 32 of module abgp: 74058990
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 129, col 25 to line 129, col 110 of module abgp: 16978154
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 130, col 25 to line 130, col 58 of module abgp: 16978154
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 131, col 25 to line 132, col 72 of module abgp: 16978154
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<signatures2 line 134, col 1 to line 134, col 17 of module abgp>: 3343959:6789938
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 134, col 25 to line 134, col 48 of module abgp: 80848947
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 134, col 25 to line 134, col 32 of module abgp: 74059010
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 135, col 25 to line 135, col 127 of module abgp: 6789942
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 136, col 25 to line 136, col 58 of module abgp: 6789942
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 137, col 25 to line 138, col 72 of module abgp: 6789939
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<test line 140, col 1 to line 140, col 10 of module abgp>: 3792803:14156312
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 140, col 18 to line 140, col 34 of module abgp: 88215328
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 140, col 18 to line 140, col 25 of module abgp: 74059020
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 140, col 18 to line 140, col 19 of module abgp: 74059020
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 140, col 21 to line 140, col 24 of module abgp: 74059020
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 141, col 18 to line 141, col 68 of module abgp: 14156312
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 142, col 18 to line 142, col 55 of module abgp: 14156312
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 143, col 18 to line 144, col 50 of module abgp: 14156312
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<validate line 146, col 1 to line 146, col 14 of module abgp>: 2904192:8609950
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 146, col 22 to line 146, col 42 of module abgp: 82668980
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 146, col 22 to line 146, col 29 of module abgp: 74080618
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 147, col 22 to line 147, col 121 of module abgp: 8612527
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 147, col 37 to line 147, col 121 of module abgp: 8612527
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 147, col 38 to line 147, col 48 of module abgp: 8612528
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 147, col 57 to line 147, col 120 of module abgp: 8609950
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  ||line 147, col 68 to line 147, col 119 of module abgp: 8612529
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 147, col 93 to line 147, col 119 of module abgp: 36129674
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |||line 147, col 77 to line 147, col 90 of module abgp: 8612530
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 148, col 22 to line 148, col 60 of module abgp: 8612531
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 149, col 22 to line 150, col 54 of module abgp: 8609950
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<Terminating line 156, col 1 to line 156, col 11 of module abgp>: 0:0
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 156, col 40 to line 156, col 56 of module abgp: 15181153
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 156, col 31 to line 156, col 37 of module abgp: 14816131
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 157, col 19 to line 157, col 32 of module abgp: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2777:0 @!@!@
+End of statistics (please note that for performance reasons large models
+are best checked with coverage and cost statistics disabled).
+@!@!@ENDMSG 2777 @!@!@
+@!@!@STARTMSG 2192:0 @!@!@
+Checking temporal properties for the current state space with 25014471 total distinct states at (2022-07-27 21:16:29)
+@!@!@ENDMSG 2192 @!@!@

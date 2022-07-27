@@ -36,7 +36,7 @@ ASSUME Quorum > Fail
   
   
   fair process (node \in Nodes) 
-      variables stateSynced = FALSE, node = self, iterNodes1 = 1, highestKVNode = self;
+      variables stateSynced = FALSE, highestKVNode = self, highestSignatures = {};
       {
       
       \* each node is represented as process and recieve msgs from other processes
@@ -53,25 +53,22 @@ ASSUME Quorum > Fail
                    \* mutex[iterNodes1] := 1;
             
             
-                    highestKVNode := CHOOSE x \in Nodes : \A y \in Nodes : states[y].value <= states[x].value;
+                    highestKVNode := CHOOSE x \in Nodes : \A y \in Nodes : states[y].value <= states[x].value; \* the same node can appear over and over for all nodes (like first accurance)
+                    highestSignatures := UNION {states[s].signatures: s \in { x \in Nodes : states[x].value = states[highestKVNode].value } };
+                    \* filter signatures by highest known value and union them
             
                     \* compare and swap
-                    cas:
+                    cas: \* todo leave only Q signatures
                     if (states[self].value < states[highestKVNode].value){
                      states[self].value := states[highestKVNode].value;
-                    
-                    
-                        if (Cardinality(states[self].signatures) < Quorum){
-                            signatures1:  states[self].signatures := states[self].signatures \union states[highestKVNode].signatures;    
-                        }
-                    
-                    
+                     signatures1:  states[self].signatures := (highestSignatures \union {self});
                     } else if (states[self].value = states[highestKVNode].value){
-                            signatures2:  states[self].signatures := states[highestKVNode].signatures \union {iterNodes1};
+                      signatures2:  states[self].signatures := (states[self].signatures \union highestSignatures);
                     };
                     
                     \*unlock: mutex[iterNodes1] := 0;
                     
+                    test: states[self].value := maxNumber;
                     
                     \* (\A e \in 1..Len(states): states[e].value = 5) /\ (\A e \in 1..Len(states): Cardinality(states[e].signatures) >= Quorum) --todo move to invariants
                     
@@ -79,7 +76,9 @@ ASSUME Quorum > Fail
                     \* validate: stateSynced := (\A e \in 1..Len(states): states[e].value =< states[iterNodes1].value) /\ 
                     \*validate: stateSynced := (states[self].value = 5) /\ (Cardinality(states[self].signatures) >= Quorum);
                     
-                    validate: stateSynced := (states[self].value = maxNumber);
+                    \*validate: stateSynced := (states[self].value = maxNumber) /\ (Cardinality(states[self].signatures) >= Quorum)
+                    
+                    validate: stateSynced := (\A e \in 1..Len(states): states[e].value = maxNumber);                    
               }    
   
            }   
@@ -87,13 +86,12 @@ ASSUME Quorum > Fail
   
 }
 *********)
-\* BEGIN TRANSLATION (chksum(pcal) = "64a9492a" /\ chksum(tla) = "20c3c791")
-\* Process node at line 38 col 8 changed to node_
-VARIABLES states, mutex, maxNumber, pc, stateSynced, node, iterNodes1, 
-          highestKVNode
+\* BEGIN TRANSLATION (chksum(pcal) = "bc73f02a" /\ chksum(tla) = "c7adc0e4")
+VARIABLES states, mutex, maxNumber, pc, stateSynced, highestKVNode, 
+          highestSignatures
 
-vars == << states, mutex, maxNumber, pc, stateSynced, node, iterNodes1, 
-           highestKVNode >>
+vars == << states, mutex, maxNumber, pc, stateSynced, highestKVNode, 
+           highestSignatures >>
 
 ProcSet == (Nodes)
 
@@ -101,65 +99,68 @@ Init == (* Global variables *)
         /\ states = [s \in 1..Cardinality(Nodes) |-> [value |-> s, signatures |-> {s}]]
         /\ mutex = [s \in 1..Cardinality(Nodes) |-> 0]
         /\ maxNumber = (CHOOSE x \in Nodes : \A y \in Nodes : y <= x)
-        (* Process node_ *)
+        (* Process node *)
         /\ stateSynced = [self \in Nodes |-> FALSE]
-        /\ node = [self \in Nodes |-> self]
-        /\ iterNodes1 = [self \in Nodes |-> 1]
         /\ highestKVNode = [self \in Nodes |-> self]
+        /\ highestSignatures = [self \in Nodes |-> {}]
         /\ pc = [self \in ProcSet |-> "iteration"]
 
 iteration(self) == /\ pc[self] = "iteration"
                    /\ IF stateSynced[self] = FALSE
                          THEN /\ highestKVNode' = [highestKVNode EXCEPT ![self] = CHOOSE x \in Nodes : \A y \in Nodes : states[y].value <= states[x].value]
+                              /\ highestSignatures' = [highestSignatures EXCEPT ![self] = UNION {states[s].signatures: s \in { x \in Nodes : states[x].value = states[highestKVNode'[self]].value } }]
                               /\ pc' = [pc EXCEPT ![self] = "cas"]
                          ELSE /\ pc' = [pc EXCEPT ![self] = "Done"]
-                              /\ UNCHANGED highestKVNode
-                   /\ UNCHANGED << states, mutex, maxNumber, stateSynced, node, 
-                                   iterNodes1 >>
+                              /\ UNCHANGED << highestKVNode, highestSignatures >>
+                   /\ UNCHANGED << states, mutex, maxNumber, stateSynced >>
 
 cas(self) == /\ pc[self] = "cas"
              /\ IF states[self].value < states[highestKVNode[self]].value
                    THEN /\ states' = [states EXCEPT ![self].value = states[highestKVNode[self]].value]
-                        /\ IF Cardinality(states'[self].signatures) < Quorum
-                              THEN /\ pc' = [pc EXCEPT ![self] = "signatures1"]
-                              ELSE /\ pc' = [pc EXCEPT ![self] = "validate"]
+                        /\ pc' = [pc EXCEPT ![self] = "signatures1"]
                    ELSE /\ IF states[self].value = states[highestKVNode[self]].value
                               THEN /\ pc' = [pc EXCEPT ![self] = "signatures2"]
-                              ELSE /\ pc' = [pc EXCEPT ![self] = "validate"]
+                              ELSE /\ pc' = [pc EXCEPT ![self] = "test"]
                         /\ UNCHANGED states
-             /\ UNCHANGED << mutex, maxNumber, stateSynced, node, iterNodes1, 
-                             highestKVNode >>
+             /\ UNCHANGED << mutex, maxNumber, stateSynced, highestKVNode, 
+                             highestSignatures >>
 
 signatures1(self) == /\ pc[self] = "signatures1"
-                     /\ states' = [states EXCEPT ![self].signatures = states[self].signatures \union states[highestKVNode[self]].signatures]
-                     /\ pc' = [pc EXCEPT ![self] = "validate"]
-                     /\ UNCHANGED << mutex, maxNumber, stateSynced, node, 
-                                     iterNodes1, highestKVNode >>
+                     /\ states' = [states EXCEPT ![self].signatures = (highestSignatures[self] \union {self})]
+                     /\ pc' = [pc EXCEPT ![self] = "test"]
+                     /\ UNCHANGED << mutex, maxNumber, stateSynced, 
+                                     highestKVNode, highestSignatures >>
 
 signatures2(self) == /\ pc[self] = "signatures2"
-                     /\ states' = [states EXCEPT ![self].signatures = states[highestKVNode[self]].signatures \union {iterNodes1[self]}]
-                     /\ pc' = [pc EXCEPT ![self] = "validate"]
-                     /\ UNCHANGED << mutex, maxNumber, stateSynced, node, 
-                                     iterNodes1, highestKVNode >>
+                     /\ states' = [states EXCEPT ![self].signatures = (states[self].signatures \union highestSignatures[self])]
+                     /\ pc' = [pc EXCEPT ![self] = "test"]
+                     /\ UNCHANGED << mutex, maxNumber, stateSynced, 
+                                     highestKVNode, highestSignatures >>
+
+test(self) == /\ pc[self] = "test"
+              /\ states' = [states EXCEPT ![self].value = maxNumber]
+              /\ pc' = [pc EXCEPT ![self] = "validate"]
+              /\ UNCHANGED << mutex, maxNumber, stateSynced, highestKVNode, 
+                              highestSignatures >>
 
 validate(self) == /\ pc[self] = "validate"
-                  /\ stateSynced' = [stateSynced EXCEPT ![self] = (states[self].value = maxNumber)]
+                  /\ stateSynced' = [stateSynced EXCEPT ![self] = (\A e \in 1..Len(states): states[e].value = maxNumber)]
                   /\ pc' = [pc EXCEPT ![self] = "iteration"]
-                  /\ UNCHANGED << states, mutex, maxNumber, node, iterNodes1, 
-                                  highestKVNode >>
+                  /\ UNCHANGED << states, mutex, maxNumber, highestKVNode, 
+                                  highestSignatures >>
 
-node_(self) == iteration(self) \/ cas(self) \/ signatures1(self)
-                  \/ signatures2(self) \/ validate(self)
+node(self) == iteration(self) \/ cas(self) \/ signatures1(self)
+                 \/ signatures2(self) \/ test(self) \/ validate(self)
 
 (* Allow infinite stuttering to prevent deadlock on termination. *)
 Terminating == /\ \A self \in ProcSet: pc[self] = "Done"
                /\ UNCHANGED vars
 
-Next == (\E self \in Nodes: node_(self))
+Next == (\E self \in Nodes: node(self))
            \/ Terminating
 
 Spec == /\ Init /\ [][Next]_vars
-        /\ \A self \in Nodes : WF_vars(node_(self))
+        /\ \A self \in Nodes : WF_vars(node(self))
 
 Termination == <>(\A self \in ProcSet: pc[self] = "Done")
 
@@ -167,5 +168,5 @@ Termination == <>(\A self \in ProcSet: pc[self] = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Tue Jul 26 22:45:20 MSK 2022 by zyeve
+\* Last modified Wed Jul 27 20:56:39 MSK 2022 by zyeve
 \* Created Thu Jul 14 21:32:05 MSK 2022 by zyeve
