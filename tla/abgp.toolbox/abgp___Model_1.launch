@@ -12,7 +12,7 @@
     <stringAttribute key="distributedTLC" value="off"/>
     <stringAttribute key="distributedTLCVMArgs" value=""/>
     <intAttribute key="fpBits" value="1"/>
-    <intAttribute key="fpIndex" value="11"/>
+    <intAttribute key="fpIndex" value="30"/>
     <booleanAttribute key="fpIndexRandom" value="true"/>
     <intAttribute key="maxHeapSize" value="25"/>
     <intAttribute key="maxSetSize" value="1000000"/>
@@ -21,14 +21,17 @@
     <stringAttribute key="modelBehaviorNext" value=""/>
     <stringAttribute key="modelBehaviorSpec" value="Spec"/>
     <intAttribute key="modelBehaviorSpecType" value="1"/>
-    <stringAttribute key="modelBehaviorVars" value="states, maxNumber, mutex, node, iterNodes1, stateSynced, pc, highestKVNodeState"/>
+    <stringAttribute key="modelBehaviorVars" value="msg, i, m, pc, receiverNode, ReceiverNodeIdRange, receiverProcs, states, SenderNodeIdRange, maxNumber, chan, senderProcs, id, id_, nbrsNodes"/>
     <stringAttribute key="modelComments" value=""/>
     <booleanAttribute key="modelCorrectnessCheckDeadlock" value="true"/>
-    <listAttribute key="modelCorrectnessInvariants"/>
-    <listAttribute key="modelCorrectnessProperties">
-        <listEntry value="1Termination"/>
+    <listAttribute key="modelCorrectnessInvariants">
+        <listEntry value="1(\A e \in 1..Cardinality(Nodes): states[e].value = maxNumber) =&gt; (\A p \in Nodes: Cardinality(states[p].signatures) &gt;= Quorum)"/>
+        <listEntry value="1(\E e \in 1..Cardinality(Nodes): states[e].value = maxNumber)"/>
     </listAttribute>
-    <intAttribute key="modelEditorOpenTabs" value="14"/>
+    <listAttribute key="modelCorrectnessProperties">
+        <listEntry value="0Termination"/>
+    </listAttribute>
+    <intAttribute key="modelEditorOpenTabs" value="8"/>
     <stringAttribute key="modelExpressionEval" value=""/>
     <stringAttribute key="modelParameterActionConstraint" value=""/>
     <listAttribute key="modelParameterConstants">
