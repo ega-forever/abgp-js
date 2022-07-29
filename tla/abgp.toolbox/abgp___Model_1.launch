@@ -12,7 +12,7 @@
     <stringAttribute key="distributedTLC" value="off"/>
     <stringAttribute key="distributedTLCVMArgs" value=""/>
     <intAttribute key="fpBits" value="1"/>
-    <intAttribute key="fpIndex" value="30"/>
+    <intAttribute key="fpIndex" value="119"/>
     <booleanAttribute key="fpIndexRandom" value="true"/>
     <intAttribute key="maxHeapSize" value="25"/>
     <intAttribute key="maxSetSize" value="1000000"/>
@@ -25,13 +25,14 @@
     <stringAttribute key="modelComments" value=""/>
     <booleanAttribute key="modelCorrectnessCheckDeadlock" value="true"/>
     <listAttribute key="modelCorrectnessInvariants">
-        <listEntry value="1(\A e \in 1..Cardinality(Nodes): states[e].value = maxNumber) =&gt; (\A p \in Nodes: Cardinality(states[p].signatures) &gt;= Quorum)"/>
+        <listEntry value="0(\A e \in 1..Cardinality(Nodes): states[e].value = maxNumber) =&gt; (\A p \in Nodes: Cardinality(states[p].signatures) &gt;= Quorum)"/>
         <listEntry value="1(\E e \in 1..Cardinality(Nodes): states[e].value = maxNumber)"/>
+        <listEntry value="1(\A p \in Nodes: Cardinality(states[p].signatures) &gt;= Quorum) =&gt; (\A e \in 1..Cardinality(Nodes): states[e].value = maxNumber)"/>
     </listAttribute>
     <listAttribute key="modelCorrectnessProperties">
         <listEntry value="0Termination"/>
     </listAttribute>
-    <intAttribute key="modelEditorOpenTabs" value="8"/>
+    <intAttribute key="modelEditorOpenTabs" value="12"/>
     <stringAttribute key="modelExpressionEval" value=""/>
     <stringAttribute key="modelParameterActionConstraint" value=""/>
     <listAttribute key="modelParameterConstants">
