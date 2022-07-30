@@ -13,6 +13,7 @@ consensus features
 * replication confirmed by multisignature (using ECC)
 * M-of-N links supported (no need to directly connect all nodes between each other)
 * 2f+1 BFT
+* TLA+ (PlusCal) specs
 
 implementation features
 * Zero dependencies (pure implementation with extensions)
