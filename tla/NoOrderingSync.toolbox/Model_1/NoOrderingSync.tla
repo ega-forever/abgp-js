@@ -1,14 +1,6 @@
-\* Modification History
-\* Last modified Fri Jul 29 13:47:04 MSK 2022 by zyeve
-\* Created Fri Jul 29 09:18:14 MSK 2022 by zyeve
-
-
 \* 1) consensus is possible when minimal connections links >= quorum (also should include liveness and safety)
 \* 2) the sync between nodes is possible even without direct connection
 \* 3) no ordering guarantee the same result (through compare-and-swap approach)
-
-
-\* there should be at least f+1 connections for each node
 
 --------------------------- MODULE NoOrderingSync ---------------------------
 EXTENDS Integers, Sequences, TLC, FiniteSets
@@ -56,102 +48,15 @@ ASSUME Quorum > Fail
      };
      
      
-  NC: assert (\A e \in Nodes: states[e].value = maxNumber) /\ (\A e \in Nodes: Cardinality(states[e].signatures) >= Quorum);                                        
-    
-  
-  
+  NC: assert (\A e \in Nodes: states[e].value = maxNumber) /\ (\A e \in Nodes: Cardinality(states[e].signatures) >= Quorum);                                          
   }
   
 
-
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-\*  fair process (node \in Nodes) 
-\*      variables stateSynced = FALSE, highestKVNode = self, highestSignatures = {}, nbrsNodes = SetNbrs({self});
-\*      {
-      
-      \* each node is represented as process and recieve msgs from other processes
-      
-      \* append happens via mutex process (however, we assume, that on node level, all write access happens as single process, so we don't use it in formal proof)
-      \* we don't check here msg delivery fails, since we assume that there is (at least) one non-failed connection between any 2 peers
-      \* since nodes exchange with state, we can access state directly here (through "states" variable)      
-  
-  
- \*           iteration: while (stateSynced = FALSE) {       \* todo use only nodes in edges (like get updates from nodes with direct connection links)              
-             
-                    \* since each node will process its requests without concurrency, then mutex is used here to simulate this behavior
-                   \* lock: await mutex[iterNodes1] = 0;
-                   \* mutex[iterNodes1] := 1;
-            
-            
- \*                   highestKVNode := CHOOSE x \in nbrsNodes : \A y \in nbrsNodes : values[y] <= values[x]; \* the same node can appear over and over for all nodes (like first accurance)
- \*                   highestSignatures := UNION {signatures[s]: s \in { x \in Nodes : values[x] = values[highestKVNode] } };
-                    \* filter signatures by highest known value and union them
-            
-                    \* compare and swap
- \*                   cas: \* todo leave only Q signatures
- \*                   if (values[self] < values[highestKVNode]){
- \*                     appendValue:  values[self] := values[highestKVNode];
- \*                     appendSignature1:  signatures[self] := highestSignatures \union {self}; 
- \*                   } else if (values[self] = values[highestKVNode]){
- \*                      appendSignature2: signatures[self] := highestSignatures \union signatures[self]; 
- \*                   };
-                    
-                    \*unlock: mutex[iterNodes1] := 0;
-                    
-                    \* test: values[self] := maxNumber;
-                    
-                    \* (\A e \in 1..Len(states): states[e].value = 5) /\ (\A e \in 1..Len(states): Cardinality(states[e].signatures) >= Quorum) --todo move to invariants
-                    
-                    \* todo compare state synced by maxed value. 
-                    \* validate: stateSynced := (\A e \in 1..Len(states): states[e].value =< states[iterNodes1].value) /\ 
-                    \*validate: stateSynced := (states[self].value = 5) /\ (Cardinality(states[self].signatures) >= Quorum);
-                    
-                    \*validate: stateSynced := (states[self].value = maxNumber) /\ (Cardinality(states[self].signatures) >= Quorum)
-                    
-  \*                  validate: stateSynced := (values[self] = maxNumber) /\ (Cardinality(signatures[self]) >= Quorum)                   
-  \*            }    
-  
-  \*         }   
-  \*     }
   
 }
 *********)
-\* BEGIN TRANSLATION (chksum(pcal) = "969cddc8" /\ chksum(tla) = "44faec1d")
+\* BEGIN TRANSLATION (chksum(pcal) = "969cddc8" /\ chksum(tla) = "56c85532")
 VARIABLES states, maxNumber, pc
 
 vars == << states, maxNumber, pc >>
@@ -183,7 +88,7 @@ NB == /\ pc[1] = "NB"
 
 NC == /\ pc[1] = "NC"
       /\ Assert((\A e \in Nodes: states[e].value = maxNumber) /\ (\A e \in Nodes: Cardinality(states[e].signatures) >= Quorum), 
-                "Failure of assertion at line 59, column 7.")
+                "Failure of assertion at line 51, column 7.")
       /\ pc' = [pc EXCEPT ![1] = "Done"]
       /\ UNCHANGED << states, maxNumber >>
 
@@ -206,4 +111,5 @@ Termination == <>(\A self \in ProcSet: pc[self] = "Done")
 
 =============================================================================
 \* Modification History
+\* Last modified Sat Jul 30 18:19:01 MSK 2022 by zyeve
 \* Created Thu Jul 14 21:32:05 MSK 2022 by zyeve

@@ -1,14 +1,6 @@
-\* Modification History
-\* Last modified Fri Jul 29 13:47:46 MSK 2022 by zyeve
-\* Created Fri Jul 29 09:18:14 MSK 2022 by zyeve
-
-
 \* 1) consensus is possible when minimal connections links >= quorum (also should include liveness and safety)
 \* 2) the sync between nodes is possible even without direct connection
 \* 3) no ordering guarantee the same result (through compare-and-swap approach)
-
-
-\* there should be at least f+1 connections for each node
 
 --------------------------- MODULE NoOrderingSync ---------------------------
 EXTENDS Integers, Sequences, TLC, FiniteSets
@@ -64,7 +56,7 @@ ASSUME Quorum > Fail
   
 }
 *********)
-\* BEGIN TRANSLATION (chksum(pcal) = "969cddc8" /\ chksum(tla) = "44faec1d")
+\* BEGIN TRANSLATION (chksum(pcal) = "969cddc8" /\ chksum(tla) = "56c85532")
 VARIABLES states, maxNumber, pc
 
 vars == << states, maxNumber, pc >>
@@ -96,7 +88,7 @@ NB == /\ pc[1] = "NB"
 
 NC == /\ pc[1] = "NC"
       /\ Assert((\A e \in Nodes: states[e].value = maxNumber) /\ (\A e \in Nodes: Cardinality(states[e].signatures) >= Quorum), 
-                "Failure of assertion at line 59, column 7.")
+                "Failure of assertion at line 51, column 7.")
       /\ pc' = [pc EXCEPT ![1] = "Done"]
       /\ UNCHANGED << states, maxNumber >>
 
@@ -119,4 +111,5 @@ Termination == <>(\A self \in ProcSet: pc[self] = "Done")
 
 =============================================================================
 \* Modification History
+\* Last modified Sat Jul 30 18:19:01 MSK 2022 by zyeve
 \* Created Thu Jul 14 21:32:05 MSK 2022 by zyeve
