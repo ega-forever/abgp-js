@@ -12,7 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "abgp-js": "file:../../",
+    "abgp-js": "^1.5.1",
+    "abgp-js-modules-crypto-bnelliptic": "^1.0.0",
+    "abgp-js-modules-node-tcp": "^1.0.1",
     "bn.js": "^5.2.1",
     "body-parser": "^1.20.0",
     "bunyan": "^1.8.15",

@@ -180,8 +180,8 @@ Please check tests for usage examples
 
 | Protocol | 
 | --- | 
-| [TCP](src/implementation/node/TCP.ts) | 
-| [HTTP](src/implementation/node/RPC.ts) | 
+| [TCP](implementations/node/tcp/TCP.ts) | 
+| [HTTP](implementations/node/rpc/src/RPC.ts) | 
 
 
 However, you still can implement your own protocol.
@@ -195,7 +195,7 @@ However, you still can implement your own protocol.
 
 # License
 
-[GNU AGPLv3](LICENSE)
+[GNU AGPLv3](abgp/LICENSE)
 
 # Copyright
 

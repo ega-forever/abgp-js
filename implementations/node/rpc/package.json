@@ -1,0 +1,42 @@
+{
+  "name": "abgp-js-modules-node-rpc",
+  "version": "1.0.1",
+  "description": "ABGP node module (rpc)",
+  "scripts": {
+    "tsc:build": "tsc",
+    "lint": "eslint src/**/*.ts",
+    "build_dist": "rm -rf dist && npm run tsc:build"
+  },
+  "keywords": [
+    "abgp",
+    "consensus",
+    "rsm",
+    "gossip",
+    "distributed"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "zyev.egor@gmail.com",
+  "license": "AGPLv3",
+  "homepage": "https://github.com/ega-forever/abgp-js",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "axios": "^0.26.1",
+    "body-parser": "^1.20.0",
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.23",
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
+    "abgp-js": "^1.5.1",
+    "eslint": "^8.13.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-node": "^11.1.0",
+    "ts-loader": "^9.2.8",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
+  }
+}

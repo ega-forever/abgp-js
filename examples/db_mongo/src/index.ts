@@ -3,9 +3,9 @@ import * as bodyParser from 'body-parser';
 import cors from 'express-cors';
 import config from './config';
 import * as bunyan from 'bunyan';
-import TCPABGP from 'abgp-js/dist/implementation/node/TCP';
+import TCPABGP from 'abgp-js-modules-node-tcp';
 import eventTypes from 'abgp-js/dist/consensus/constants/EventTypes';
-import Crypto from 'abgp-js/dist/implementation/crypto/bnelliptic';
+import Crypto from 'abgp-js-modules-crypto-bnelliptic';
 import StorageMongo from './StorageMongo';
 
 const init = async () => {
