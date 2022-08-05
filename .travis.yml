@@ -11,12 +11,10 @@ before_install:
   - npm install -g node-gyp
 
 install:
-  - cd abgp && npm install
-  - cd abgp && npm run tsc:build
+  - cd abgp && npm install && npm run tsc:build
 
 script:
-  - cd abgp && mkdir dump
-  - cd abgp && npm test
+  - cd abgp && mkdir dump && npm test
 
 notifications:
   email: false
