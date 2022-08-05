@@ -11,16 +11,16 @@ before_install:
   - npm install -g node-gyp
 
 install:
-  - ls ~ && ls ~/abgp-js
-  - cd ~/abgp-js/abgp && npm install && npm run tsc:build
-  - cd ~/abgp-js/implementations/crypto/bnelliptic && npm install && npm run build_dist
-  - cd ~/abgp-js/implementations/crypto/plain && npm install && npm run build_dist
-  - cd ~/abgp-js/implementations/node/rpc && npm install && npm run build_dist
-  - cd ~/abgp-js/implementations/node/tcp && npm install && npm run build_dist
-  - cd ~/abgp-js/implementations/storage/plain && npm install && npm run build_dist
+  - ls $TRAVIS_BUILD_DIR
+  - cd $TRAVIS_BUILD_DIR/abgp-js/abgp && npm install && npm run tsc:build
+  - cd $TRAVIS_BUILD_DIR/abgp-js/implementations/crypto/bnelliptic && npm install && npm run build_dist
+  - cd $TRAVIS_BUILD_DIR/abgp-js/implementations/crypto/plain && npm install && npm run build_dist
+  - cd $TRAVIS_BUILD_DIR/abgp-js/implementations/node/rpc && npm install && npm run build_dist
+  - cd $TRAVIS_BUILD_DIR/abgp-js/implementations/node/tcp && npm install && npm run build_dist
+  - cd $TRAVIS_BUILD_DIR/abgp-js/implementations/storage/plain && npm install && npm run build_dist
 
 script:
-  - cd ~/abgp-js/abgp && mkdir dump && npm test
+  - cd $TRAVIS_BUILD_DIR/abgp-js/abgp && mkdir dump && npm test
 
 notifications:
   email: false
