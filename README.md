@@ -149,10 +149,12 @@ A ABGP instance emits the following events (available at ``/components/shared/Ev
 * `STATE_UPDATE`: emits on each state update
 * `STATE_SYNCED`: emits when comparing local and remote state and both states are equal
 
-# Custom transport layer
+# Customizable transport layer
 
-In order to communicate between nodes, you have to implement the interface by yourself. As an example you can take a look at TCP implementation: ```src/implementation/TCP```.
- In order to write your own implementation you have to implement 2 methods:
+## Custom implementation
+
+In order to communicate between nodes, you can use exciting modules (listed below) or implement the interface by yourself. 
+In order to write your own implementation you have to implement 2 methods:
  
 * The ```async initialize()``` function, which fires on ABGP start. This method is useful, when you want to open the connection, for instance, tcp one, or connect to certain message broker like rabbitMQ.
 
@@ -161,28 +163,43 @@ In order to communicate between nodes, you have to implement the interface by yo
 Also, keep in mind, that instance doesn't handle the disconnected / dead nodes, which means that instance will try to make requests to all presented members in cluster, 
 even if they are not available. So, you need to handle it on your own.
 
+## Out of the box protocols
+
+| Protocol | npm package
+| --- | --- |
+| [TCP](implementations/node/tcp/src/index.ts) | abgp-js-modules-node-tcp 
+| [HTTP](implementations/node/rpc/src/index.ts) | abgp-js-modules-node-rpc
+
+
 # Custom storage layer
+
+## Custom implementation
 
 In order to keep all state and records, there is an option to provide custom storage layer. The only requirement is to implement the interface (IStorageInterface). 
 The storage layer can be anything: Redis, MongoDB, Postgres, SqLite and so on. An example with in-memory storage provider can be found under `src/implementation/storage/PlainStorage.ts`.
 
+## Out of the box protocols
+
+| Protocol | npm package
+| --- | --- |
+| [Plain (in-memory)](implementations/storage/plain/src/index.ts) | abgp-js-modules-storage-plain
+
 # Custom crypto
+
+## Custom implementation
 
 As some projects try to reduce amount of dependencies, the crypto implementation has been moved to extensions, and right now have 2 implementations: pure (only native API used, like crypto)
 and elliptic + bn.js (to speed up some calculations). However, you can create your own implementation, all you need is to follow the ```ICryptoInterface``` interface.
 
+## Out of the box protocols
+
+| Protocol | npm package
+| --- | --- |
+| [bigNumber + elliptic](implementations/crypto/bnelliptic/src/index.ts) | abgp-js-modules-crypto-bnelliptic
+| [plain](implementations/crypto/plain/src/index.ts) | abgp-js-modules-crypto-plain
 
 # Usage
 Please check tests for usage examples
-
-# Implemented protocols out of the box
-
-
-| Protocol | 
-| --- | 
-| [TCP](implementations/node/tcp/TCP.ts) | 
-| [HTTP](implementations/node/rpc/src/RPC.ts) | 
-
 
 However, you still can implement your own protocol.
 
@@ -195,7 +212,7 @@ However, you still can implement your own protocol.
 
 # License
 
-[GNU AGPLv3](abgp/LICENSE)
+[GNU AGPLv3](LICENSE)
 
 # Copyright
 
