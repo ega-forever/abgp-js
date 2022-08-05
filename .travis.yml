@@ -11,15 +11,16 @@ before_install:
   - npm install -g node-gyp
 
 install:
-  - cd ~/abgp && npm install && npm run tsc:build
-  - cd ~/implementations/crypto/bnelliptic && npm install && npm run build_dist
-  - cd ~/implementations/crypto/plain && npm install && npm run build_dist
-  - cd ~/implementations/node/rpc && npm install && npm run build_dist
-  - cd ~/implementations/node/tcp && npm install && npm run build_dist
-  - cd ~/implementations/storage/plain && npm install && npm run build_dist
+  - ls ~ && ls ~/abgp-js
+  - cd ~/abgp-js/abgp && npm install && npm run tsc:build
+  - cd ~/abgp-js/implementations/crypto/bnelliptic && npm install && npm run build_dist
+  - cd ~/abgp-js/implementations/crypto/plain && npm install && npm run build_dist
+  - cd ~/abgp-js/implementations/node/rpc && npm install && npm run build_dist
+  - cd ~/abgp-js/implementations/node/tcp && npm install && npm run build_dist
+  - cd ~/abgp-js/implementations/storage/plain && npm install && npm run build_dist
 
 script:
-  - cd ~/abgp && mkdir dump && npm test
+  - cd ~/abgp-js/abgp && mkdir dump && npm test
 
 notifications:
   email: false
