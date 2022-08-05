@@ -3,7 +3,7 @@ dist: bionic
 os: linux
 group: stable
 language: node_js
-node_js: 12.1.0
+node_js: 16.14.0
 
 before_install:
   - sudo apt-get update
@@ -11,12 +11,12 @@ before_install:
   - npm install -g node-gyp
 
 install:
-  - npm install
-  - npm run tsc:build
+  - cd abgp && npm install
+  - cd abgp && npm run tsc:build
 
 script:
-  - mkdir dump
-  - npm test
+  - cd abgp && mkdir dump
+  - cd abgp && npm test
 
 notifications:
   email: false

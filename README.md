@@ -205,10 +205,16 @@ However, you still can implement your own protocol.
 
 # Implemented examples
 
-
 | Implementation | 
 | --- | 
 | [MongoDB](examples/db_mongo) | 
+
+# TLA+ specs
+
+| Test type | 
+| --- | 
+| [Concurrency](tla/ConcurrentAppend.tla) |
+| [Ordering + connections links](tla/NoOrderingSync.tla) |
 
 # License
 
