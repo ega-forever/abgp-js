@@ -11,12 +11,12 @@ before_install:
   - npm install -g node-gyp
 
 install:
-  - cd $TRAVIS_BUILD_DIR/abgp && npm install && npm run tsc:build
   - cd $TRAVIS_BUILD_DIR/implementations/crypto/bnelliptic && npm install && npm run build_dist
   - cd $TRAVIS_BUILD_DIR/implementations/crypto/plain && npm install && npm run build_dist
   - cd $TRAVIS_BUILD_DIR/implementations/node/rpc && npm install && npm run build_dist
   - cd $TRAVIS_BUILD_DIR/implementations/node/tcp && npm install && npm run build_dist
   - cd $TRAVIS_BUILD_DIR/implementations/storage/plain && npm install && npm run build_dist
+  - cd $TRAVIS_BUILD_DIR/abgp && npm install && npm run tsc:build
 
 script:
   - cd $TRAVIS_BUILD_DIR/abgp && mkdir dump && npm test

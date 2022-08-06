@@ -2,14 +2,8 @@
 .travis.yml
 src
 tsconfig.json
-tslint.json
 dist/test
 _config.yml
 webpack.config.js
 webpack_report*
-examples
-temp
-test
-test.*
 .eslintrc.js
-.dockerignore

@@ -8,7 +8,7 @@
     "test": "mocha --timeout 180000 -r ts-node/register src/test/**/*.spec.ts src/test/**/**/*.spec.ts",
     "lint": "eslint src/**/*.ts",
     "build_web": "webpack",
-    "build_dist": "rm -rf dist && npm run tsc:build && npm run build_web"
+    "build_dist": "rm -rf dist LICENSE README.md && npm run tsc:build && npm run build_web && cp ../README.md . && cp ../LICENSE ."
   },
   "keywords": [
     "abgp",
