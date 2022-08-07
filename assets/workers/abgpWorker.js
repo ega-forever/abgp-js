@@ -1,90 +1,9 @@
 const window = self;
 const path = window.location.pathname.split(/(\/*.{0,}\/workers\/)/gm, 2).find(el => el.length);
 importScripts(`${path}bundle.js`);
-importScripts(`${path}bundle_cryptoplain.js`);
-//importScripts(`${path}bundle_cryptobnelliptic.js`);
-importScripts(`${path}bundle_storageplain.js`);
+importScripts(`${path}implementation/crypto/bundle.js`);
+importScripts(`${path}implementation/storage/bundle.js`);
 
-class PlainStorageRecord {
-
-  constructor() {
-    this.db = new Map();
-  }
-
-  async get(hash) {
-    const item = this.db.get(hash);
-
-    if (!item) {
-      return null;
-    }
-
-    return item.cloneObject();
-  }
-
-  async save(record) {
-    this.db.set(record.hash, record.cloneObject());
-  }
-
-  async has(hash) {
-    return this.db.has(hash);
-  }
-
-  async getByTimestamp(timestamp) {
-    return [...this.db.values()]
-      .filter((v) => v.timestamp === timestamp)
-      .map((item) => item.cloneObject());
-  }
-
-  async getAfterTimestamp(timestamp, timestampIndex, limit) {
-    return [...this.db.values()]
-      .filter((v) =>
-        v.timestamp > timestamp ||
-        (v.timestamp === timestamp && v.timestampIndex > timestampIndex))
-      .sort((a, b) =>
-        ((a.timestamp > b.timestamp ||
-          (a.timestamp === b.timestamp && a.timestampIndex > b.timestampIndex)
-        ) ? 1 : -1))
-      .slice(0, limit)
-      .map((item) => item.cloneObject());
-  }
-
-  async del(hash) {
-    this.db.delete(hash);
-  }
-}
-
-class PlainStorageState {
-
-  constructor() {
-    this.db = new Map();
-  }
-
-  async get(publicKey) {
-    const state = this.db.get(publicKey);
-
-    if (!state) {
-      return {
-        timestamp: 0,
-        timestampIndex: -1,
-        root: '0',
-        publicKey
-      };
-    }
-
-    return state;
-  }
-
-  async save(state) {
-    this.db.set(state.publicKey, state);
-  }
-}
-
-class PlainStorage {
-  constructor() {
-    this.Record = new PlainStorageRecord();
-    this.State = new PlainStorageState();
-  }
-}
 
 const requests = new Map();
 
@@ -123,9 +42,8 @@ const init = (index, keys, settings) => {
       trace: (text) => {}
     },
     privateKey: keys[index].privateKey,
-    storage: new StoragePlain.default(),
-    crypto: new CryptoPlain.default()
-    //crypto: new CryptoBNElliptic.default()
+    storage: new PlainStorage(),
+    crypto: new PlainCrypto()
   });
 
   for (let i = 0; i < keys.length; i++)
