@@ -2,7 +2,7 @@
 import * as crypto from 'crypto';
 import { ec as EC } from 'elliptic';
 import BN from 'bn.js';
-import ICryptoInterface, { ICryptoMathInterface } from 'abgp-js/src/consensus/interfaces/ICryptoInterface';
+import ICryptoInterface, { ICryptoMathInterface } from 'abgp-js/dist/consensus/interfaces/ICryptoInterface';
 
 const ec = new EC('secp256k1');
 

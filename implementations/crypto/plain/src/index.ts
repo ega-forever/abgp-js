@@ -1,5 +1,6 @@
 import { randomBytes, createHash } from 'crypto';
-import ICryptoInterface, { ICryptoMathInterface } from 'abgp-js/src/consensus/interfaces/ICryptoInterface';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import ICryptoInterface, { ICryptoMathInterface } from 'abgp-js/dist/consensus/interfaces/ICryptoInterface';
 import Point from './Point';
 import curveParams from './secp256k1';
 import { addMod, powMod } from './math';

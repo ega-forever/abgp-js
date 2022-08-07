@@ -1,6 +1,7 @@
-import RecordModel from 'abgp-js/src/consensus/models/RecordModel';
-import { IRecord, IState, IStorageInterface } from 'abgp-js/src/consensus/interfaces/IStorageInterface';
-import StateModel from 'abgp-js/src/consensus/models/StateModel';
+/* eslint-disable import/no-extraneous-dependencies */
+import RecordModel from 'abgp-js/dist/consensus/models/RecordModel';
+import { IRecord, IState, IStorageInterface } from 'abgp-js/dist/consensus/interfaces/IStorageInterface';
+import StateModel from 'abgp-js/dist/consensus/models/StateModel';
 
 class PlainStorageRecord implements IRecord {
   private readonly db: Map<string, RecordModel>;

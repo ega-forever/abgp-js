@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "abgp-js": "^1.5.1",
+    "abgp-js": "^1.7.0",
     "abgp-js-modules-crypto-bnelliptic": "^1.0.0",
     "abgp-js-modules-node-tcp": "^1.0.1",
     "bn.js": "^5.2.1",
