@@ -1,0 +1,258 @@
+version: "3"
+
+services:
+
+  node1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      LOG_LEVEL: 30
+      NODE_GOSSIP_INTERVAL_MIN: 100
+      NODE_GOSSIP_INTERVAL_MAX: 300
+      NODE_PUBLIC_KEY: "03484b3f4d062d19763ab6fe93ffccdc5473c7d7ba90c057cc44864b955fad32d0"
+      NODE_PRIVATE_KEY: "4bbc9da8d50f267ffa4ea7159c4e06be6271af1b2dd78f0c365af22866f9f1bb"
+      REST_PORT: 3101
+      NODE_HOST: node1
+      NODE_PORT: 3102
+      NODE_PEERS: "tcp://node1:3102/03484b3f4d062d19763ab6fe93ffccdc5473c7d7ba90c057cc44864b955fad32d0;
+      tcp://node2:3202/023de456911ffdd774e5ae6699e955b6cb1f2fda268d67a94c2c1a38d859d0cb92;
+      tcp://node3:3302/03ea4bd640369ab91eed6266e1c618f9638d2104464fe1ff8446b3caf0cc125c33;
+      tcp://node4:3402/031db1490af8b27b7ab8ca6733091aa64469d573d10b5a2761c1d4e7260a3d5aec;
+      tcp://node5:3502/02615ce6f1b811b48fa06bd40daf708ea28d096b5f14ebafef3fb17da01db490fe;
+      tcp://node6:3602/02fccca092ed82c52dac5bc67f741c590867d95091e36444809c461747a0bb729d;
+      tcp://node7:3702/03658592329320f3fa362d511a9254863980caf14134b895a200f20d701bbe4426;
+      tcp://node8:3802/02048e2432827950185727f393a251b2548e40359449f3f02079fa025efcb44996;
+      tcp://node9:3902/025a0853f423f62bd67eb60768f3355b17f15e047371fbb344f9f3bb24060c1794"
+    ports:
+      - 3101:3101
+      - 3102:3102
+    networks:
+      - abgp
+
+  node2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      LOG_LEVEL: 30
+      NODE_GOSSIP_INTERVAL_MIN: 100
+      NODE_GOSSIP_INTERVAL_MAX: 300
+      NODE_PUBLIC_KEY: "023de456911ffdd774e5ae6699e955b6cb1f2fda268d67a94c2c1a38d859d0cb92"
+      NODE_PRIVATE_KEY: "67da9f4a8d69e82e492751095451df8104603ff14b028aa0a2742cb03c98329f"
+      REST_PORT: 3201
+      NODE_HOST: node2
+      NODE_PORT: 3202
+      NODE_PEERS: "tcp://node1:3102/03484b3f4d062d19763ab6fe93ffccdc5473c7d7ba90c057cc44864b955fad32d0;
+      tcp://node2:3202/023de456911ffdd774e5ae6699e955b6cb1f2fda268d67a94c2c1a38d859d0cb92;
+      tcp://node3:3302/03ea4bd640369ab91eed6266e1c618f9638d2104464fe1ff8446b3caf0cc125c33;
+      tcp://node4:3402/031db1490af8b27b7ab8ca6733091aa64469d573d10b5a2761c1d4e7260a3d5aec;
+      tcp://node5:3502/02615ce6f1b811b48fa06bd40daf708ea28d096b5f14ebafef3fb17da01db490fe;
+      tcp://node6:3602/02fccca092ed82c52dac5bc67f741c590867d95091e36444809c461747a0bb729d;
+      tcp://node7:3702/03658592329320f3fa362d511a9254863980caf14134b895a200f20d701bbe4426;
+      tcp://node8:3802/02048e2432827950185727f393a251b2548e40359449f3f02079fa025efcb44996;
+      tcp://node9:3902/025a0853f423f62bd67eb60768f3355b17f15e047371fbb344f9f3bb24060c1794"
+    ports:
+      - 3201:3201
+      - 3202:3202
+    networks:
+      - abgp
+
+  node3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      LOG_LEVEL: 30
+      NODE_GOSSIP_INTERVAL_MIN: 100
+      NODE_GOSSIP_INTERVAL_MAX: 300
+      NODE_PUBLIC_KEY: "03ea4bd640369ab91eed6266e1c618f9638d2104464fe1ff8446b3caf0cc125c33"
+      NODE_PRIVATE_KEY: "7e734f80891ee72f5ab7583d1fa309f8cf94eb83df74fe51a72656533f53d538"
+      REST_PORT: 3301
+      NODE_HOST: node3
+      NODE_PORT: 3302
+      NODE_PEERS: "tcp://node1:3102/03484b3f4d062d19763ab6fe93ffccdc5473c7d7ba90c057cc44864b955fad32d0;
+      tcp://node2:3202/023de456911ffdd774e5ae6699e955b6cb1f2fda268d67a94c2c1a38d859d0cb92;
+      tcp://node3:3302/03ea4bd640369ab91eed6266e1c618f9638d2104464fe1ff8446b3caf0cc125c33;
+      tcp://node4:3402/031db1490af8b27b7ab8ca6733091aa64469d573d10b5a2761c1d4e7260a3d5aec;
+      tcp://node5:3502/02615ce6f1b811b48fa06bd40daf708ea28d096b5f14ebafef3fb17da01db490fe;
+      tcp://node6:3602/02fccca092ed82c52dac5bc67f741c590867d95091e36444809c461747a0bb729d;
+      tcp://node7:3702/03658592329320f3fa362d511a9254863980caf14134b895a200f20d701bbe4426;
+      tcp://node8:3802/02048e2432827950185727f393a251b2548e40359449f3f02079fa025efcb44996;
+      tcp://node9:3902/025a0853f423f62bd67eb60768f3355b17f15e047371fbb344f9f3bb24060c1794"
+    ports:
+      - 3301:3301
+      - 3302:3302
+    networks:
+      - abgp
+
+  node4:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      LOG_LEVEL: 30
+      NODE_GOSSIP_INTERVAL_MIN: 100
+      NODE_GOSSIP_INTERVAL_MAX: 300
+      NODE_PUBLIC_KEY: "031db1490af8b27b7ab8ca6733091aa64469d573d10b5a2761c1d4e7260a3d5aec"
+      NODE_PRIVATE_KEY: "669c28009680daceacdf9b927d7dcfb3e91b78ee1c4af59ed33db366093a6cce"
+      REST_PORT: 3401
+      NODE_HOST: node4
+      NODE_PORT: 3402
+      NODE_PEERS: "tcp://node1:3102/03484b3f4d062d19763ab6fe93ffccdc5473c7d7ba90c057cc44864b955fad32d0;
+      tcp://node2:3202/023de456911ffdd774e5ae6699e955b6cb1f2fda268d67a94c2c1a38d859d0cb92;
+      tcp://node3:3302/03ea4bd640369ab91eed6266e1c618f9638d2104464fe1ff8446b3caf0cc125c33;
+      tcp://node4:3402/031db1490af8b27b7ab8ca6733091aa64469d573d10b5a2761c1d4e7260a3d5aec;
+      tcp://node5:3502/02615ce6f1b811b48fa06bd40daf708ea28d096b5f14ebafef3fb17da01db490fe;
+      tcp://node6:3602/02fccca092ed82c52dac5bc67f741c590867d95091e36444809c461747a0bb729d;
+      tcp://node7:3702/03658592329320f3fa362d511a9254863980caf14134b895a200f20d701bbe4426;
+      tcp://node8:3802/02048e2432827950185727f393a251b2548e40359449f3f02079fa025efcb44996;
+      tcp://node9:3902/025a0853f423f62bd67eb60768f3355b17f15e047371fbb344f9f3bb24060c1794"
+    ports:
+      - 3401:3401
+      - 3402:3402
+    networks:
+      - abgp
+
+  node5:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      LOG_LEVEL: 30
+      NODE_GOSSIP_INTERVAL_MIN: 100
+      NODE_GOSSIP_INTERVAL_MAX: 300
+      NODE_PUBLIC_KEY: "02615ce6f1b811b48fa06bd40daf708ea28d096b5f14ebafef3fb17da01db490fe"
+      NODE_PRIVATE_KEY: "78aa7602688e32f2c636bfb6c64673ac768120e375547ca25cbb0e44a2f62bc6"
+      REST_PORT: 3501
+      NODE_HOST: node5
+      NODE_PORT: 3502
+      NODE_PEERS: "tcp://node1:3102/03484b3f4d062d19763ab6fe93ffccdc5473c7d7ba90c057cc44864b955fad32d0;
+      tcp://node2:3202/023de456911ffdd774e5ae6699e955b6cb1f2fda268d67a94c2c1a38d859d0cb92;
+      tcp://node3:3302/03ea4bd640369ab91eed6266e1c618f9638d2104464fe1ff8446b3caf0cc125c33;
+      tcp://node4:3402/031db1490af8b27b7ab8ca6733091aa64469d573d10b5a2761c1d4e7260a3d5aec;
+      tcp://node5:3502/02615ce6f1b811b48fa06bd40daf708ea28d096b5f14ebafef3fb17da01db490fe;
+      tcp://node6:3602/02fccca092ed82c52dac5bc67f741c590867d95091e36444809c461747a0bb729d;
+      tcp://node7:3702/03658592329320f3fa362d511a9254863980caf14134b895a200f20d701bbe4426;
+      tcp://node8:3802/02048e2432827950185727f393a251b2548e40359449f3f02079fa025efcb44996;
+      tcp://node9:3902/025a0853f423f62bd67eb60768f3355b17f15e047371fbb344f9f3bb24060c1794"
+    ports:
+      - 3501:3501
+      - 3502:3502
+    networks:
+      - abgp
+
+  node6:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      LOG_LEVEL: 30
+      NODE_GOSSIP_INTERVAL_MIN: 100
+      NODE_GOSSIP_INTERVAL_MAX: 300
+      NODE_PUBLIC_KEY: "02fccca092ed82c52dac5bc67f741c590867d95091e36444809c461747a0bb729d"
+      NODE_PRIVATE_KEY: "e07283af1e5babc54628c158ff40d2ddce1c7d10af2533011d91c0d046e2985e"
+      REST_PORT: 3601
+      NODE_HOST: node6
+      NODE_PORT: 3602
+      NODE_PEERS: "tcp://node1:3102/03484b3f4d062d19763ab6fe93ffccdc5473c7d7ba90c057cc44864b955fad32d0;
+      tcp://node2:3202/023de456911ffdd774e5ae6699e955b6cb1f2fda268d67a94c2c1a38d859d0cb92;
+      tcp://node3:3302/03ea4bd640369ab91eed6266e1c618f9638d2104464fe1ff8446b3caf0cc125c33;
+      tcp://node4:3402/031db1490af8b27b7ab8ca6733091aa64469d573d10b5a2761c1d4e7260a3d5aec;
+      tcp://node5:3502/02615ce6f1b811b48fa06bd40daf708ea28d096b5f14ebafef3fb17da01db490fe;
+      tcp://node6:3602/02fccca092ed82c52dac5bc67f741c590867d95091e36444809c461747a0bb729d;
+      tcp://node7:3702/03658592329320f3fa362d511a9254863980caf14134b895a200f20d701bbe4426;
+      tcp://node8:3802/02048e2432827950185727f393a251b2548e40359449f3f02079fa025efcb44996;
+      tcp://node9:3902/025a0853f423f62bd67eb60768f3355b17f15e047371fbb344f9f3bb24060c1794"
+    ports:
+      - 3601:3601
+      - 3602:3602
+    networks:
+      - abgp
+
+  node7:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      LOG_LEVEL: 30
+      NODE_GOSSIP_INTERVAL_MIN: 100
+      NODE_GOSSIP_INTERVAL_MAX: 300
+      NODE_PUBLIC_KEY: "03658592329320f3fa362d511a9254863980caf14134b895a200f20d701bbe4426"
+      NODE_PRIVATE_KEY: "7ece256e46145777d6b4f7671f05d1a192e511e2a75e5299386cd1944de7a235"
+      REST_PORT: 3701
+      NODE_HOST: node7
+      NODE_PORT: 3702
+      NODE_PEERS: "tcp://node1:3102/03484b3f4d062d19763ab6fe93ffccdc5473c7d7ba90c057cc44864b955fad32d0;
+      tcp://node2:3202/023de456911ffdd774e5ae6699e955b6cb1f2fda268d67a94c2c1a38d859d0cb92;
+      tcp://node3:3302/03ea4bd640369ab91eed6266e1c618f9638d2104464fe1ff8446b3caf0cc125c33;
+      tcp://node4:3402/031db1490af8b27b7ab8ca6733091aa64469d573d10b5a2761c1d4e7260a3d5aec;
+      tcp://node5:3502/02615ce6f1b811b48fa06bd40daf708ea28d096b5f14ebafef3fb17da01db490fe;
+      tcp://node6:3602/02fccca092ed82c52dac5bc67f741c590867d95091e36444809c461747a0bb729d;
+      tcp://node7:3702/03658592329320f3fa362d511a9254863980caf14134b895a200f20d701bbe4426;
+      tcp://node8:3802/02048e2432827950185727f393a251b2548e40359449f3f02079fa025efcb44996;
+      tcp://node9:3902/025a0853f423f62bd67eb60768f3355b17f15e047371fbb344f9f3bb24060c1794"
+    ports:
+      - 3701:3701
+      - 3702:3702
+    networks:
+      - abgp
+
+  node8:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      LOG_LEVEL: 30
+      NODE_GOSSIP_INTERVAL_MIN: 100
+      NODE_GOSSIP_INTERVAL_MAX: 300
+      NODE_PUBLIC_KEY: "02048e2432827950185727f393a251b2548e40359449f3f02079fa025efcb44996"
+      NODE_PRIVATE_KEY: "4542fe72c58698246ddc32c304fc7524e839abc443625d0728e241fcd1140a3b"
+      REST_PORT: 3801
+      NODE_HOST: node8
+      NODE_PORT: 3802
+      NODE_PEERS: "tcp://node1:3102/03484b3f4d062d19763ab6fe93ffccdc5473c7d7ba90c057cc44864b955fad32d0;
+      tcp://node2:3202/023de456911ffdd774e5ae6699e955b6cb1f2fda268d67a94c2c1a38d859d0cb92;
+      tcp://node3:3302/03ea4bd640369ab91eed6266e1c618f9638d2104464fe1ff8446b3caf0cc125c33;
+      tcp://node4:3402/031db1490af8b27b7ab8ca6733091aa64469d573d10b5a2761c1d4e7260a3d5aec;
+      tcp://node5:3502/02615ce6f1b811b48fa06bd40daf708ea28d096b5f14ebafef3fb17da01db490fe;
+      tcp://node6:3602/02fccca092ed82c52dac5bc67f741c590867d95091e36444809c461747a0bb729d;
+      tcp://node7:3702/03658592329320f3fa362d511a9254863980caf14134b895a200f20d701bbe4426;
+      tcp://node8:3802/02048e2432827950185727f393a251b2548e40359449f3f02079fa025efcb44996;
+      tcp://node9:3902/025a0853f423f62bd67eb60768f3355b17f15e047371fbb344f9f3bb24060c1794"
+    ports:
+      - 3801:3801
+      - 3802:3802
+    networks:
+      - abgp
+
+  node9:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      LOG_LEVEL: 30
+      NODE_GOSSIP_INTERVAL_MIN: 100
+      NODE_GOSSIP_INTERVAL_MAX: 300
+      NODE_PUBLIC_KEY: "025a0853f423f62bd67eb60768f3355b17f15e047371fbb344f9f3bb24060c1794"
+      NODE_PRIVATE_KEY: "fbb646f38b0f79a661454f2f5ec1251ed6aab458138d5a2e8f676a5e81db5bc0"
+      REST_PORT: 3901
+      NODE_HOST: node9
+      NODE_PORT: 3902
+      NODE_PEERS: "tcp://node1:3102/03484b3f4d062d19763ab6fe93ffccdc5473c7d7ba90c057cc44864b955fad32d0;
+      tcp://node2:3202/023de456911ffdd774e5ae6699e955b6cb1f2fda268d67a94c2c1a38d859d0cb92;
+      tcp://node3:3302/03ea4bd640369ab91eed6266e1c618f9638d2104464fe1ff8446b3caf0cc125c33;
+      tcp://node4:3402/031db1490af8b27b7ab8ca6733091aa64469d573d10b5a2761c1d4e7260a3d5aec;
+      tcp://node5:3502/02615ce6f1b811b48fa06bd40daf708ea28d096b5f14ebafef3fb17da01db490fe;
+      tcp://node6:3602/02fccca092ed82c52dac5bc67f741c590867d95091e36444809c461747a0bb729d;
+      tcp://node7:3702/03658592329320f3fa362d511a9254863980caf14134b895a200f20d701bbe4426;
+      tcp://node8:3802/02048e2432827950185727f393a251b2548e40359449f3f02079fa025efcb44996;
+      tcp://node9:3902/025a0853f423f62bd67eb60768f3355b17f15e047371fbb344f9f3bb24060c1794"
+    ports:
+      - 3901:3901
+      - 3902:3902
+    networks:
+      - abgp
+
+networks:
+  abgp:

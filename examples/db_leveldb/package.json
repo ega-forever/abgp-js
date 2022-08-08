@@ -1,5 +1,5 @@
 {
-  "name": "db_mongo",
+  "name": "db_leveldb",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -18,15 +18,16 @@
     "bn.js": "^5.2.1",
     "body-parser": "^1.20.0",
     "bunyan": "^1.8.15",
+    "classic-level": "^1.2.0",
     "dotenv": "^16.0.0",
     "elliptic": "^6.5.4",
     "express": "^4.18.1",
     "express-cors": "^0.0.3",
-    "jayson": "^3.6.6",
-    "mongoose": "^6.3.2"
+    "jayson": "^3.6.6"
   },
   "devDependencies": {
     "axios": "^0.27.2",
+    "lodash": "^4.17.21",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.4"
   }

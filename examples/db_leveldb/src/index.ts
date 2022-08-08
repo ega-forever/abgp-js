@@ -6,7 +6,7 @@ import * as bunyan from 'bunyan';
 import TCPABGP from 'abgp-js-modules-node-tcp';
 import eventTypes from 'abgp-js/dist/consensus/constants/EventTypes';
 import Crypto from 'abgp-js-modules-crypto-bnelliptic';
-import StorageMongo from './StorageMongo';
+import StorageLevel from './StorageLevel';
 
 const init = async () => {
   const app = express();
@@ -18,8 +18,7 @@ const init = async () => {
   }));
   app.use(cors());
 
-  const storageMongo = new StorageMongo();
-  await storageMongo.init(config.db.uri);
+  const storageLevel = new StorageLevel(config.db.path);
 
   const instance = new TCPABGP({
     address: `tcp://${config.node.host}:${config.node.port}/${config.node.publicKey}`,
@@ -30,7 +29,7 @@ const init = async () => {
     sendSignalToRandomPeer: config.node.sendSignalToRandomPeer,
     logger,
     privateKey: config.node.privateKey,
-    storage: storageMongo,
+    storage: storageLevel,
     crypto: new Crypto()
   });
 
@@ -123,6 +122,7 @@ const init = async () => {
 
     res.send(states);
   });
+
 
   app.listen(config.rest.port, () => {
     logger.info(`rest started at ${config.rest.port}`);
