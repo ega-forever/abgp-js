@@ -118,8 +118,6 @@ const init = async () => {
       )
     );
 
-    console.log(states)
-
     res.send(states);
   });
 

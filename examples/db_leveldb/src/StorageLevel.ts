@@ -68,9 +68,6 @@ export class StorageLevelRecord implements IRecord {
     const rangeRecordsKeys = await this.recordRangeDb.keys({ gt: `${timestamp}:${timestampIndex}`, limit }).all();
     const rangeRecordHashes = await this.recordRangeDb.getMany(rangeRecordsKeys);
 
-    console.log(rangeRecordsKeys);
-    console.log(rangeRecordHashes)
-
     const records = await this.recordDb.getMany(rangeRecordHashes);
 
     return records.map(levelRecord => {
