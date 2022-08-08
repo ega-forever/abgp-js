@@ -205,9 +205,10 @@ However, you still can implement your own protocol.
 
 # Implemented examples
 
-| Implementation | 
-| --- | 
-| [MongoDB](examples/db_mongo) | 
+| Implementation                 | 
+|--------------------------------| 
+| [MongoDB](examples/db_mongo)   | 
+| [LevelDB](examples/db_leveldb) | 
 
 # TLA+ specs
 
