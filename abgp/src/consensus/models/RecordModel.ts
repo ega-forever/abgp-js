@@ -1,8 +1,6 @@
 class RecordModelBase {
   public hash: string;
 
-  public stateHash?: string;
-
   public key: string;
 
   public value: string;
@@ -51,7 +49,6 @@ export default class RecordModel extends RecordModelConstructorParams {
 
     return new RecordModel({
       hash: obj.hash,
-      stateHash: obj.stateHash,
       key: obj.key,
       value: obj.value,
       version: obj.version,
@@ -75,7 +72,6 @@ export default class RecordModel extends RecordModelConstructorParams {
 
     return {
       hash: this.hash,
-      stateHash: this.stateHash,
       key: this.key,
       value: this.value,
       version: this.version,
@@ -90,7 +86,6 @@ export default class RecordModel extends RecordModelConstructorParams {
   public cloneObject() {
     return new RecordModel({
       hash: this.hash,
-      stateHash: this.stateHash,
       key: this.key,
       value: this.value,
       version: this.version,

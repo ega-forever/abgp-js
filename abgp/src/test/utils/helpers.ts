@@ -143,7 +143,6 @@ export const getUniqueMultiSigDbItemsCount = async (nodes: ABGP[], totalRecordsC
         continue;
       }
 
-      expect(record.stateHash).to.not.eq(null);
       state[record.hash] = state[record.hash] ? state[record.hash] + 1 : 1;
 
       if (state[record.hash] === nodes.length) {

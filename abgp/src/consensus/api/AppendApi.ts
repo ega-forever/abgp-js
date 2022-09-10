@@ -238,9 +238,8 @@ export default class AppendApi {
       item.signatureType === SignatureType.MULTISIG &&
       ((prevItem && prevItem.signatureType === SignatureType.INTERMEDIATE) || !prevItem)
     ) {
-      // eslint-disable-next-line no-param-reassign
-      item.stateHash = this.abgp.crypto.math.addMod(lastState.root, item.hash);
-      await this.abgp.saveState(item.timestamp, item.timestampIndex, item.stateHash);
+      const stateHash = this.abgp.crypto.math.addMod(lastState.root, item.hash);
+      await this.abgp.saveState(item.timestamp, item.timestampIndex, stateHash);
     } else {
       await this.abgp.saveState(item.timestamp, item.timestampIndex, lastState.root);
     }

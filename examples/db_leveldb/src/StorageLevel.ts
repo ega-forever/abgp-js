@@ -52,7 +52,6 @@ export class StorageLevelRecord implements IRecord {
     const record = JSON.parse(levelRecord);
     return new RecordModel({
       hash: record.hash,
-      stateHash: record.stateHash,
       key: record.key,
       value: record.value,
       version: record.version,
@@ -68,13 +67,16 @@ export class StorageLevelRecord implements IRecord {
     const rangeRecordsKeys = await this.recordRangeDb.keys({ gt: `${timestamp}:${timestampIndex}`, limit }).all();
     const rangeRecordHashes = await this.recordRangeDb.getMany(rangeRecordsKeys);
 
+    if (!rangeRecordHashes) {
+      return [];
+    }
+
     const records = await this.recordDb.getMany(rangeRecordHashes);
 
     return records.map(levelRecord => {
       const record = JSON.parse(levelRecord);
       return new RecordModel({
         hash: record.hash,
-        stateHash: record.stateHash,
         key: record.key,
         value: record.value,
         version: record.version,
@@ -94,13 +96,17 @@ export class StorageLevelRecord implements IRecord {
     }).all();
 
     const rangeRecordHashes = await this.recordRangeDb.getMany(rangeRecordsKeys);
+
+    if (!rangeRecordHashes) {
+      return [];
+    }
+
     const records = await this.recordDb.getMany(rangeRecordHashes);
 
     return records.map(levelRecord => {
       const record = JSON.parse(levelRecord);
       return new RecordModel({
         hash: record.hash,
-        stateHash: record.stateHash,
         key: record.key,
         value: record.value,
         version: record.version,
@@ -116,7 +122,6 @@ export class StorageLevelRecord implements IRecord {
   async save(record: RecordModel): Promise<void> {
     const levelRecord = {
       hash: record.hash,
-      stateHash: record.stateHash,
       key: record.key,
       value: record.value,
       version: record.version,

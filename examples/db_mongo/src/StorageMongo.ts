@@ -5,7 +5,6 @@ import mongoose, { Schema } from 'mongoose';
 
 const RecordMongoSchema = new Schema({
   hash: String,
-  stateHash: String,
   key: String,
   value: String,
   version: Number,
@@ -50,7 +49,6 @@ export class StorageMongoRecord implements IRecord {
     const plainRm = recordMongo.toObject();
     return new RecordModel({
       hash: plainRm.hash,
-      stateHash: plainRm.stateHash,
       key: plainRm.key,
       value: plainRm.value,
       version: plainRm.version,
@@ -85,7 +83,6 @@ export class StorageMongoRecord implements IRecord {
       const plainRm = rm.toObject();
       return new RecordModel({
         hash: plainRm.hash,
-        stateHash: plainRm.stateHash,
         key: plainRm.key,
         value: plainRm.value,
         version: plainRm.version,
@@ -104,7 +101,6 @@ export class StorageMongoRecord implements IRecord {
       const plainRm = rm.toObject();
       return new RecordModel({
         hash: plainRm.hash,
-        stateHash: plainRm.stateHash,
         key: plainRm.key,
         value: plainRm.value,
         version: plainRm.version,
@@ -125,7 +121,6 @@ export class StorageMongoRecord implements IRecord {
   async save(record: RecordModel): Promise<void> {
     const mongoRecord = {
       hash: record.hash,
-      stateHash: record.stateHash,
       key: record.key,
       value: record.value,
       version: record.version,

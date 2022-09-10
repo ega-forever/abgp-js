@@ -1,6 +1,6 @@
 {
   "name": "abgp-js",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "authenticated byzantine gossip protocol",
   "scripts": {
     "tsc:watch": "tsc -w",
